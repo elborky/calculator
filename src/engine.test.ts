@@ -510,6 +510,22 @@ describe('getDisplayValue — normal states', () => {
   });
 });
 
+describe('decimal.js correctness via engine — Group 12 (E-045–E-049)', () => {
+  it('0.1 + 0.2 = 0.3 via full engine sequence (E-045) (T-064)', () => {
+    const s0 = initialState();
+    const s1 = inputDigit(s0, '0');
+    const s2 = inputDecimal(s1);
+    const s3 = inputDigit(s2, '1');
+    const s4 = inputOperator(s3, 'add');
+    const s5 = inputDigit(s4, '0');
+    const s6 = inputDecimal(s5);
+    const s7 = inputDigit(s6, '2');
+    const s8 = inputEquals(s7);
+    expect(s8.entryBuffer).toBe('0.3');
+    expect(s8.errorState).toBeNull();
+  });
+});
+
 describe('getDisplayValue — error states', () => {
   it('returns errorState tag when error is set (T-063)', () => {
     // Scenario 1: divide-by-zero error state

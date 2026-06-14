@@ -94,3 +94,39 @@ Node LTS v24 (Krypton).
 **Source:** `06-tech-choices.md` §4.
 **Verification:** Vite 8.0.16 latest — npm registry `registry.npmjs.org/vite/latest` (2026-06). Node LTS v24
 Krypton newest active LTS — `nodejs.org/dist/index.json` (2026-06).
+
+---
+
+> Flows decisions (CP-7 autonomous — logic/sequencing choices). Authoritative rationale lives in
+> `02-flows.md`; this is the index.
+
+## D-009 — Post-equals digit clears accumulator (fresh-start semantics)
+
+**Decision:** When `justEvaluated = true` and the next input is a digit, `accumulator` is set to `null`
+(not just `entryBuffer` replaced). This means a digit after `=` unconditionally starts a brand-new
+calculation with no left-hand value — the prior result is abandoned.
+**Rationale:** Standard basic-calculator behaviour: after a result the user either (a) presses an operator
+to continue from the result (§3.3 — accumulator survives, pending operator chains) or (b) types a digit
+to start over (accumulator cleared). Preserving accumulator on digit entry after `=` would silently poison
+the next operator-set step with a stale left-hand value. Clearing it is the safe, conventional default.
+**Source:** `02-flows.md` §1.3, §3.3.
+
+## D-010 — Operator-first (no prior digit) uses implicit `0` as left-hand operand
+
+**Decision:** If an operator is pressed when `accumulator` is `null` and `pendingOperator` is `null` (fresh
+state), treat `entryBuffer` value (typically `"0"`) as the implicit left-hand operand: store it in
+`accumulator`, register the operator, and reset `entryBuffer`. This makes `+ 5 =` yield `5` (not an error).
+**Rationale:** Prevents an undefined-accumulator error on a common misfire (pressing `+` before any digit).
+Treating the displayed `0` as the left-hand is the only sensible non-error interpretation. Not a taste
+call — the only alternative is a no-op or an error, both worse UX.
+**Source:** `02-flows.md` §2.3.
+
+## D-011 — Chaining operator on error path: error can also arise from auto-resolve step
+
+**Decision:** The operator-chaining auto-resolve (§2.2) can itself trigger the error flow — if the
+auto-resolved intermediate result is a divide-by-zero or overflow, `errorState` is set at the operator
+press, not only at `=`. The new operator is NOT registered in this case (latch wins).
+**Rationale:** The chaining step performs a real arithmetic resolution; it must honour the same error
+contract as `=`. Allowing the engine to register a new operator on top of a poisoned intermediate value
+would produce a compounded invalid state.
+**Source:** `02-flows.md` §5.4 ("via chain" path).

@@ -101,9 +101,9 @@ storm-depends-on:
 - [DONE] T-163 — CE/AC reachable during error
 
 ## Group 10 — Long-number display: shrink → scroll (D-006)
-- [PENDING] T-164 — `fitDisplay()` shrink font toward floor
-- [PENDING] T-165 — horizontal scroll (right-anchored) at floor
-- [PENDING] T-166 — exponent strings render fully
+- [DONE] T-164 — `fitDisplay()` shrink font toward floor
+- [DONE] T-165 — horizontal scroll (right-anchored) at floor
+- [DONE] T-166 — exponent strings render fully
 
 ## Group 11 — Motion + reduced-motion (F11, UR-025)
 - [PENDING] T-167 — button `:active` press-scale

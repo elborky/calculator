@@ -77,6 +77,90 @@ function pendingLine(state: EngineState): string {
 }
 
 // ---------------------------------------------------------------------------
+// T-164..T-166 — fitDisplay(isError): shrink font → scroll fallback (D-006)
+//
+// Adjusts .readout presentation after textContent is set so the value is
+// always fully visible — no truncation, no ellipsis (correctness / trust).
+//
+// Algorithm:
+//   1. If isError: clear fit state and return — error sentences wrap, never scroll.
+//   2. Read the computed font-floor from the --readout-font-floor CSS custom property.
+//   3. Clear any previous inline font-size override and scroll data-attr.
+//   4. If scrollWidth <= clientWidth: fits at natural clamp() size → done.
+//   5. Otherwise: step down font-size in 0.1rem decrements toward the floor.
+//      Stop as soon as it fits OR floor is reached.
+//   6. If still overflowing at the floor: activate horizontal scroll mode.
+//      Wrap the text in a span.readout-inner (direction:ltr inside rtl container)
+//      so digit order is correct and exponent strings (T-166) render fully.
+//
+// Right-anchor technique (T-165): CSS sets direction:rtl on the scroll container
+// so the scroll origin is the right edge — least-significant digits stay visible.
+// The inner ltr span restores natural reading order for the content.
+//
+// Called from render() on every state change, after textContent is set.
+// Never called during error render (isError guard at top).
+// ---------------------------------------------------------------------------
+function fitDisplay(isError: boolean): void {
+  const el = readoutEl!;
+
+  if (isError) {
+    // Error sentences wrap via word-break (CSS). Reset fit state and exit.
+    el.style.fontSize    = '';
+    el.removeAttribute('data-overflow');
+    // Unwrap inner span if present from a previous scroll state
+    const inner = el.querySelector('.readout-inner');
+    if (inner) {
+      el.textContent = inner.textContent;
+    }
+    return;
+  }
+
+  // --- read the floor from the CSS token (avoids hardcoded literals in JS) ---
+  const floorStr = getComputedStyle(document.documentElement)
+    .getPropertyValue('--readout-font-floor')
+    .trim(); // e.g. "1.25rem"
+  // Convert rem to px for comparison (document root font-size is the multiplier)
+  const rootFontPx   = parseFloat(getComputedStyle(document.documentElement).fontSize);
+  const floorPx      = parseFloat(floorStr) * rootFontPx; // NaN-safe: parseInt("1.25") * 16
+
+  // --- reset previous fit overrides so we measure from the natural clamp() size ---
+  el.style.fontSize = '';
+  el.removeAttribute('data-overflow');
+  // Unwrap inner span if present (from prior scroll state)
+  const prevInner = el.querySelector('.readout-inner');
+  if (prevInner) {
+    el.textContent = prevInner.textContent;
+  }
+
+  // Short-circuit: fits at natural size → done (UE-006 reset case)
+  if (el.scrollWidth <= el.clientWidth) return;
+
+  // --- Step 1: shrink font-size in 0.1rem steps toward the floor ---
+  // Start from the currently computed size (whatever clamp() resolved to).
+  let currentPx = parseFloat(getComputedStyle(el).fontSize);
+
+  while (currentPx > floorPx && el.scrollWidth > el.clientWidth) {
+    currentPx = Math.max(currentPx - 1.6, floorPx); // ~0.1rem step at 16px root
+    el.style.fontSize = `${currentPx}px`;
+  }
+
+  // --- Step 2: still overflowing at floor → activate horizontal scroll ---
+  if (el.scrollWidth > el.clientWidth) {
+    el.setAttribute('data-overflow', 'scroll');
+    // Wrap the raw text in a ltr span inside the rtl scroll container.
+    // This preserves digit/exponent order while right-anchoring the scroll.
+    // T-166: exponent strings (e.g. "1.23e+45") are inside the ltr span
+    //        so they render fully and are not reversed by the rtl container.
+    const text = el.textContent ?? '';
+    el.textContent = ''; // clear
+    const span = document.createElement('span');
+    span.className  = 'readout-inner';
+    span.textContent = text;
+    el.appendChild(span);
+  }
+}
+
+// ---------------------------------------------------------------------------
 // T-142 — render(state): primary readout + pending line + error class toggle
 //
 // Called by dispatch() on every state change AND once at app start (T-146).
@@ -85,8 +169,7 @@ function pendingLine(state: EngineState): string {
 // T-145 — error CSS class toggle is DERIVED (not stored):
 //   state.errorState !== null  →  add    'display--error'
 //   otherwise                  →  remove 'display--error'
-//   The class routes to var(--error) in CSS (via .display--error .readout rule in
-//   layout.css); it never stores a UI-only boolean (INT-6 / UR-018).
+//   The class routes to var(--error) in CSS; it never stores a UI-only boolean.
 // ---------------------------------------------------------------------------
 export function render(state: EngineState): void {
   const displayValue = getDisplayValue(state);
@@ -103,12 +186,14 @@ export function render(state: EngineState): void {
 
   // T-145 — error CSS class toggle (UR-016, INT-6)
   // Derived from live state — never stored as a UI flag (UR-018).
-  // layout.css .display--error .readout applies: color var(--error), smaller
-  // font-size, white-space:normal so the sentence wraps (not colour alone — UR-026).
   const displayEl = readoutEl!.closest<HTMLElement>('.display');
   if (displayEl) {
     displayEl.classList.toggle('display--error', isError);
   }
+
+  // T-164..T-166 — fitDisplay after readout text is set (D-006).
+  // Error sentences skip fit (they wrap via CSS word-break).
+  fitDisplay(isError);
 
   // Pending-expression line (UR-006..UR-008, T-144)
   const pendingText = pendingLine(state);
@@ -118,7 +203,7 @@ export function render(state: EngineState): void {
   // Toggle the HTML `hidden` attribute — the line reserves space when visible
   // (CSS uses `visibility`/`min-height`), and is fully collapsed when hidden.
   // T-162 ASSERTION HOOK: during error, pendingLine() returns "" (errorState !== null
-  // check at line 69 above), so pendingEl always has [hidden] set in error state.
+  // check at render.ts:68), so pendingEl always has [hidden] set in error state.
   // REVIEW e2e assertion: document.querySelector('.pending-line[hidden]') is truthy
   // whenever the calculator is in an error state.
   if (hasPending) {

@@ -587,6 +587,19 @@ describe('decimal.js correctness via engine — Group 12 (E-045–E-049)', () =>
 });
 
 describe('chaining and multi-operator — Group 13 (E-025–E-027)', () => {
+  it('10 ÷ 2 + 3 = 8 — mixed operators left-to-right (E-027) (T-071)', () => {
+    const s0 = initialState();
+    const s1 = inputDigit(s0, '1');
+    const s2 = inputDigit(s1, '0');
+    const s3 = inputOperator(s2, 'divide');
+    const s4 = inputDigit(s3, '2');
+    const s5 = inputOperator(s4, 'add'); // auto-resolves 10÷2=5
+    const s6 = inputDigit(s5, '3');
+    const s7 = inputEquals(s6); // 5+3=8
+    expect(s7.entryBuffer).toBe('8');
+    expect(s7.errorState).toBeNull();
+  });
+
   it('1 + 1 + 1 + 1 = 4 — long same-op chain (E-026) (T-070)', () => {
     const s0 = initialState();
     const s1 = inputDigit(s0, '1');

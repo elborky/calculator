@@ -120,4 +120,10 @@ describe('resolveOperation', () => {
     expect(result).toBeInstanceOf(Decimal);
     expect((result as Decimal).toString()).toBe('3.3');
   });
+
+  it('subtraction correct — 10 - 4 = 6 (T-027)', () => {
+    const result = resolveOperation(new Decimal('10'), 'subtract', new Decimal('4'));
+    expect(result).toBeInstanceOf(Decimal);
+    expect((result as Decimal).toString()).toBe('6');
+  });
 });

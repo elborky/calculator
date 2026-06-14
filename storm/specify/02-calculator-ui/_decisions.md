@@ -83,3 +83,23 @@ craft/asset-handling call within CP-7 technical authority.
 **Verification:** Inter is OFL-licensed, freely self-hostable; a font asset, not a runtime dependency,
 so no version gate applies. Typeface + weights mandated by `08-design-system.md:82-86`.
 **Source:** `06-tech-choices.md` §5; `08-design-system.md:82-86`.
+
+## D-005 — `Backspace` key is a no-op (not in the keyboard whitelist)
+
+**Decision:** The `Backspace` key does **nothing** — it is omitted from M2's keyboard whitelist
+(`03-rules.md` UR-011, UR-012). M2 dispatches no M1 call on `Backspace`.
+**Rationale:** M1 exposes no single-character delete; its only buffer reset is `inputClearEntry`
+(whole `entryBuffer` → `"0"`, R-017). Two candidate mappings both fail: (a) mapping `Backspace` → CE
+would surprise the user, since "delete one digit" ≠ "clear the whole entry"; (b) a *true* per-char
+delete would require M2 to mutate `entryBuffer` and re-inject the trimmed string into M1 — **forbidden
+by INT-4** (M2 must only ever feed whitelisted single-char digits / typed operators, never a hand-built
+buffer string, or M1's `new Decimal(entryBuffer)` could throw). With both mappings ruled out, the safe
+and least-surprising choice is no-op. The productive correction path remains **CE** (clear current
+entry) and **AC** (full reset), both already bound (button + `Escape`).
+**Tradeoff (CP-15):** chose buffer-hygiene safety + no-surprise over a per-digit-delete convenience;
+**sacrificed** the small ergonomic nicety of backspacing a mistyped digit. Reversible later only if M1
+ever ships a `deleteLastChar` reducer (out of M1's frozen scope — F9).
+**Verification:** native browser key behaviour; no third-party library, no version gate. INT-4
+buffer-hygiene constraint verified against `_briefing.md` INT-4 + `01-data-model.md §4`.
+**Source:** `03-rules.md` UR-011/UR-012; `_briefing.md` INT-4; `01-calculation-engine/03-rules.md`
+R-017.

@@ -127,3 +127,19 @@ floor C3).
 no version gate. Display sizing + `tabular-nums` mandated by `08-design-system.md §4, §6`.
 **Source:** `05-edge-cases.md` §"Long-number display approach" + UE-001..UE-007; `08-design-system.md
 §4, §6, §8`.
+
+## D-007 — Task-granularity encoding for M2 BUILD
+
+**Decision:** The M2 BUILD list (`_index.md`) is encoded as **87 atomic tasks (T-101..T-187) across 15
+build groups (0–14)**, each ≤ 1 file / 1 logical unit with a concrete **Done when** check, traced to
+`UR-NNN` / `UE-NNN` / flow numbers where natural.
+**Rationale:** Two M2-specific granularity rules were applied: (a) the v3 mockup port is split
+per-row / per-button / per-effect rather than one "build the UI" task (Groups 1, 3) — defeating the
+#1 granularity-breach risk for a UI module; (b) because M2 is a view layer (not pure logic), each task
+states the *fittest verifiable check* (tsc / `vite build` / DOM assertion / visual focus-ring) rather
+than forcing TDD that doesn't fit a view surface — full browser e2e is deferred to REVIEW (Playwright),
+with the surface left verifiable. M2 extends the existing root M1 package with Vite + `index.html`
+(D-002 one-pipeline rationale), it does not create a second package.
+**Verification:** process decision, no third-party library or version gate. Granularity discipline per
+`~/.claude/rules/storm-protocol.md`; baseline mirror = M1 `_index.md` BUILD list (D-016).
+**Source:** `_index.md` "BUILD task list" + "Decision logged this pass".

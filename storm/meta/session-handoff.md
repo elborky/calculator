@@ -7,6 +7,33 @@
 
 <!-- NEWEST ENTRY BELOW THIS LINE -->
 
+## [2026-06-15 01:05] — SPECIFY M2 complete (APPROVED) / next BUILD M2 — anchor: ccf0a13
+
+> `[unverified — written by main context]` — fresh sub-agent dispatch failed (API error: 1M-context
+> usage credits, #FF-008, same as prior session). Per the mandatory fallback the orchestrator wrote this
+> entry directly. Facts below are cross-checked against git log + CLAUDE.md + module-status.md + the M2
+> artifacts (not pure conversation memory). Outbox (session-delta.md) flushed CLEAN this session — no
+> verbal-only items (all decisions landed in committed artifacts).
+
+- ✅ **Done this session:**
+  - SPECIFY phase entered + completed for M2 (Calculator UI / keypad) — the first demo-able surface.
+  - **Briefing (7e27611):** orchestrator-authored `_briefing.md` — 13 canonical facts, M1 integration contract (8 public fns + EngineState shape) VERIFIED against M1 `src/` source, 6 INT rules, 3 open-questions (all CP-7 AI-autonomous). Domain Lens re-validated (W-G24) — holds.
+  - **7 concern files drafted** via forked sub-agents (tiers honored): `01-data-model` + `06-tech-choices` opus; `02-flows` (8 flows) + `03-rules` (32 UR) + `04-ui` + `05-edge-cases` (55 UE) + `_index` (87 tasks) sonnet.
+  - **3 glassmorphism mockups** (sonnet ×3 parallel): v1 Conservative (light), v2 Bold (dark), v3 Wildcard (aurora). Screenshotted + shown to owner.
+  - **Cross-file opus audit (77550f0):** FIX-REQUIRED 1 finding (focus-ring 2px vs 3px). Orchestrator fixed across 6 spec locations (c111f3d, grep-verified) → `_audit.md` net **PASS**.
+  - **APPROVED marker fired (877cdcb):** module SPECIFY exit. CLAUDE.md → BUILD M2 next; module-status M2 → SPECIFY-APPROVED.
+  - M1 untouched/frozen throughout.
+
+- 🔒 **Decided:**
+  - **M2 visual baseline = v3 Wildcard (aurora glass)** — owner taste pick (CP-7) after 3-variant screenshot comparison. Why: owner's "dorong sampai mentok" steer + "ga bosenin" is the product's one first-class axis. Locked in `04-ui/_picked.md` (4bd9881).
+  - **UI tech approach = vanilla TypeScript + Vite 8 static build** (over Svelte 5 runner-up) — why: one-screen app (+20-40 bespoke LOC delta only), glassmorphism needs unmediated CSS control, zero framework upgrade-debt the zero-coding owner can't debug. CP-6 head-to-head, profile-fit #FF-004. `06-tech-choices.md` + `_decisions.md` D-001.
+  - **D-001..D-007** (all CP-7 technical, in `_decisions.md`): UI approach, bundler, CSS-tokens, error wording, pending-line derivation, Backspace=no-op, long-number auto-shrink→scroll, task granularity.
+
+- ⏳ **Pending — needs YOUR decision:** none. Outbox clean, audit resolved, owner pick locked, no blockers.
+  - *(BUILD/M4 carry-forward notes — NOT owner decisions, flagged for the next phase: (1) M4 theming SPECIFY must reconcile its token tables to the v3 baseline, since v3 departs from design-system §3 tokens — recorded in `_picked.md`. (2) BUILD task T-181 must reconcile the v3 mockup's Space-Grotesk-via-CDN against the self-hosted-Inter decision D-004.)*
+
+- ➡️ **Next:** Run `/storm-build 02` for M2 — first demo-able surface; ends the one-module dark stretch. 87 tasks staged (T-101–T-187) in `storm/specify/02-calculator-ui/_index.md`. Build target = the locked v3 mockup (`04-ui/mockup-v3.html`); accessibility floor non-negotiable.
+
 ## [2026-06-15 00:25] — REVIEW M1 complete (PASS) / next SPECIFY M2 — anchor: 35ba71c
 
 > `[unverified — written by main context]` — fresh sub-agent dispatch failed (API error: 1M-context

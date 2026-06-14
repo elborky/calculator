@@ -411,4 +411,15 @@ describe('inputClearEntry', () => {
     expect(s5.errorState).toBeNull(); // CE clears the error latch
     expect(s5.entryBuffer).toBe('0');
   });
+
+  it('from mid-first-operand, accumulator stays null (E-028) (T-055)', () => {
+    // Sequence: initialState() → digit '7' → CE (no operator pressed)
+    const s0 = initialState();
+    const s1 = inputDigit(s0, '7');
+    const s2 = inputClearEntry(s1);
+
+    expect(s2.entryBuffer).toBe('0');
+    expect(s2.accumulator).toBeNull(); // accumulator was never set, CE must not change it
+    expect(s2.pendingOperator).toBeNull();
+  });
 });

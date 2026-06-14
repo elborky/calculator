@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { initialState, inputDigit, inputDecimal, inputOperator, inputEquals, resolveOperation } from './engine';
+import { initialState, inputDigit, inputDecimal, inputOperator, inputEquals, inputClearEntry, resolveOperation } from './engine';
 import { Decimal } from './decimal-config';
 
 describe('initialState', () => {
@@ -377,5 +377,23 @@ describe('inputEquals', () => {
     expect(s5).toBe(s4);
     expect(s6).toBe(s5);
     expect(s7).toBe(s6);
+  });
+});
+
+describe('inputClearEntry', () => {
+  it('resets buffer, preserves pending operator (E-029) (T-053)', () => {
+    // Sequence: digit '5' → op 'add' → digit '3' → CE
+    const s0 = initialState();
+    const s1 = inputDigit(s0, '5');
+    const s2 = inputOperator(s1, 'add');
+    const s3 = inputDigit(s2, '3');
+    const s4 = inputClearEntry(s3);
+
+    // CE resets the entry buffer only
+    expect(s4.entryBuffer).toBe('0');
+    expect(s4.errorState).toBeNull();
+    // accumulator and pendingOperator must be preserved
+    expect(s4.accumulator!.toString()).toBe('5');
+    expect(s4.pendingOperator).toBe('add');
   });
 });

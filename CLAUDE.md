@@ -2,16 +2,16 @@
 
 ## Current State
 
-- **Phase:** Pre-CAPTURE
-- **Sub-context:** STORM scaffolding complete
-- **Last decision:** STORM v1 init
-- **Next step:** Run `/storm-capture` — pour ideas into `storm/capture/01-braindump.md` first or tell me directly
+- **Phase:** STRUCTURE complete → entering SPECIFY
+- **Sub-context:** All 9 structure files + hero mockup approved
+- **Last decision:** Deploy = self-hosted Dokploy; aesthetic = glassmorphism; scope = basic 4-function + history/theme/keyboard
+- **Next step:** Run `/storm-specify` for module M1 (calculation engine) — JIT per CP-9, just before BUILD
 
 ## STORM Config
 
 - **Framework version:** STORM Protocol v1.5.0 (loaded from `.claude/rules/storm-protocol.md`)
-- **Domain lens:** not yet declared (set in CAPTURE)
-- **Deployment target:** not yet decided (set in STRUCTURE per CP-6 #5)
+- **Domain lens:** "Solo zero-stakes consumer web utility — design-craft-forward, framework-test vehicle" (`storm/structure/00-domain-lens.md`)
+- **Deployment target:** Self-hosted Dokploy (static NGINX build, Traefik + Let's Encrypt) — `storm/structure/07-deployment-target.md`
 - **Design tool:** `/frontend-design` (D4 baseline per #FF-019 — fallback to `/design-shotgun` only if unavailable)
 
 ## Project Identity

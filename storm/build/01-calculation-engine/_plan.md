@@ -185,7 +185,7 @@ storm-depends-on:
 | # | Task | Status |
 |---|---|---|
 | T-081 | Run `tsc --noEmit` — zero type errors | [DONE] |
-| T-082 | Run `vitest run` — all tests pass, 0 failures | [PENDING] |
+| T-082 | Run `vitest run` — all tests pass, 0 failures | [DONE] |
 
 ---
 

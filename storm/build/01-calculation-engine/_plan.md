@@ -32,7 +32,7 @@ storm-depends-on:
 | T-006 | Define `Operator` union type in `src/types.ts` | [DONE] |
 | T-007 | Define `ErrorTag` union type in `src/types.ts` | [DONE] |
 | T-008 | Define `EngineState` interface (5 fields, Decimal import) in `src/types.ts` | [DONE] |
-| T-009 | Export `initialState()` factory in `src/engine.ts` | [PENDING] |
+| T-009 | Export `initialState()` factory in `src/engine.ts` | [DONE] |
 | T-010 | Test: `initialState returns correct defaults` | [PENDING] |
 
 ## Group 2 — Decimal.js configuration

@@ -5,7 +5,7 @@
 - **Phase:** BUILD M1 (calculation engine) — Group 0 scaffold in progress
 - **Sub-context:** M1 Calculation Engine fully specified — 6 concern files + cross-file audit PASS (headless module: UI/mockup deferred to M2)
 - **Last decision:** M1 stack = TypeScript + decimal.js + Vitest; repeated-equals dropped as out-of-scope (= twice = no-op); engine state = 5 fields
-- **Next step:** BUILD M1 in progress — current task: T-016 — Test inputDigit double-zero stays "0"
+- **Next step:** BUILD M1 in progress — current task: T-019 — Implement inputDecimal
 
 ## STORM Config
 

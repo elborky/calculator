@@ -57,3 +57,39 @@ export function inputDigit(state: EngineState, digit: string): EngineState {
   // Normal append
   return { ...state, entryBuffer: state.entryBuffer + digit };
 }
+
+/**
+ * Handles the decimal-point button press ('.').
+ *
+ * Rules applied (in order):
+ *   R-014 / E-014  — error no-op: if errorState is set, return state unchanged.
+ *   E-013          — justEvaluated reset: start fresh with "0.", clear justEvaluated flag.
+ *   R-007 / E-009, E-010 — second decimal no-op: buffer already has '.', return unchanged.
+ *   E-011          — leading decimal from fresh state: '0' → '0.' (handled by normal append).
+ *   Normal         — append '.' to entryBuffer.
+ *
+ * Never mutates state; always returns a new EngineState object.
+ */
+export function inputDecimal(state: EngineState): EngineState {
+  // R-014 / E-014 — error no-op
+  if (state.errorState !== null) {
+    return state;
+  }
+
+  // E-013 — fresh start after a completed evaluation
+  if (state.justEvaluated) {
+    return {
+      ...state,
+      entryBuffer: '0.',
+      justEvaluated: false,
+    };
+  }
+
+  // R-007 / E-009, E-010 — second decimal no-op
+  if (state.entryBuffer.includes('.')) {
+    return state;
+  }
+
+  // Normal append (covers E-011: '0' → '0.')
+  return { ...state, entryBuffer: state.entryBuffer + '.' };
+}

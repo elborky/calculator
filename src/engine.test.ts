@@ -629,6 +629,18 @@ describe('chaining and multi-operator — Group 13 (E-025–E-027)', () => {
 });
 
 describe('negatives — Group 14 (E-041–E-044)', () => {
+  it('1 - 1 - 1 = -1 — subtraction through zero (E-043) (T-074)', () => {
+    const s0 = initialState();
+    const s1 = inputDigit(s0, '1');
+    const s2 = inputOperator(s1, 'subtract');
+    const s3 = inputDigit(s2, '1');
+    const s4 = inputOperator(s3, 'subtract'); // auto-resolves 1-1=0
+    const s5 = inputDigit(s4, '1');
+    const s6 = inputEquals(s5); // 0-1=-1
+    expect(s6.entryBuffer).toBe('-1');
+    expect(s6.errorState).toBeNull();
+  });
+
   it('negative as left operand in next chain: 3-5=-2, then -2+10=8 (E-042) (T-073)', () => {
     const s0 = initialState();
     const s1 = inputDigit(s0, '3');

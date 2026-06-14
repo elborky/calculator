@@ -130,3 +130,41 @@ press, not only at `=`. The new operator is NOT registered in this case (latch w
 contract as `=`. Allowing the engine to register a new operator on top of a poisoned intermediate value
 would produce a compounded invalid state.
 **Source:** `02-flows.md` §5.4 ("via chain" path).
+
+---
+
+> Rules decisions (CP-7 autonomous — arithmetic behaviour / boundary choices). Authoritative rationale
+> lives in `03-rules.md`; this is the index.
+
+## D-012 — Operator chaining semantics: strictly left-to-right, no precedence (OQ3 resolved)
+
+**Decision:** The engine evaluates chained operators left-to-right with no algebraic precedence.
+`2 + 3 × 4 = 20` (not 14). A pending operation is always resolved before the new operator is registered.
+**Rationale:** This is a *basic* calculator (non-scientific, F1, F9). Left-to-right is the universally
+expected behaviour on physical pocket calculators and is the conventional definition of a "basic" 4-function
+tool. Implementing algebraic precedence would be scope creep (YAGNI) and would surprise users accustomed
+to the genre. OQ3 is now fully resolved.
+**Source:** `03-rules.md` R-004, R-005.
+
+## D-013 — Overflow threshold stated as a config contract, not a hard ceiling in the spec
+
+**Decision:** `03-rules.md` does not hard-code an overflow magnitude. It states the contract: any result
+that decimal.js cannot represent within the configured precision and exponent bounds triggers
+`errorState = 'overflow'`. The concrete config values (precision, toExpPos/toExpNeg) are a BUILD-time
+parameter owned by the engine initialisation.
+**Rationale:** Locking a magic number at SPECIFY would create a false precision — the right value depends
+on UX (how long numbers look on screen), which is M2's domain. The contract is testable without fixing the
+number; the config is a one-line change at BUILD. OQ2 is resolved to the contract level; the value is
+BUILD-owned.
+**Source:** `03-rules.md` R-012, R-013.
+
+## D-014 — M1/M2 display boundary is final; M1 does not round or format for display
+
+**Decision:** M1 exposes a full-precision `Decimal` value (and `toString()`) to M2. M1 never truncates,
+rounds for display, or formats. M2 owns all display decisions (digit count, scientific notation threshold,
+error message text). This boundary is stated as non-re-litigable in `03-rules.md`.
+**Rationale:** Without an explicit boundary rule, M1 BUILD tasks risk implementing display logic in the
+wrong layer, or M2 tasks risk re-opening what is an M1 concern. The explicit declaration prevents both
+drifts. Consistent with F5 ("M1 surfaces, M2 renders") and `01-data-model.md §42-46`. The visible-
+precision taste slice (OQ1) is deferred to M2.
+**Source:** `03-rules.md` R-024, §11.

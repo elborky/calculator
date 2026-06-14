@@ -39,7 +39,7 @@ storm-depends-on:
 
 | # | Task | Status |
 |---|---|---|
-| T-011 | Create `src/decimal-config.ts` with precision/rounding/exp-bounds config | [PENDING] |
+| T-011 | Create `src/decimal-config.ts` with precision/rounding/exp-bounds config | [DONE] |
 | T-012 | Test: `0.1 + 0.2 = 0.3 decimal.js correctness (E-045)` | [PENDING] |
 
 ## Group 3 — Digit input handler

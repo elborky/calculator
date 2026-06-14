@@ -2,10 +2,10 @@
 
 ## Current State
 
-- **Phase:** BUILD M1 (calculation engine) — Group 7 equals handler
-- **Sub-context:** M1 Calculation Engine fully specified — 6 concern files + cross-file audit PASS (headless module: UI/mockup deferred to M2)
+- **Phase:** BUILD M1 (calculation engine) — Group 17 final verification
+- **Sub-context:** M1 Calculation Engine fully specified — 6 concern files + cross-file audit PASS; 78/80 active tasks done, 59 tests passing
 - **Last decision:** M1 stack = TypeScript + decimal.js + Vitest; repeated-equals dropped as out-of-scope (= twice = no-op); engine state = 5 fields
-- **Next step:** BUILD M1 — T-041 onwards (inputEquals tests + CE/AC handlers); 40 tasks done (T-001–T-040), 40 pending
+- **Next step:** T-081 [IN PROGRESS] tsc --noEmit, then T-082 vitest full suite
 
 ## STORM Config
 

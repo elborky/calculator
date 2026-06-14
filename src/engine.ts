@@ -223,6 +223,20 @@ export function inputOperator(state: EngineState, op: Operator): EngineState {
 }
 
 /**
+ * Handles the All Clear (AC) button press.
+ *
+ * Rules applied:
+ *   R-018 — AC = full reset to initial state: all 5 fields reset.
+ *
+ * AC always works — no error-guard, no conditions. Simply returns initialState().
+ *
+ * Never mutates state; always returns a new EngineState object.
+ */
+export function inputAllClear(_state: EngineState): EngineState {
+  return initialState();
+}
+
+/**
  * Handles the Clear Entry (CE) button press.
  *
  * Rules applied:

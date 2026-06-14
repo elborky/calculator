@@ -726,3 +726,20 @@ describe('overflow — Group 15 (E-006–E-008)', () => {
     expect(result.pendingOperator).toBeNull();
   });
 });
+
+describe('justEvaluated matrix — Group 16 (E-050–E-055)', () => {
+  it('operator after equals carries result forward as left operand (E-051) (T-078)', () => {
+    // 3 + 4 = 7 (justEvaluated=true), then press add
+    // → accumulator stays 7, pendingOperator='add', entryBuffer='0', justEvaluated=false
+    const s0 = initialState();
+    const s1 = inputDigit(s0, '3');
+    const s2 = inputOperator(s1, 'add');
+    const s3 = inputDigit(s2, '4');
+    const s4 = inputEquals(s3); // result=7, justEvaluated=true
+    const s5 = inputOperator(s4, 'add');
+    expect(s5.accumulator!.toString()).toBe('7');
+    expect(s5.pendingOperator).toBe('add');
+    expect(s5.entryBuffer).toBe('0');
+    expect(s5.justEvaluated).toBe(false);
+  });
+});

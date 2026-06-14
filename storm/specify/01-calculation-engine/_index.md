@@ -244,7 +244,7 @@ the one-module "dark stretch" that everything else builds on (`_briefing.md` —
 | # | Task | Done when |
 |---|---|---|
 | T-075 [DONE] | Write test `overflow on result exceeding configured bound (E-006)` — construct an operand that forces `errorState = 'overflow'` | 1 pass: `errorState` set. |
-| T-076 | Write test `very large but within bound is not an error (E-007)` | 1 pass: ERR null; result a large-but-valid Decimal. |
+| T-076 [DONE] | Write test `very large but within bound is not an error (E-007)` | 1 pass: ERR null; result a large-but-valid Decimal. |
 | T-077 | Write test `overflow via chained operator (E-008, D-011)` | 1 pass: chain auto-resolve that overflows sets ERR and does not accept new operator. |
 
 ---

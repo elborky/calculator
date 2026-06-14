@@ -697,4 +697,17 @@ describe('overflow — Group 15 (E-006–E-008)', () => {
     const result = inputEquals(state);
     expect(result.errorState).toBe('overflow');
   });
+
+  it('very large but within bound is not an error (E-007) (T-076)', () => {
+    // 1e+15 × 9 = 9e+15 — very large but within Decimal.maxE (9e+9000000000000000)
+    const state = {
+      ...initialState(),
+      accumulator: new Decimal('1e+15'),
+      pendingOperator: 'multiply' as const,
+      entryBuffer: '9',
+    };
+    const result = inputEquals(state);
+    expect(result.errorState).toBeNull();
+    expect(result.entryBuffer).not.toBe('');
+  });
 });

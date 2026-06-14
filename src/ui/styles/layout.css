@@ -1,0 +1,203 @@
+/* ============================================================ *
+ * M2 v3 — LAYOUT: aurora canvas, glass slab, display scrim     *
+ * Ported from mockup-v3.html. All theme colour via var(--token)*
+ * (UR-029). Structural blur/radius/shadow are tokens or noted  *
+ * structural literals.                                         *
+ * ============================================================ */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+  background: var(--bg-base);   /* aurora layers sit on top via ::before/::after */
+  overflow: hidden;
+  position: relative;
+}
+
+/* -------- ANIMATED AURORA CANVAS (T-124, T-136) -------- */
+/* layer 1: slow-drifting multi-stop aurora */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -30%;
+  z-index: 0;
+  background: var(--bg-aurora);
+  background-size: 200% 200%, 200% 200%, 200% 200%, 200% 200%, 100% 100%;
+  animation: auroraDrift 26s ease-in-out infinite alternate;
+  filter: saturate(125%);
+}
+/* layer 2: orbiting blurred light-blob — refraction colour behind glass */
+body::after {
+  content: "";
+  position: fixed;
+  top: 50%; left: 50%;
+  width: 420px; height: 420px;
+  margin: -210px 0 0 -210px;
+  z-index: 0;
+  border-radius: 50%;
+  background: var(--bg-blob);
+  filter: blur(40px);
+  animation: blobOrbit 18s linear infinite;
+}
+
+@keyframes auroraDrift {
+  0%   { background-position: 0% 0%, 100% 0%, 100% 100%, 0% 100%, 0 0; }
+  100% { background-position: 100% 50%, 0% 60%, 20% 0%, 80% 40%, 0 0; }
+}
+@keyframes blobOrbit {
+  0%   { transform: rotate(0deg)   translateX(120px) rotate(0deg); }
+  100% { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
+}
+
+/* fine grain/noise texture overlay — premium, not muddy */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+/* -------- LAYOUT: flex row reserves M3 history slot (T-175) -------- */
+.app-layout {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  width: 100%;
+  max-width: 640px;
+}
+/* reserved history aside (M3, F3) — laid out, empty in M2 */
+.history-slot {
+  width: 240px;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+/* -------- THE SCULPTURAL GLASS SLAB (T-125) -------- */
+.calc {
+  position: relative;
+  width: 100%;
+  max-width: 372px;
+  padding: 22px;
+  border-radius: var(--radius-body);
+  background: var(--glass-fill);
+  backdrop-filter: blur(var(--blur-body)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--blur-body)) saturate(160%);
+  border: 1px solid var(--glass-border);
+  /* layered elevation: outer float + coloured under-glow + inner sheen */
+  box-shadow:
+    0 30px 70px rgba(0, 0, 0, 0.45),
+    0 0 60px rgba(124, 92, 255, 0.22),       /* indigo under-glow bloom */
+    inset 0 1px 0 rgba(255, 255, 255, 0.40), /* top sheen */
+    inset 0 0 60px rgba(255, 255, 255, 0.04);/* inner frost */
+  transform: perspective(1400px) rotateX(2.2deg);  /* sculptural tilt (dropped on reduced-motion) */
+}
+/* chromatic top-edge sheen — extra glass-craft layer */
+.calc::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 12%; right: 12%;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, rgba(124, 92, 255, 0.7), rgba(255, 255, 255, 0.85), rgba(255, 94, 122, 0.7), transparent);
+  opacity: 0.8;
+}
+
+/* reserved theme-toggle corner (M4, F4) — kept clear (T-176) */
+.toggle-slot {
+  position: absolute;
+  top: 16px; right: 16px;
+  width: 38px; height: 22px;
+}
+
+/* -------- DISPLAY: recessed window + dark contrast scrim (T-127) -------- */
+.display {
+  position: relative;
+  min-height: 124px;
+  margin-bottom: 18px;
+  padding: 18px 20px;
+  border-radius: var(--radius-display);
+  background: var(--glass-fill-display);
+  backdrop-filter: blur(var(--blur-display)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--blur-display)) saturate(140%);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    inset 0 2px 14px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+/* THE A11Y GUARANTOR: near-opaque dark scrim so the readout never fights the
+   animated aurora for contrast (white on this ~17:1, AAA). */
+.display::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border-radius: 16px;
+  background: var(--display-scrim);
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.35);
+  z-index: 0;
+}
+.display > * { position: relative; z-index: 1; }
+
+/* pending-expression line (T-129) — space reserved, no layout jump */
+.pending-line {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--text-on-scrim-soft);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+  min-height: 1.2em;
+  letter-spacing: 0.02em;
+  text-align: right;
+  width: 100%;
+}
+.pending-line[hidden] { display: block; visibility: hidden; }  /* collapse value, keep space */
+
+/* primary readout (T-128) */
+.readout {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(2.6rem, 13vw, 4.2rem);
+  font-weight: 300;
+  color: var(--text-on-scrim);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.05;
+  text-align: right;
+  width: 100%;
+  word-break: break-word;       /* error sentence wraps, never overflows */
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
+}
+/* error rendering: colour + the words (not colour alone — UR-026); Group 9 wires the toggle */
+.readout.error {
+  color: var(--error);
+  font-size: clamp(1.4rem, 6vw, 2rem);
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+@keyframes resultRise {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* -------- backdrop-filter fallback — legibility never sacrificed (T-126) -------- */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .calc    { background: rgba(26, 18, 56, 0.88); }
+  .display { background: rgba(14, 10, 36, 0.92); }
+}

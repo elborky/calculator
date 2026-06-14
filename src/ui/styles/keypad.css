@@ -1,0 +1,136 @@
+/* ============================================================ *
+ * M2 v3 — KEYPAD: 4-col grid + glass keys (T-130..T-136)       *
+ * Ported from mockup-v3.html. Theme colour via var(--token).   *
+ * Focus ring + ≥64px targets = locked a11y floor (UR §6).      *
+ * ============================================================ */
+
+/* -------- 4-col grid, exact §3 layout (T-130, T-131) -------- */
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 12px;
+}
+
+/* -------- base glass key (T-132) -------- */
+.key {
+  min-height: 64px;             /* ≥64px tap target (above 44px WCAG floor) */
+  min-width: 64px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-btn);
+  background: var(--glass-fill);
+  backdrop-filter: blur(var(--blur-key)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--blur-key)) saturate(150%);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  font-size: 1.55rem;
+  font-weight: 500;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  transition: transform 80ms ease-out, background 120ms ease, box-shadow 150ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.key:hover {
+  background: var(--glass-fill-hover);
+  box-shadow:
+    0 6px 22px rgba(0, 0, 0, 0.28),
+    0 0 18px rgba(255, 255, 255, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.30);
+}
+
+.key:active {
+  transform: scale(0.96);
+  filter: brightness(1.12);
+}
+
+/* visible focus ring — accent, 3px solid + 3px offset (HARD FLOOR, T-169) */
+.key:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  z-index: 3;
+}
+
+/* util keys (AC / CE) — de-emphasized (T-135) */
+.key--util {
+  color: var(--text-secondary);
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+/* operator keys — coral fill + glyph + glow, not colour alone (T-133, UR-024) */
+.key--op {
+  background: linear-gradient(145deg, var(--operator-accent), #e0466a);
+  border-color: var(--glass-border-bright);
+  color: #fff;
+  font-size: 1.85rem;
+  font-weight: 500;
+  box-shadow:
+    0 6px 20px var(--operator-glow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  text-shadow: 0 1px 6px rgba(120, 0, 30, 0.4);
+}
+.key--op:hover {
+  background: linear-gradient(145deg, #ff7088, #e84d70);
+  box-shadow:
+    0 8px 28px var(--operator-glow),
+    0 0 22px var(--operator-glow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* equals — indigo fill + bloom, spans 2 rows, the commit action (T-131, T-134) */
+.key--equals {
+  grid-column: 4;
+  grid-row: 4 / span 2;
+  background: linear-gradient(155deg, var(--accent), #5a3ce0);
+  border-color: var(--glass-border-bright);
+  color: #fff;
+  font-size: 2.1rem;
+  font-weight: 500;
+  box-shadow:
+    0 8px 26px var(--accent-glow),
+    0 0 26px var(--accent-glow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  text-shadow: 0 1px 8px rgba(40, 0, 90, 0.5);
+}
+.key--equals:hover {
+  background: linear-gradient(155deg, #8b6cff, #6646e6);
+  box-shadow:
+    0 10px 34px var(--accent-glow),
+    0 0 38px var(--accent-glow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+/* zero — spans 2 cols, label left-aligned to echo digit column (T-131) */
+.key--zero {
+  grid-column: 1 / span 2;
+  justify-content: flex-start;
+  padding-left: 26px;
+}
+
+/* -------- responsive: phone = full-width, stacked, no tilt (T-173, T-174) -------- */
+@media (max-width: 640px) {
+  .app-layout { flex-direction: column; max-width: 420px; }
+  .history-slot { width: 100%; height: 0; }   /* M3 stacks on phone */
+  .calc {
+    max-width: 100%;
+    transform: none;                           /* drop tilt on phone */
+  }
+}
+
+/* -------- REDUCED MOTION (HARD FLOOR — T-172, not optional) -------- */
+@media (prefers-reduced-motion: reduce) {
+  body::before { animation: none; }
+  body::after  { animation: none; }
+  .readout     { animation: none; }
+  .key         { transition: background 1ms; }
+  .key:active  { transform: none; }
+  .calc        { transform: none; }            /* no tilt when motion reduced */
+}

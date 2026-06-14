@@ -1,0 +1,50 @@
+/* ============================================================ *
+ * M2 v3 WILDCARD DESIGN TOKENS (D-003 — the M4 swap surface)   *
+ * Ported from 04-ui/mockup-v3.html :root. Theme colours are    *
+ * custom properties so component rules reference var(--token)  *
+ * (UR-029) — M4 (F4) re-skins by swapping this layer.          *
+ * v3 intentionally departs from design-system §3 (owner pick); *
+ * M4 SPECIFY reconciles §3 tables to this baseline.            *
+ * ============================================================ */
+:root {
+  /* Accent system — vibrant indigo (equals) + hot coral-rose (operators) */
+  --accent:           #7c5cff;
+  --accent-glow:      rgba(124, 92, 255, 0.55);
+  --operator-accent:  #ff5e7a;
+  --operator-glow:    rgba(255, 94, 122, 0.50);
+  --error:            #ff8a8a;
+
+  /* Text — on the dark display scrim the readout is near-white for AA+ */
+  --text-on-scrim:        #ffffff;                 /* display number → ~17:1 on scrim */
+  --text-on-scrim-soft:   rgba(255, 255, 255, 0.66); /* pending line */
+  --text-primary:         #f4f2ff;                 /* digit button labels on glass */
+  --text-secondary:       rgba(244, 242, 255, 0.62); /* AC / CE labels */
+
+  /* Maximalist glass — layered, low-alpha light film over dark aurora */
+  --glass-fill:          rgba(255, 255, 255, 0.10);
+  --glass-fill-hover:    rgba(255, 255, 255, 0.17);
+  --glass-fill-display:  rgba(255, 255, 255, 0.05);
+  --glass-border:        rgba(255, 255, 255, 0.22);
+  --glass-border-bright: rgba(255, 255, 255, 0.45);
+
+  /* The dark contrast scrim under the display number — the a11y guarantor */
+  --display-scrim:       rgba(14, 10, 36, 0.78);
+
+  /* ---- Background / aurora gradient tokens (T-121, UR-029) ---- */
+  --bg-base:   #0a0820;
+  --bg-aurora:
+    radial-gradient(40% 50% at 20% 25%, #3a1d8a 0%, transparent 60%),
+    radial-gradient(45% 55% at 80% 20%, #b21e6e 0%, transparent 60%),
+    radial-gradient(50% 60% at 75% 80%, #1d4ed8 0%, transparent 62%),
+    radial-gradient(45% 50% at 25% 80%, #6d28d9 0%, transparent 60%),
+    linear-gradient(135deg, #160d3a 0%, #2a1052 50%, #3a0e44 100%);
+  --bg-blob:   radial-gradient(circle, rgba(255, 94, 122, 0.55) 0%, rgba(124, 92, 255, 0.4) 45%, transparent 70%);
+
+  /* ---- Glass-recipe structural tokens (T-122; structural literals per UR-029) ---- */
+  --radius-body:    30px;
+  --radius-display: 22px;
+  --radius-btn:     18px;
+  --blur-body:      22px;
+  --blur-display:   16px;
+  --blur-key:       10px;
+}

@@ -16,7 +16,10 @@ body {
   justify-content: center;
   padding: 32px 20px;
   background: var(--bg-base);   /* aurora layers sit on top via ::before/::after */
-  overflow: hidden;
+  /* T-177 — landscape-phone: overflow-y: auto so content scrolls, not clips.
+     body stays flex-centered on tall viewports; on short landscape it scrolls. */
+  overflow-x: hidden;
+  overflow-y: auto;
   position: relative;
 }
 
@@ -85,11 +88,11 @@ body::after {
   align-self: stretch;
 }
 
-/* -------- THE SCULPTURAL GLASS SLAB (T-125) -------- */
+/* -------- THE SCULPTURAL GLASS SLAB (T-125, T-173 — desktop max-width ~360px) -------- */
 .calc {
   position: relative;
   width: 100%;
-  max-width: 372px;
+  max-width: 360px;    /* T-173: ~360px desktop cap, centered by flex parent */
   padding: 22px;
   border-radius: var(--radius-body);
   background: var(--glass-fill);

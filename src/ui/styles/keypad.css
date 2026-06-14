@@ -130,6 +130,20 @@
     max-width: 100%;
     transform: none;                           /* drop tilt on phone */
   }
+  /* T-174 — phone touch targets: keys are already ≥64px (above 44px WCAG floor).
+     On narrow viewports the 4-col grid may compress; enforce 44px minimum per key. */
+  .key {
+    min-height: 44px;                          /* WCAG 2.5.5 floor — in practice keys stay ≥60px */
+    min-width: 44px;
+  }
+}
+
+/* T-177 — landscape phone: short viewport, content must scroll not clip.
+   body already has overflow-y: auto (layout.css). Padding ensures the slab
+   doesn't butt against the viewport edge in landscape. */
+@media (max-width: 640px) and (orientation: landscape) {
+  body { align-items: flex-start; padding: 16px 12px; }
+  .calc { max-width: 100%; }
 }
 
 /* -------- REDUCED MOTION (HARD FLOOR — T-172, a11y non-negotiable) --------

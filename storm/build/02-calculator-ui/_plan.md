@@ -114,11 +114,11 @@ storm-depends-on:
 - [DONE] T-172 — `prefers-reduced-motion` → instant
 
 ## Group 12 — Responsive layout + reserved M3/M4 slots
-- [PENDING] T-173 — body max-width 360px centered (desktop)
-- [PENDING] T-174 — phone layout (≤640px, ≥44px targets)
-- [PENDING] T-175 — flex container w/ reserved M3 history slot
-- [PENDING] T-176 — reserve top-right corner for M4 toggle
-- [PENDING] T-177 — landscape-phone reachable (scroll not clip)
+- [DONE] T-173 — body max-width 360px centered (desktop)
+- [DONE] T-174 — phone layout (≤640px, ≥44px targets)
+- [DONE] T-175 — flex container w/ reserved M3 history slot
+- [DONE] T-176 — reserve top-right corner for M4 toggle
+- [DONE] T-177 — landscape-phone reachable (scroll not clip)
 
 ## Group 13 — Fonts (self-hosted Inter, D-004)
 - [PENDING] T-178 — add Inter `.woff2` (300/400/500) to `src/ui/fonts/`

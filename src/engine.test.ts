@@ -628,6 +628,18 @@ describe('chaining and multi-operator — Group 13 (E-025–E-027)', () => {
   });
 });
 
+describe('negatives — Group 14 (E-041–E-044)', () => {
+  it('3 - 5 = -2 — negative result (E-041) (T-072)', () => {
+    const s0 = initialState();
+    const s1 = inputDigit(s0, '3');
+    const s2 = inputOperator(s1, 'subtract');
+    const s3 = inputDigit(s2, '5');
+    const s4 = inputEquals(s3);
+    expect(s4.entryBuffer).toBe('-2');
+    expect(s4.errorState).toBeNull();
+  });
+});
+
 describe('getDisplayValue — error states', () => {
   it('returns errorState tag when error is set (T-063)', () => {
     // Scenario 1: divide-by-zero error state

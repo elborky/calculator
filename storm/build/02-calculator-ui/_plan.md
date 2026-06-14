@@ -20,7 +20,7 @@ storm-depends-on:
 ## Group 0 — Vite scaffold over the existing M1 package
 - [DONE] T-101 — add `vite@8.0.16` dev-dependency to root `package.json`
 - [DONE] T-102 — add `"dev": "vite"` script
-- [PENDING] T-103 — add `"build": "tsc --noEmit && vite build"` script
+- [DONE] T-103 — add `"build": "tsc --noEmit && vite build"` script
 - [PENDING] T-104 — add `"preview": "vite preview"` script
 - [PENDING] T-105 — create `vite.config.ts` (minimal, default root, default dist)
 - [PENDING] T-106 — create `index.html` with `#app` mount + module script

@@ -6,17 +6,9 @@ storm-canonical: true
 
 # Braindump — Calculator
 
-> Human-led. No filter. Pour everything here — features, feelings, half-baked ideas, problems to solve, "wouldn't it be cool if…"
-> AI will not interrupt during this phase. Write freely.
-> When done, run `/storm-capture` to start the structured intake.
+## Owner input (2026-06-14, Raw Branch Mode A passive-listen)
 
-## Instructions
-
-- Write as if explaining to a friend — no tech jargon required
-- Include the PROBLEM you're solving, not just the solution
-- Mention who would use this and when
-- List anything you definitely want AND anything you're unsure about
-
----
-
-*Waiting for your first idea...*
+- **Product:** web-based calculator
+- **Complexity:** intentionally simple — bukan poin utamanya
+- **Real goal:** field-test the STORM framework end-to-end — exercise every phase (CAPTURE → SHIP) on a small, low-risk product
+- **Design intent (owner verbatim):** "calculator app yang simple aja, tapi secara design ga bosenin" — simple in function, but the visual design must NOT be boring / generic. Visual appeal matters.

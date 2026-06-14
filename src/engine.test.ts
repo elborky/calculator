@@ -453,4 +453,22 @@ describe('inputAllClear', () => {
     expect(s4.justEvaluated).toBe(false);
     expect(s4.errorState).toBeNull();
   });
+
+  it('escapes error latch — AC clears overflow errorState, all fields reset (E-034, R-015) (T-059)', () => {
+    // Construct a dirty state with errorState: 'overflow'
+    const dirtyState = {
+      entryBuffer: '9999',
+      accumulator: new Decimal('1e100'),
+      pendingOperator: 'multiply' as const,
+      justEvaluated: true,
+      errorState: 'overflow' as const,
+    };
+    const s = inputAllClear(dirtyState);
+
+    expect(s.entryBuffer).toBe('0');
+    expect(s.accumulator).toBeNull();
+    expect(s.pendingOperator).toBeNull();
+    expect(s.justEvaluated).toBe(false);
+    expect(s.errorState).toBeNull();
+  });
 });

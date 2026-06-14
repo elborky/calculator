@@ -336,4 +336,24 @@ describe('inputEquals', () => {
     expect(s4.entryBuffer).toBe('0');
     expect(s4.justEvaluated).toBe(true);
   });
+
+  it('equals after equals is no-op — 3+4==→7 (E-022/E-053, D-017) (T-050)', () => {
+    // Sequence: digit '3' → op 'add' → digit '4' → equals (result 7) → equals AGAIN
+    const s0 = initialState();
+    const s1 = inputDigit(s0, '3');
+    const s2 = inputOperator(s1, 'add');
+    const s3 = inputDigit(s2, '4');
+    const s4 = inputEquals(s3); // first equals: result 7, justEvaluated=true
+
+    expect(s4.entryBuffer).toBe('7');
+    expect(s4.justEvaluated).toBe(true);
+
+    const s5 = inputEquals(s4); // second equals: must be a no-op
+
+    // D-017: 5-field model has no lastOperator/lastRhs — repeated equals returns state unchanged
+    expect(s5).toBe(s4); // same reference — guard returns state directly
+    expect(s5.entryBuffer).toBe('7');
+    expect(s5.justEvaluated).toBe(true);
+    expect(s5.errorState).toBeNull();
+  });
 });

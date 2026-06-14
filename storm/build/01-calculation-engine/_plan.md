@@ -46,7 +46,7 @@ storm-depends-on:
 
 | # | Task | Status |
 |---|---|---|
-| T-013 | Implement `inputDigit(state, digit)` in `src/engine.ts` | [PENDING] |
+| T-013 | Implement `inputDigit(state, digit)` in `src/engine.ts` | [DONE] |
 | T-014 | Test: `inputDigit — appends digit normally` | [PENDING] |
 | T-015 | Test: `inputDigit — leading-zero replacement (R-025, E-037)` | [PENDING] |
 | T-016 | Test: `inputDigit — double-zero stays "0" (E-037)` | [PENDING] |

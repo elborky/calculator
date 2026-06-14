@@ -98,7 +98,7 @@ storm-depends-on:
 | T-042 | Test: `inputEquals — no pending operator is no-op (E-020, R-006)` | [DONE] |
 | T-043 | Test: `inputEquals — fresh state equals gives 0 (E-021)` | [DONE] |
 | T-044 | Test: `inputEquals — negative result (E-041, R-021): 3 - 5 = -2` | [DONE] |
-| T-045 | Test: `inputEquals — divide by zero sets errorState (E-001, R-010)` | [PENDING] |
+| T-045 | Test: `inputEquals — divide by zero sets errorState (E-001, R-010)` | [DONE] |
 | T-046 | Test: `inputEquals — no-op in error state (E-023)` | [PENDING] |
 | T-047 | Test: `inputEquals — zero result is not error (E-024, E-039)` | [PENDING] |
 

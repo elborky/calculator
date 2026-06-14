@@ -298,4 +298,17 @@ describe('inputEquals', () => {
     expect(s4.justEvaluated).toBe(true);
     expect(s4.errorState).toBeNull();
   });
+
+  it('divide by zero sets errorState (E-001, R-010) (T-045)', () => {
+    // Sequence: digit '5' → op 'divide' → equals
+    // After pressing 'divide', entryBuffer resets to '0'.
+    // Pressing equals resolves 5 ÷ 0 → divide-by-zero error.
+    const s0 = initialState();
+    const s1 = inputDigit(s0, '5');
+    const s2 = inputOperator(s1, 'divide');
+    // s2.entryBuffer === '0' (right operand is zero — no further input needed)
+    const s3 = inputEquals(s2);
+
+    expect(s3.errorState).toBe('divide-by-zero');
+  });
 });

@@ -58,7 +58,7 @@ storm-depends-on:
 | # | Task | Status |
 |---|---|---|
 | T-019 | Implement `inputDecimal(state)` in `src/engine.ts` | [DONE] |
-| T-020 | Test: `inputDecimal — appends decimal (E-011)` | [PENDING] |
+| T-020 | Test: `inputDecimal — appends decimal (E-011)` | [DONE] |
 | T-021 | Test: `inputDecimal — second decimal no-op (E-009, E-010)` | [PENDING] |
 | T-022 | Test: `inputDecimal — fresh "0." after justEvaluated (E-013)` | [PENDING] |
 | T-023 | Test: `inputDecimal — no-op in error state (E-014)` | [PENDING] |

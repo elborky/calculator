@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { initialState, inputDigit } from './engine';
+import { initialState, inputDigit, inputDecimal } from './engine';
 import { Decimal } from './decimal-config';
 
 describe('initialState', () => {
@@ -67,5 +67,13 @@ describe('inputDigit', () => {
     // State must be completely unchanged
     expect(state.entryBuffer).toBe('Error');
     expect(state.errorState).toBe('divide-by-zero');
+  });
+});
+
+describe('inputDecimal', () => {
+  it('appends decimal to buffer (E-011 happy path) (T-020)', () => {
+    // Fresh state has entryBuffer: '0'; pressing decimal produces '0.'
+    const state = inputDecimal(initialState());
+    expect(state.entryBuffer).toBe('0.');
   });
 });

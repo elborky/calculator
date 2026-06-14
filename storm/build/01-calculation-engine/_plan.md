@@ -23,7 +23,7 @@ storm-depends-on:
 | T-002 | Create `tsconfig.json` (strict, ESNext, moduleResolution:bundler, noEmit) | [DONE] |
 | T-003 | Install `typescript@6.0.3`, `decimal.js@10.6.0`, `vitest@4.1.8` | [DONE] |
 | T-004 | Create `vitest.config.ts` (minimal, globals:true optional) | [DONE] |
-| T-005 | Create placeholder `src/engine.ts` (empty named export stub) | [PENDING] |
+| T-005 | Create placeholder `src/engine.ts` (empty named export stub) | [DONE] |
 
 ## Group 1 — State type definitions
 

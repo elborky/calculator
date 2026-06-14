@@ -168,3 +168,20 @@ wrong layer, or M2 tasks risk re-opening what is an M1 concern. The explicit dec
 drifts. Consistent with F5 ("M1 surfaces, M2 renders") and `01-data-model.md §42-46`. The visible-
 precision taste slice (OQ1) is deferred to M2.
 **Source:** `03-rules.md` R-024, §11.
+
+---
+
+> Edge-cases decisions (CP-7 autonomous — boundary behaviour choices surfaced during enumeration).
+> Authoritative rationale lives in `05-edge-cases.md`; this is the index.
+
+## D-015 — Repeated equals re-applies last operator + last right-hand operand
+
+**Decision:** When `=` is pressed while `justEvaluated = true`, the engine re-applies the last resolved
+operator to the current result using the same right-hand operand from the prior evaluation. Each subsequent
+`=` repeats the same (operator, rhs) pair. Example: `3 + 4 = = =` → 7, 11, 15.
+**Rationale:** Standard basic-calculator "chained equals" convention — the most common expectation for
+repeated `=` presses. The alternative (no-op) would violate the principle of least surprise. The engine
+must retain the last rhs and last operator post-evaluation to support this; exact encoding is a BUILD
+implementation detail. No scope creep — repeated `=` is inherent to the "resolve pending operation"
+contract (F3) applied idempotently.
+**Source:** `05-edge-cases.md` E-022, E-053.

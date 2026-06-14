@@ -62,9 +62,9 @@ storm-depends-on:
 - [DONE] T-136 — v3 signature effects (aurora drift, glow, sheen)
 
 ## Group 4 — M1 import + held-state wiring (INT-1)
-- [PENDING] T-137 — `src/ui/state.ts` import M1 public API
-- [PENDING] T-138 — single held `let state: EngineState = initialState()`
-- [PENDING] T-139 — `dispatch(fn)` replace-cell + render helper
+- [DONE] T-137 — `src/ui/state.ts` import M1 public API
+- [DONE] T-138 — single held `let state: EngineState = initialState()`
+- [DONE] T-139 — `dispatch(fn)` replace-cell + render helper
 
 ## Group 5 — Operator/glyph/key map constant (INT-5)
 - [PENDING] T-140 — `src/ui/operator-map.ts` key→Operator frozen map

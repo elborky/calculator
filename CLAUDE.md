@@ -2,10 +2,10 @@
 
 ## Current State
 
-- **Phase:** BUILD M1 complete → next is REVIEW M1
-- **Sub-context:** M1 Calculation Engine built — 80/80 active tasks DONE, tsc clean, 59 tests green (0 failures)
-- **Last decision:** M1 stack = TypeScript + decimal.js + Vitest; repeated-equals dropped (= twice = no-op); engine state = 5 fields; overflow bound = toExpPos:21/toExpNeg:-7
-- **Next step:** Run `/storm-review` for M1 (Calculation Engine)
+- **Phase:** REVIEW M1 PASS → next is SPECIFY M2 (UI)
+- **Sub-context:** M1 Calculation Engine reviewed (L7+L8) — PASS. L8-01 P1 bug fixed (digit-after-equals now nulls accumulator, D-009). 61 tests green, tsc clean.
+- **Last decision:** M1 overflow bound corrected — `toExpPos:21` is display-notation only; real overflow guard = `!isFinite()` at `Decimal.maxE` (L8-02). Engine state stays 5 fields.
+- **Next step:** Run `/storm-specify 02` for M2 (UI module)
 
 ## STORM Config
 

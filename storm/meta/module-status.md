@@ -7,3 +7,4 @@
 
 | Module | Slug | Phase | Staging SHA | Prod SHA | SHIP date | Notes |
 |---|---|---|---|---|---|---|
+| M1 Calculation Engine | 01-calculation-engine | REVIEW-PASS | (exit marker below) | — | — | Pure headless TS library — no deploy surface (M2 will bundle). L7+L8 PASS; L8-01 P1 bug fixed (660d26b). 61 tests green. |

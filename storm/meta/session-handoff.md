@@ -7,6 +7,35 @@
 
 <!-- NEWEST ENTRY BELOW THIS LINE -->
 
+## [2026-06-15 00:03] — BUILD M1 complete / next REVIEW M1 — anchor: 35045c5
+
+- ✅ **Done this session:**
+  - BUILD phase entered for M1 (Calculation Engine). Build plan drafted — 78 active tasks across 18 groups (Groups 0–17) in `storm/build/01-calculation-engine/_plan.md` — commit 87ed4e1.
+  - All 79 task commits executed (T-001 through T-082; T-048, T-049, T-079 = SKIP per D-017 + plan notes):
+    - **Group 0 (scaffold):** `package.json` (ESM), `tsconfig.json` (strict/ESNext), deps installed (`typescript@6.0.3`, `decimal.js@10.6.0`, `vitest@4.1.8`), `vitest.config.ts`, `src/engine.ts` stub — T-001–T-005
+    - **Group 1 (types):** `Operator`, `ErrorTag`, `EngineState` (5 fields), `initialState()` factory + test — T-006–T-010
+    - **Group 2 (decimal.js config):** `src/decimal-config.ts` (precision:21, overflow-bound knob) + correctness test — T-011–T-012
+    - **Groups 3–4 (digit/decimal input):** `inputDigit` + `inputDecimal` impls + 9 tests (leading-zero, dup-dot, JE-reset, error no-op) — T-013–T-024
+    - **Group 5 (resolve helper):** `resolveOperation` impl + 6 tests (4 ops, div-by-zero, "0.0" divisor) — T-025–T-031
+    - **Group 6 (operator input):** `inputOperator` impl + 7 tests (chain LTR, op-swap, op-first, error no-op) — T-032–T-039
+    - **Group 7 (equals):** `inputEquals` impl + 7 tests (normal, no-op, fresh state, negatives, div-by-zero, error no-op, zero result) — T-040–T-047
+    - **Group 8 (equals-after-equals):** T-048/T-049 SKIP; T-050–T-051 — equals-after-equals no-op tests (D-017) — T-050–T-051
+    - **Groups 9–10 (clear entry / all clear):** `inputClearEntry` + `inputAllClear` impls + 7 tests (buffer reset, error latch escape, AC full reset) — T-052–T-060
+    - **Group 11 (display API):** `getDisplayValue` impl + 2 tests (entryBuffer / errorState tag) — T-061–T-063
+    - **Groups 12–16 (edge-case batches):** 17 tests — decimal.js correctness (E-045–E-049), LTR chaining (E-025–E-027), negatives (E-041–E-043), overflow (E-006–E-008), justEvaluated matrix (E-051, E-055); T-079 SKIP — T-064–T-080
+    - **Group 17 (final checks):** `tsc --noEmit` PASS (zero type errors), `vitest run` PASS — 59 tests, 0 failures — T-081–T-082
+  - Module-exit marker committed — commit 35045c5: `storm:BUILD:calc-engine:: - module complete, ready for REVIEW`
+  - CLAUDE.md updated to `BUILD M1 complete → next REVIEW M1` (80/80 active tasks DONE, tsc clean, 59 tests green).
+
+- 🔒 **Decided:**
+  - **Overflow bound = `toExpPos:21` / `toExpNeg:-7` in `decimal-config.ts`** — this is the effective display-level overflow guard; `decimal.js` `isFinite()` / `maxE` is the internal guard used in `resolveOperation`. Documented in T-075 context and exit-marker commit body.
+  - **T-048 / T-049 confirmed SKIP** — repeated-equals originally planned tasks; dropped because D-017 (equals-after-equals = no-op) was fully covered by T-050 / T-051 and the implementation.
+  - **_plan.md stale-status reconciled at session exit** — during execution the batched multi-task sub-agents left 38 task rows marked [PENDING] / 1 [IN PROGRESS] in the plan file, while git had all 80 task commits + 59 green tests. The orchestrator reconciled `_plan.md` against git ground truth at exit (all 80 task rows → [DONE]; legend line + 4 [SKIP] preserved). Resolved, not carried forward — recovery cross-check will read clean next session.
+
+- ⏳ **Pending — needs YOUR decision:** none. All owner-authority decisions resolved. Outbox (session-delta.md) is stale from prior session (SPECIFY M1); no new verbal-only items this session.
+
+- ➡️ **Next:** Run `/storm-review` for M1 (Calculation Engine). Scope: verify `src/engine.ts` + `src/types.ts` + `src/decimal-config.ts` + test suite against the M1 spec (`storm/specify/01-calculation-engine/`).
+
 ## [2026-06-14 22:17] — SPECIFY M1 complete / next BUILD M1 — anchor: a06e144
 
 > `[written by main context]` — fresh sub-agent dispatch failed (API error: 1M-context usage

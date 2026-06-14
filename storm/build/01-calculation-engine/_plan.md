@@ -81,13 +81,13 @@ storm-depends-on:
 | # | Task | Status |
 |---|---|---|
 | T-032 | Implement `inputOperator(state, op)` in `src/engine.ts` | [DONE] |
-| T-033 | Test: `inputOperator — first op commits buffer to accumulator` | [PENDING] |
-| T-034 | Test: `inputOperator — operator-first uses implicit 0 (E-015, D-010)` | [PENDING] |
-| T-035 | Test: `inputOperator — operator-swap same op no-resolve (E-016)` | [PENDING] |
-| T-036 | Test: `inputOperator — operator-swap different op (E-017)` | [PENDING] |
-| T-037 | Test: `inputOperator — chaining auto-resolves left-to-right (E-018, R-004)` | [PENDING] |
-| T-038 | Test: `inputOperator — chaining div-by-zero sets error (D-011, E-002)` | [PENDING] |
-| T-039 | Test: `inputOperator — no-op in error state (E-019)` | [PENDING] |
+| T-033 | Test: `inputOperator — first op commits buffer to accumulator` | [DONE] |
+| T-034 | Test: `inputOperator — operator-first uses implicit 0 (E-015, D-010)` | [DONE] |
+| T-035 | Test: `inputOperator — operator-swap same op no-resolve (E-016)` | [DONE] |
+| T-036 | Test: `inputOperator — operator-swap different op (E-017)` | [DONE] |
+| T-037 | Test: `inputOperator — chaining auto-resolves left-to-right (E-018, R-004)` | [DONE] |
+| T-038 | Test: `inputOperator — chaining div-by-zero sets error (D-011, E-002)` | [DONE] |
+| T-039 | Test: `inputOperator — no-op in error state (E-019)` | [DONE] |
 
 ## Group 7 — Equals handler
 
@@ -108,77 +108,77 @@ storm-depends-on:
 |---|---|---|
 | T-048 | *(removed — repeated-equals dropped, D-017)* | [SKIP] |
 | T-049 | *(removed — repeated-equals dropped, D-017)* | [SKIP] |
-| T-050 | Test: `inputEquals — equals after equals is no-op (E-022/E-053, D-017): 3+4==→7` | [PENDING] |
-| T-051 | Test: `inputEquals — multiple repeated equals no-op: 3+4===→7` | [PENDING] |
+| T-050 | Test: `inputEquals — equals after equals is no-op (E-022/E-053, D-017): 3+4==→7` | [DONE] |
+| T-051 | Test: `inputEquals — multiple repeated equals no-op: 3+4===→7` | [DONE] |
 
 ## Group 9 — Clear-entry (CE) handler
 
 | # | Task | Status |
 |---|---|---|
-| T-052 | Implement `inputClearEntry(state)` in `src/engine.ts` | [PENDING] |
-| T-053 | Test: `inputClearEntry — resets buffer, preserves pending op (E-029)` | [PENDING] |
-| T-054 | Test: `inputClearEntry — escapes error latch (E-032, R-015)` | [PENDING] |
-| T-055 | Test: `inputClearEntry — from mid-first-operand, accumulator stays null (E-028)` | [PENDING] |
-| T-056 | Test: `inputClearEntry — CE then equals uses 0 as right operand (E-058)` | [PENDING] |
+| T-052 | Implement `inputClearEntry(state)` in `src/engine.ts` | [DONE] |
+| T-053 | Test: `inputClearEntry — resets buffer, preserves pending op (E-029)` | [DONE] |
+| T-054 | Test: `inputClearEntry — escapes error latch (E-032, R-015)` | [DONE] |
+| T-055 | Test: `inputClearEntry — from mid-first-operand, accumulator stays null (E-028)` | [DONE] |
+| T-056 | Test: `inputClearEntry — CE then equals uses 0 as right operand (E-058)` | [DONE] |
 
 ## Group 10 — All-clear (AC) handler
 
 | # | Task | Status |
 |---|---|---|
-| T-057 | Implement `inputAllClear(state)` in `src/engine.ts` | [PENDING] |
-| T-058 | Test: `inputAllClear — full reset from mid-expression (E-033)` | [PENDING] |
-| T-059 | Test: `inputAllClear — escapes error latch (E-034, R-015)` | [PENDING] |
-| T-060 | Test: `inputAllClear — no residual after AC (E-059)` | [PENDING] |
+| T-057 | Implement `inputAllClear(state)` in `src/engine.ts` | [DONE] |
+| T-058 | Test: `inputAllClear — full reset from mid-expression (E-033)` | [DONE] |
+| T-059 | Test: `inputAllClear — escapes error latch (E-034, R-015)` | [DONE] |
+| T-060 | Test: `inputAllClear — no residual after AC (E-059)` | [DONE] |
 
 ## Group 11 — Public API & display value
 
 | # | Task | Status |
 |---|---|---|
-| T-061 | Define `getDisplayValue(state)` in `src/engine.ts` | [PENDING] |
-| T-062 | Test: `getDisplayValue — returns entryBuffer in normal states` | [PENDING] |
-| T-063 | Test: `getDisplayValue — returns errorState tag when error set` | [PENDING] |
+| T-061 | Define `getDisplayValue(state)` in `src/engine.ts` | [DONE] |
+| T-062 | Test: `getDisplayValue — returns entryBuffer in normal states` | [DONE] |
+| T-063 | Test: `getDisplayValue — returns errorState tag when error set` | [DONE] |
 
 ## Group 12 — Edge-case batch: decimal.js correctness (E-045–E-049)
 
 | # | Task | Status |
 |---|---|---|
-| T-064 | Test: `0.1 + 0.2 = 0.3 via engine (E-045)` | [PENDING] |
-| T-065 | Test: `0.3 - 0.2 = 0.1 via engine (E-046)` | [PENDING] |
-| T-066 | Test: `0.1 × 0.2 = 0.02 via engine (E-047)` | [PENDING] |
-| T-067 | Test: `1 ÷ 3 finite, no error (E-048)` | [PENDING] |
-| T-068 | Test: `0.1 + 0.2 - 0.3 = 0 exactly (E-049)` | [PENDING] |
+| T-064 | Test: `0.1 + 0.2 = 0.3 via engine (E-045)` | [DONE] |
+| T-065 | Test: `0.3 - 0.2 = 0.1 via engine (E-046)` | [DONE] |
+| T-066 | Test: `0.1 × 0.2 = 0.02 via engine (E-047)` | [DONE] |
+| T-067 | Test: `1 ÷ 3 finite, no error (E-048)` | [DONE] |
+| T-068 | Test: `0.1 + 0.2 - 0.3 = 0 exactly (E-049)` | [DONE] |
 
 ## Group 13 — Edge-case batch: chaining (E-025–E-027)
 
 | # | Task | Status |
 |---|---|---|
-| T-069 | Test: `2 + 3 × 4 = 20 left-to-right (E-025, R-004)` | [PENDING] |
-| T-070 | Test: `1 + 1 + 1 + 1 = 4 (E-026)` | [PENDING] |
-| T-071 | Test: `10 ÷ 2 + 3 = 8 (E-027)` | [PENDING] |
+| T-069 | Test: `2 + 3 × 4 = 20 left-to-right (E-025, R-004)` | [DONE] |
+| T-070 | Test: `1 + 1 + 1 + 1 = 4 (E-026)` | [DONE] |
+| T-071 | Test: `10 ÷ 2 + 3 = 8 (E-027)` | [DONE] |
 
 ## Group 14 — Edge-case batch: negatives (E-041–E-044)
 
 | # | Task | Status |
 |---|---|---|
-| T-072 | Test: `3 - 5 = -2 (E-041)` | [PENDING] |
-| T-073 | Test: `3 - 5 = + 10 = 8 (E-042)` | [PENDING] |
-| T-074 | Test: `1 - 1 - 1 = -1 (E-043)` | [PENDING] |
+| T-072 | Test: `3 - 5 = -2 (E-041)` | [DONE] |
+| T-073 | Test: `3 - 5 = + 10 = 8 (E-042)` | [DONE] |
+| T-074 | Test: `1 - 1 - 1 = -1 (E-043)` | [DONE] |
 
 ## Group 15 — Edge-case batch: overflow (E-006–E-008)
 
 | # | Task | Status |
 |---|---|---|
-| T-075 | Test: `overflow sets errorState (E-006)` | [PENDING] |
-| T-076 | Test: `large-but-valid result is not error (E-007)` | [PENDING] |
-| T-077 | Test: `overflow via chained op (E-008, D-011)` | [PENDING] |
+| T-075 | Test: `overflow sets errorState (E-006)` | [DONE] |
+| T-076 | Test: `large-but-valid result is not error (E-007)` | [DONE] |
+| T-077 | Test: `overflow via chained op (E-008, D-011)` | [DONE] |
 
 ## Group 16 — Edge-case batch: justEvaluated matrix (E-050–E-055)
 
 | # | Task | Status |
 |---|---|---|
-| T-078 | Test: `operator after equals carries result forward (E-051)` | [PENDING] |
+| T-078 | Test: `operator after equals carries result forward (E-051)` | [DONE] |
 | T-079 | *(covered by T-050/T-051 — E-053 no-op asserted there; no duplicate)* | [SKIP] |
-| T-080 | Test: `AC after equals gives full reset (E-055, E-035)` | [PENDING] |
+| T-080 | Test: `AC after equals gives full reset (E-055, E-035)` | [DONE] |
 
 ## Group 17 — Final check
 

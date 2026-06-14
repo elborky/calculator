@@ -102,4 +102,14 @@ describe('inputDecimal', () => {
     expect(state.entryBuffer).toBe('Error');
     expect(state.errorState).toBe('divide-by-zero');
   });
+
+  it('leading decimal entry-point from initialState produces "0." (E-011) (T-024)', () => {
+    // E-011: pressing decimal as the very first input (leading decimal)
+    // initialState() guarantees entryBuffer: '0' — the canonical entry-point scenario
+    const fresh = initialState();
+    expect(fresh.entryBuffer).toBe('0'); // pre-condition: entry-point confirmed
+    const state = inputDecimal(fresh);
+    // Leading decimal must produce '0.' — never bare '.'
+    expect(state.entryBuffer).toBe('0.');
+  });
 });

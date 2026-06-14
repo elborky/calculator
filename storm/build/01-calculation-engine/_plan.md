@@ -62,7 +62,7 @@ storm-depends-on:
 | T-021 | Test: `inputDecimal — second decimal no-op (E-009, E-010)` | [DONE] |
 | T-022 | Test: `inputDecimal — fresh "0." after justEvaluated (E-013)` | [DONE] |
 | T-023 | Test: `inputDecimal — no-op in error state (E-014)` | [DONE] |
-| T-024 | Test: `inputDecimal — leading decimal from fresh state → "0." (E-011)` | [PENDING] |
+| T-024 | Test: `inputDecimal — leading decimal from fresh state → "0." (E-011)` | [DONE] |
 
 ## Group 5 — Arithmetic resolve helper
 

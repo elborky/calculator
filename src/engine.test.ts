@@ -93,4 +93,13 @@ describe('inputDecimal', () => {
     // Flag must be cleared
     expect(state.justEvaluated).toBe(false);
   });
+
+  it('no-op in error state (E-014) (T-023)', () => {
+    // Error state: divide-by-zero; decimal press must not change anything
+    const errorState = { ...initialState(), entryBuffer: 'Error', errorState: 'divide-by-zero' as const };
+    const state = inputDecimal(errorState);
+    // State must be completely unchanged
+    expect(state.entryBuffer).toBe('Error');
+    expect(state.errorState).toBe('divide-by-zero');
+  });
 });

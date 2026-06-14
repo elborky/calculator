@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { initialState, inputDigit, inputDecimal, inputOperator, inputEquals, inputClearEntry, inputAllClear, resolveOperation } from './engine';
+import { initialState, inputDigit, inputDecimal, inputOperator, inputEquals, inputClearEntry, inputAllClear, resolveOperation, getDisplayValue } from './engine';
 import { Decimal } from './decimal-config';
 
 describe('initialState', () => {
@@ -488,5 +488,24 @@ describe('inputAllClear', () => {
     expect(s.pendingOperator).toBeNull();
     expect(s.justEvaluated).toBe(false);
     expect(s.errorState).toBeNull();
+  });
+});
+
+describe('getDisplayValue — normal states', () => {
+  it('returns entryBuffer in normal states (T-062)', () => {
+    // Scenario 1: initialState → '0'
+    const s0 = initialState();
+    expect(getDisplayValue(s0)).toBe('0');
+
+    // Scenario 2: after digit '7' pressed → '7'
+    const s1 = inputDigit(initialState(), '7');
+    expect(getDisplayValue(s1)).toBe('7');
+
+    // Scenario 3: after 3 + 4 = → '7' (result now in entryBuffer)
+    const s2a = inputDigit(initialState(), '3');
+    const s2b = inputOperator(s2a, 'add');
+    const s2c = inputDigit(s2b, '4');
+    const s2d = inputEquals(s2c);
+    expect(getDisplayValue(s2d)).toBe('7');
   });
 });

@@ -80,7 +80,7 @@ storm-depends-on:
 
 | # | Task | Status |
 |---|---|---|
-| T-032 | Implement `inputOperator(state, op)` in `src/engine.ts` | [PENDING] |
+| T-032 | Implement `inputOperator(state, op)` in `src/engine.ts` | [DONE] |
 | T-033 | Test: `inputOperator — first op commits buffer to accumulator` | [PENDING] |
 | T-034 | Test: `inputOperator — operator-first uses implicit 0 (E-015, D-010)` | [PENDING] |
 | T-035 | Test: `inputOperator — operator-swap same op no-resolve (E-016)` | [PENDING] |

@@ -140,3 +140,84 @@ export function inputDecimal(state: EngineState): EngineState {
   // Normal append (covers E-011: '0' → '0.')
   return { ...state, entryBuffer: state.entryBuffer + '.' };
 }
+
+/**
+ * Handles an operator button press ('+', '−', '×', '÷').
+ *
+ * Rules applied (in order):
+ *   R-014 / E-019  — error no-op: if errorState is set, return state unchanged.
+ *   E-015 / D-010  — operator-first implicit 0: if accumulator is null, commit entryBuffer
+ *                    to accumulator (covers both "0 +" and "5 +" first-press cases).
+ *   E-016 / E-017  — operator-swap: if accumulator is set, pendingOperator is set, and no
+ *                    right operand has been entered yet (entryBuffer === '0' && !justEvaluated),
+ *                    just replace the pendingOperator without resolving.
+ *   R-004 / E-018  — left-to-right chaining: if accumulator and pendingOperator are both set
+ *                    and a right operand exists, resolve the pending operation first, then set
+ *                    the new operator.
+ *   D-011          — on chaining error, do NOT set the new operator.
+ *
+ * Never mutates state; always returns a new EngineState object.
+ */
+export function inputOperator(state: EngineState, op: Operator): EngineState {
+  // R-014 / E-019 — error no-op
+  if (state.errorState !== null) {
+    return state;
+  }
+
+  if (state.accumulator === null) {
+    // First operator press (or operator-first D-010/E-015):
+    // commit the current entryBuffer as the left operand.
+    return {
+      ...state,
+      accumulator: new Decimal(state.entryBuffer),
+      pendingOperator: op,
+      entryBuffer: '0',
+      justEvaluated: false,
+    };
+  }
+
+  if (state.pendingOperator === null) {
+    // accumulator exists but no pending op — just set it (guard case)
+    return {
+      ...state,
+      pendingOperator: op,
+      entryBuffer: '0',
+      justEvaluated: false,
+    };
+  }
+
+  // accumulator and pendingOperator both set
+  if (state.entryBuffer === '0' && !state.justEvaluated) {
+    // E-016 / E-017 — operator-swap: no right operand entered yet
+    return {
+      ...state,
+      pendingOperator: op,
+    };
+  }
+
+  // R-004 / E-018 — resolve left-to-right, then set new operator
+  const result = resolveOperation(
+    state.accumulator,
+    state.pendingOperator,
+    new Decimal(state.entryBuffer),
+  );
+
+  if (typeof result === 'string') {
+    // Error result (ErrorTag) — D-011: do NOT set new operator
+    return {
+      ...state,
+      errorState: result,
+      pendingOperator: null,
+      entryBuffer: '0',
+    };
+  }
+
+  // Successful resolve — chain with new operator
+  return {
+    ...state,
+    accumulator: result,
+    pendingOperator: op,
+    entryBuffer: '0',
+    justEvaluated: false,
+  };
+}

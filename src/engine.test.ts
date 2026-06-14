@@ -32,4 +32,11 @@ describe('inputDigit', () => {
     const state2 = inputDigit(state1, '3');
     expect(state2.entryBuffer).toBe('53');
   });
+
+  it('leading-zero replacement — non-zero digit replaces "0", not appends (R-025, E-037) (T-015)', () => {
+    // Buffer starts at '0' (initial state)
+    const state = inputDigit(initialState(), '7');
+    // Must be '7', not '07'
+    expect(state.entryBuffer).toBe('7');
+  });
 });

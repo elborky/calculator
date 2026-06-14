@@ -121,10 +121,10 @@ storm-depends-on:
 - [DONE] T-177 — landscape-phone reachable (scroll not clip)
 
 ## Group 13 — Fonts (self-hosted Inter, D-004)
-- [PENDING] T-178 — add Inter `.woff2` (300/400/500) to `src/ui/fonts/`
-- [PENDING] T-179 — `@font-face` declarations (font-display: swap)
-- [PENDING] T-180 — preload display weight (300)
-- [PENDING] T-181 — reconcile v3 display font (Space Grotesk CDN → self-host or Inter-300)
+- [DONE] T-178 — add Inter `.woff2` (300/400/500) to `src/ui/fonts/`
+- [DONE] T-179 — `@font-face` declarations (font-display: swap)
+- [DONE] T-180 — preload display weight (300)
+- [DONE] T-181 — reconcile v3 display font (Space Grotesk CDN → self-host or Inter-300)
 
 ## Group 14 — Verification (tsc + build + manual; REVIEW does browser e2e)
 - [PENDING] T-182 — `tsc --noEmit` across M1+M2

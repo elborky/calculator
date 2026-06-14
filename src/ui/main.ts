@@ -1,8 +1,10 @@
 // M2 Calculator UI — application entry point.
 //
-// Stylesheet wiring (Groups 2–3). Order matters: tokens first so component
-// rules can resolve var(--token) (UR-029, T-123). Vite bundles these into the
-// static dist/ CSS.
+// Stylesheet wiring (Groups 2–3, 13). Order matters: fonts first (T-178..T-179,
+// D-004) so @font-face is declared before any rule uses font-family: 'Inter';
+// then tokens so component rules can resolve var(--token) (UR-029, T-123).
+// Vite bundles these into the static dist/ CSS; woff2 files are fingerprinted.
+import './styles/fonts.css'
 import './styles/tokens.css'
 import './styles/layout.css'
 import './styles/keypad.css'

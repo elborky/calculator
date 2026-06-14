@@ -2,10 +2,10 @@
 
 ## Current State
 
-- **Phase:** STRUCTURE complete → entering SPECIFY
-- **Sub-context:** All 9 structure files + hero mockup approved
-- **Last decision:** Deploy = self-hosted Dokploy; aesthetic = glassmorphism; scope = basic 4-function + history/theme/keyboard
-- **Next step:** Run `/storm-specify` for module M1 (calculation engine) — JIT per CP-9, just before BUILD
+- **Phase:** SPECIFY (M1 complete) → next is BUILD M1
+- **Sub-context:** M1 Calculation Engine fully specified — 6 concern files + cross-file audit PASS (headless module: UI/mockup deferred to M2)
+- **Last decision:** M1 stack = TypeScript + decimal.js + Vitest; repeated-equals dropped as out-of-scope (= twice = no-op); engine state = 5 fields
+- **Next step:** Run `/storm-build` for M1 (calculation engine) — 80-task TDD plan in `storm/specify/01-calculation-engine/_index.md`
 
 ## STORM Config
 

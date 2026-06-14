@@ -7,6 +7,29 @@
 
 <!-- NEWEST ENTRY BELOW THIS LINE -->
 
+## [2026-06-15 02:30] — BUILD M2 (Calculator UI) in progress, Groups 0–3 done / next Group 4 — anchor: f3c5ab7
+
+> `[unverified — written by main context]` — fresh sub-agent dispatch failed (API error: 1M-context
+> usage credits, #FF-008, same as the last 2 sessions). Per the mandatory fallback the orchestrator
+> wrote this entry directly. Facts cross-checked against git log (c686220..f3c5ab7) + `_plan.md` markers
+> + CLAUDE.md. Verbal-only items folded in from `session-delta.md`, tagged `[conversation-claim]`.
+
+- ✅ **Done this session:**
+  - Entered BUILD M2 (Calculator UI / keypad). Drafted + committed `_plan.md` (1120f67) — 87 tasks, 15 groups (0–14), per-task markers.
+  - **Group 0 — Vite scaffold (T-101..T-108, commits 9077938→d72061c):** vite@8.0.16 pinned exact as devDep on the *existing* M1 package (D-002, no second package); `dev`/`build`/`preview` scripts (`build` = `tsc --noEmit && vite build`); `vite.config.ts` (defaults: repo-root root, `dist/` outDir); `index.html` (`#app` mount); `src/ui/main.ts` stub; `npm run build` GREEN → static `dist/` (HTML+CSS+JS, exit 0). `dist/` gitignored.
+  - **Groups 1–3 — v3 Wildcard UI port (T-109..T-136, commits 075b43a + 8ceb91d):** `index.html` 15-key grid markup (real `<button>`s, true-Unicode operator glyphs U+00F7/00D7/2212/002B, `data-digit`/`data-op`/`data-action` per key for binding INT-4, `role=status`+`aria-live` display, reserved M3/M4 slots); `src/ui/styles/{tokens,layout,keypad}.css` (all theme colour via `var(--token)` UR-029; aurora canvas + orbiting blob + grain, sculptural glass slab, display contrast-scrim a11y guarantor, 4-col grid with =-2row/0-2col spans, coral operators, indigo equals bloom, 3px focus ring, responsive + reduced-motion pre-ported). `src/vite-env.d.ts` added (vite/client CSS-module types). main.ts imports CSS tokens-first.
+  - **First visual render LANDED** — static aurora-glass UI verified in-browser (Vite dev), desktop + phone screenshots in `storm/build/02-calculator-ui/_evidence/` (74f15bb). Faithful to mockup-v3. Ends M1's dark stretch.
+  - `_plan.md`: T-101..T-136 = `[DONE]`; T-137..T-187 = `[PENDING]`. M1 (`src/engine.ts`, `src/types.ts`, `decimal-config.ts`, tests) untouched/frozen.
+
+- 🔒 **Decided:**
+  - **`[conversation-claim]` — BUILD M2 runs INLINE ON OPUS, not forked sonnet.** Forked sub-agent dispatch is blocked by #FF-008 (1M-context usage-credits gate). Owner chose (via AskUserQuestion) "jalanin langsung (opus)" over enabling credits. Why: unblocked progress now > tier-purity. Cost accepted: every M2 task commit honestly tagged `Model: opus` (not sonnet) → BUILD measurement-tier baseline is skewed (#FF-028 no-overclaim). Recorded in commit bodies + CLAUDE.md + `session-delta.md`.
+  - **`[conversation-claim]` — granularity adaptation for mockup-port Groups 1–3:** committed per-FILE (2 commits) not per-button (would be 28). Why: porting one mockup file has ~zero per-button recovery value; owner said "gas". Group 0 stayed per-task (distinct units). Plan markers stay per-task. AI-autonomous (CP-7, consistent with D-007).
+
+- ⏳ **Pending — needs YOUR decision:**
+  - **`[conversation-claim]` — re-confirm execution mode for the remaining 11 groups:** keep running inline-opus, OR enable usage credits (claude.ai/settings/usage) to restore forked-sonnet tier-purity for Groups 4–14? Owner picked inline-opus for *this* session; not a blocker, just a re-confirm prompt. (BUILD/M4 carry-forwards from the prior SPECIFY handoff still stand: M4 theming reconciles tokens to v3 baseline; T-181 reconciles v3 display font Space-Grotesk-CDN vs self-hosted-Inter D-004.)
+
+- ➡️ **Next:** Continue BUILD M2 → **Group 4** (M1 import + held-state wiring, T-137–T-139), then Groups 5–8 (operator/glyph map, render, click + keyboard binding) to make the calculator **interactive** — the second payoff (`12 + 3 =` → `15`, `5 ÷ 0` → "Cannot divide by zero"). Fonts (self-hosted Inter, D-004) = Group 13. UI is currently styled-but-static.
+
 ## [2026-06-15 01:05] — SPECIFY M2 complete (APPROVED) / next BUILD M2 — anchor: ccf0a13
 
 > `[unverified — written by main context]` — fresh sub-agent dispatch failed (API error: 1M-context

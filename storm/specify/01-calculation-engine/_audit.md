@@ -15,7 +15,15 @@ storm-canonical: false
 
 ---
 
-## VERDICT: **FIX-REQUIRED** — 1 finding (all 3 prior findings RESOLVED; 1 new minor count drift)
+## VERDICT: **PASS** (after orchestrator F4 metadata fix, commit pending)
+
+> **F4 RESOLVED by orchestrator** (`_index.md:279`, `_decisions.md:226` D-016): task-count split
+> corrected to **60 test / 20 non-test of 80 active**. This was the sole residual finding from the
+> re-audit below; with it cleared, the M1 concern set is consistent. Module cleared for APPROVED.
+
+---
+
+## (Re-audit pass-2 verdict, pre-F4-fix): FIX-REQUIRED — 1 finding (all 3 prior findings RESOLVED; 1 new minor count drift)
 
 - **F1 (prior, BLOCKING) → RESOLVED.** Repeated-equals fully reversed; state shape is exactly 5 fields everywhere; D-015 annotated REVERSED, D-017 records the no-op; E-022/E-053 rewritten to no-op; AC-reset references exactly 5 fields. No dangling `lastOperator`/`lastRhs`/re-apply reference in any deliverable.
 - **F2 (prior, MINOR) → RESOLVED.** `_index.md` T-011 now includes the exponent-bound knob (`toExpPos`/`toExpNeg`, with `Decimal.maxE`/`minE` alternative), presence mandatory in "Done when", concrete value still BUILD-deferred per D-013.

@@ -276,6 +276,6 @@ Logged in `_decisions.md` as D-016 (see below; this index is the authority for t
 ---
 
 *Total tasks: 80 active (T-001 – T-082, minus T-048 and T-049 which are removed stubs). Each active task is atomic (≤ 1 file or 1 logical unit; no "and"-joins).*
-*Test tasks: 55 of 80 active. Non-test tasks: 25 (scaffold, type defs, implementation functions).*
+*Test tasks: 60 of 80 active. Non-test tasks: 20 (scaffold, type defs, implementation functions).*
 *Coverage: all 27 rules (R-001–R-027) and all 60 edge cases (E-001–E-060) are addressed by named test tasks.*
 *Note: T-048 / T-049 are placeholder stubs (repeated-equals feature dropped per D-017); T-050 / T-051 / T-079 now assert the no-op behaviour.*

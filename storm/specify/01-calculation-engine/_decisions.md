@@ -223,7 +223,7 @@ per D-017; T-050/T-051 assert no-op), CE handler + tests (T-052–T-056), AC han
 (T-057–T-060), display-value API + tests (T-061–T-063), edge-case batches (T-064–T-080),
 final clean check (T-081–T-082). **80 active tasks** (82 IDs minus 2 removed stubs).
 **Rationale:** Granularity discipline: each active task ≤ 1 file or 1 logical unit, no "and"-joined
-tasks. 55 of 80 active tasks are test tasks (TDD-first where natural — M1 is pure logic with no
+tasks. 60 of 80 active tasks are test tasks (TDD-first where natural — M1 is pure logic with no
 side effects, the ideal TDD target). Test tasks carry R-NNN / E-NNN tags to link directly to the
 spec's 27 rules and 60 edge cases. The handler split (digit / decimal / operator / equals / CE / AC
 / display-value) mirrors the state-machine transitions in `01-data-model.md §2` and prevents any

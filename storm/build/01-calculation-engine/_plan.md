@@ -68,7 +68,7 @@ storm-depends-on:
 
 | # | Task | Status |
 |---|---|---|
-| T-025 | Implement `resolveOperation(left, op, right)` in `src/engine.ts` | [PENDING] |
+| T-025 | Implement `resolveOperation(left, op, right)` in `src/engine.ts` | [DONE] |
 | T-026 | Test: `resolveOperation — addition (1.1 + 2.2 = 3.3 exact)` | [PENDING] |
 | T-027 | Test: `resolveOperation — subtraction` | [PENDING] |
 | T-028 | Test: `resolveOperation — multiplication` | [PENDING] |

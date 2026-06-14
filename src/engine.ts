@@ -1,5 +1,52 @@
 // Calculation engine — M1
-import { EngineState } from './types';
+import { Decimal } from './decimal-config';
+import { EngineState, Operator, ErrorTag } from './types';
+
+/**
+ * Performs the arithmetic operation `left op right` using decimal.js.
+ *
+ * Rules applied:
+ *   R-010 / R-011 — div-by-zero guard: if op is 'divide' and right is zero,
+ *                   return 'divide-by-zero' WITHOUT computing.
+ *   R-012         — overflow: after computation, if the result is not finite
+ *                   (decimal.js returns Infinity for extreme magnitudes at the
+ *                   configured precision), return 'overflow'.
+ *
+ * Pure function — no state touched.
+ */
+export function resolveOperation(
+  left: Decimal,
+  op: Operator,
+  right: Decimal,
+): Decimal | ErrorTag {
+  // R-010 / R-011 — guard BEFORE computing
+  if (op === 'divide' && right.isZero()) {
+    return 'divide-by-zero';
+  }
+
+  let result: Decimal;
+  switch (op) {
+    case 'add':
+      result = left.plus(right);
+      break;
+    case 'subtract':
+      result = left.minus(right);
+      break;
+    case 'multiply':
+      result = left.times(right);
+      break;
+    case 'divide':
+      result = left.dividedBy(right);
+      break;
+  }
+
+  // R-012 — overflow: decimal.js may produce a non-finite Decimal on extreme magnitudes
+  if (!result.isFinite()) {
+    return 'overflow';
+  }
+
+  return result;
+}
 
 /**
  * Returns a fresh, zeroed EngineState — the canonical starting point for the engine.

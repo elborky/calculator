@@ -422,4 +422,19 @@ describe('inputClearEntry', () => {
     expect(s2.accumulator).toBeNull(); // accumulator was never set, CE must not change it
     expect(s2.pendingOperator).toBeNull();
   });
+
+  it('CE then equals uses 0 as right operand — 5 + 0 = 5 (E-058) (T-056)', () => {
+    // Sequence: digit '5' → op 'add' → digit '3' → CE → equals
+    // CE resets entryBuffer to '0', so equals resolves: 5 + 0 = 5
+    const s0 = initialState();
+    const s1 = inputDigit(s0, '5');
+    const s2 = inputOperator(s1, 'add');
+    const s3 = inputDigit(s2, '3');
+    const s4 = inputClearEntry(s3); // CE — buffer back to '0'
+    const s5 = inputEquals(s4);     // equals — resolves 5 + 0 = 5
+
+    expect(s5.entryBuffer).toBe('5');
+    expect(s5.justEvaluated).toBe(true);
+    expect(s5.errorState).toBeNull();
+  });
 });

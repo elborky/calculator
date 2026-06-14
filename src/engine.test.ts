@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { initialState, inputDigit, inputDecimal, resolveOperation } from './engine';
+import { initialState, inputDigit, inputDecimal, inputOperator, resolveOperation } from './engine';
 import { Decimal } from './decimal-config';
 
 describe('initialState', () => {
@@ -111,6 +111,22 @@ describe('inputDecimal', () => {
     const state = inputDecimal(fresh);
     // Leading decimal must produce '0.' — never bare '.'
     expect(state.entryBuffer).toBe('0.');
+  });
+});
+
+describe('inputOperator', () => {
+  it('first op commits entryBuffer to accumulator, sets pendingOperator, resets buffer (T-033)', () => {
+    // Sequence: initialState → digit '5' → operator 'add'
+    const s0 = initialState();
+    const s1 = inputDigit(s0, '5');
+    const s2 = inputOperator(s1, 'add');
+
+    // Buffer committed to accumulator
+    expect(s2.accumulator!.toString()).toBe('5');
+    // Pending operator set
+    expect(s2.pendingOperator).toBe('add');
+    // Entry buffer reset
+    expect(s2.entryBuffer).toBe('0');
   });
 });
 

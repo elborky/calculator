@@ -509,3 +509,21 @@ describe('getDisplayValue — normal states', () => {
     expect(getDisplayValue(s2d)).toBe('7');
   });
 });
+
+describe('getDisplayValue — error states', () => {
+  it('returns errorState tag when error is set (T-063)', () => {
+    // Scenario 1: divide-by-zero error state
+    const divByZeroState = {
+      ...initialState(),
+      errorState: 'divide-by-zero' as const,
+    };
+    expect(getDisplayValue(divByZeroState)).toBe('divide-by-zero');
+
+    // Scenario 2: overflow error state
+    const overflowState = {
+      ...initialState(),
+      errorState: 'overflow' as const,
+    };
+    expect(getDisplayValue(overflowState)).toBe('overflow');
+  });
+});

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { initialState, inputDigit, inputDecimal, inputOperator, inputEquals, inputClearEntry, resolveOperation } from './engine';
+import { initialState, inputDigit, inputDecimal, inputOperator, inputEquals, inputClearEntry, inputAllClear, resolveOperation } from './engine';
 import { Decimal } from './decimal-config';
 
 describe('initialState', () => {
@@ -436,5 +436,21 @@ describe('inputClearEntry', () => {
     expect(s5.entryBuffer).toBe('5');
     expect(s5.justEvaluated).toBe(true);
     expect(s5.errorState).toBeNull();
+  });
+});
+
+describe('inputAllClear', () => {
+  it('full reset from mid-expression — all 5 fields at initial values (E-033) (T-058)', () => {
+    // Sequence: digit '9' → op 'multiply' → digit '3' → AC
+    const s1 = inputDigit(initialState(), '9');
+    const s2 = inputOperator(s1, 'multiply');
+    const s3 = inputDigit(s2, '3');
+    const s4 = inputAllClear(s3);
+
+    expect(s4.entryBuffer).toBe('0');
+    expect(s4.accumulator).toBeNull();
+    expect(s4.pendingOperator).toBeNull();
+    expect(s4.justEvaluated).toBe(false);
+    expect(s4.errorState).toBeNull();
   });
 });

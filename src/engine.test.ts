@@ -285,4 +285,17 @@ describe('inputEquals', () => {
     expect(s1.justEvaluated).toBe(true);
     expect(s1.errorState).toBeNull();
   });
+
+  it('negative result — 3 - 5 = -2, no error (E-041, R-021) (T-044)', () => {
+    // Sequence: digit '3' → op 'subtract' → digit '5' → equals
+    const s0 = initialState();
+    const s1 = inputDigit(s0, '3');
+    const s2 = inputOperator(s1, 'subtract');
+    const s3 = inputDigit(s2, '5');
+    const s4 = inputEquals(s3);
+
+    expect(s4.entryBuffer).toBe('-2');
+    expect(s4.justEvaluated).toBe(true);
+    expect(s4.errorState).toBeNull();
+  });
 });

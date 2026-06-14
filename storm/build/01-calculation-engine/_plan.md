@@ -29,7 +29,7 @@ storm-depends-on:
 
 | # | Task | Status |
 |---|---|---|
-| T-006 | Define `Operator` union type in `src/types.ts` | [PENDING] |
+| T-006 | Define `Operator` union type in `src/types.ts` | [DONE] |
 | T-007 | Define `ErrorTag` union type in `src/types.ts` | [PENDING] |
 | T-008 | Define `EngineState` interface (5 fields, Decimal import) in `src/types.ts` | [PENDING] |
 | T-009 | Export `initialState()` factory in `src/engine.ts` | [PENDING] |

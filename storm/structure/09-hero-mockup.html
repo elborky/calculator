@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculator — Hero Mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg-gradient: linear-gradient(135deg, #1a1a3e 0%, #2d1b4e 50%, #3d1f4e 100%);
+      --glass-fill: rgba(255, 255, 255, 0.08);
+      --glass-fill-display: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.18);
+      --text-primary: #f5f5fa;
+      --text-secondary: rgba(245, 245, 250, 0.55);
+      --accent: #a29bfe;
+      --operator-accent: #ff9f9f;
+      --error: #ff7675;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      background: var(--bg-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+    }
+
+    /* Layout wrapper */
+    .app-layout {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      width: 100%;
+      max-width: 640px;
+    }
+
+    /* Glass pane mixin — applied via class */
+    .glass {
+      background: var(--glass-fill);
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+
+    /* ─── History Tape ─────────────────────────────────── */
+    .history-tape {
+      width: 240px;
+      flex-shrink: 0;
+      padding: 20px 16px;
+      border-radius: 24px;
+      align-self: stretch;
+    }
+
+    .history-label {
+      font-size: 0.6875rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+
+    .history-entry {
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .history-entry:last-child {
+      border-bottom: none;
+    }
+
+    .history-entry.recent .history-expression {
+      color: rgba(245, 245, 250, 0.75);
+    }
+
+    .history-entry.recent .history-result {
+      color: var(--text-primary);
+    }
+
+    .history-expression {
+      font-size: 0.8125rem;
+      font-weight: 400;
+      color: var(--text-secondary);
+      font-variant-numeric: tabular-nums;
+      line-height: 1.5;
+    }
+
+    .history-result {
+      font-size: 1.125rem;
+      font-weight: 300;
+      color: rgba(245, 245, 250, 0.8);
+      font-variant-numeric: tabular-nums;
+      line-height: 1.4;
+      margin-top: 2px;
+    }
+
+    .history-result::before {
+      content: '= ';
+      color: var(--accent);
+      font-weight: 400;
+    }
+
+    /* ─── Calculator Body ──────────────────────────────── */
+    .calculator {
+      flex: 1;
+      min-width: 0;
+      max-width: 360px;
+      border-radius: 24px;
+      padding: 20px;
+      position: relative;
+    }
+
+    /* Theme toggle pill — top-right inside calc */
+    .theme-toggle {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 36px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid var(--glass-border);
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: default;
+    }
+
+    .theme-toggle-icon {
+      font-size: 11px;
+      line-height: 1;
+      color: var(--text-secondary);
+    }
+
+    /* ─── Display ──────────────────────────────────────── */
+    .display {
+      background: var(--glass-fill-display);
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      padding: 14px 18px 16px;
+      min-height: 96px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: flex-end;
+      margin-top: 8px;
+      margin-bottom: 16px;
+    }
+
+    .display-expression {
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: var(--text-secondary);
+      font-variant-numeric: tabular-nums;
+      line-height: 1.4;
+      letter-spacing: 0.01em;
+    }
+
+    .display-result {
+      font-size: clamp(2.5rem, 12vw, 3.5rem);
+      font-weight: 300;
+      color: var(--text-primary);
+      font-variant-numeric: tabular-nums;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-top: 4px;
+    }
+
+    /* ─── Keypad ───────────────────────────────────────── */
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .btn {
+      background: var(--glass-fill);
+      backdrop-filter: blur(8px) saturate(140%);
+      -webkit-backdrop-filter: blur(8px) saturate(140%);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.14),
+        inset 0 1px 0 rgba(255, 255, 255, 0.20);
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 1.375rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      cursor: default;
+      user-select: none;
+      transition: transform 80ms ease-out, background 120ms;
+    }
+
+    .btn:active {
+      transform: scale(0.96);
+    }
+
+    /* Utility buttons (AC, ±, %) */
+    .btn-util {
+      color: var(--text-secondary);
+      font-size: 1.125rem;
+    }
+
+    /* Operator buttons */
+    .btn-op {
+      color: var(--operator-accent);
+      border-color: rgba(255, 159, 159, 0.25);
+    }
+
+    /* Equals button */
+    .btn-eq {
+      background: var(--accent);
+      color: #1a1a3e;
+      border-color: rgba(162, 155, 254, 0.5);
+      box-shadow:
+        0 4px 20px rgba(162, 155, 254, 0.30),
+        inset 0 1px 0 rgba(255, 255, 255, 0.30);
+    }
+
+    /* Zero spans 2 columns */
+    .btn-zero {
+      grid-column: span 2;
+      justify-content: flex-start;
+      padding-left: 24px;
+    }
+
+    /* Subtle hover glow for operator and equals */
+    .btn-op:hover {
+      background: rgba(255, 159, 159, 0.12);
+    }
+
+    .btn-eq:hover {
+      background: #b5aaff;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+
+    <!-- History Tape -->
+    <aside class="history-tape glass">
+      <p class="history-label">History</p>
+
+      <div class="history-entry recent">
+        <div class="history-expression">1,234 &times; 56</div>
+        <div class="history-result">69,104</div>
+      </div>
+
+      <div class="history-entry">
+        <div class="history-expression">500 &divide; 4</div>
+        <div class="history-result">125</div>
+      </div>
+
+      <div class="history-entry">
+        <div class="history-expression">88 + 12</div>
+        <div class="history-result">100</div>
+      </div>
+    </aside>
+
+    <!-- Calculator -->
+    <main class="calculator glass">
+
+      <!-- Theme toggle -->
+      <div class="theme-toggle" aria-label="Toggle theme" title="Switch to light mode">
+        <span class="theme-toggle-icon">🌙</span>
+      </div>
+
+      <!-- Display -->
+      <div class="display" role="status" aria-live="polite" aria-label="Calculator display">
+        <div class="display-expression">1,234 &times;</div>
+        <div class="display-result">56</div>
+      </div>
+
+      <!-- Keypad -->
+      <div class="keypad" role="group" aria-label="Calculator keypad">
+
+        <!-- Row 1 -->
+        <button class="btn btn-util" aria-label="All clear">AC</button>
+        <button class="btn btn-util" aria-label="Plus minus">±</button>
+        <button class="btn btn-util" aria-label="Percent">%</button>
+        <button class="btn btn-op" aria-label="Divide">÷</button>
+
+        <!-- Row 2 -->
+        <button class="btn" aria-label="7">7</button>
+        <button class="btn" aria-label="8">8</button>
+        <button class="btn" aria-label="9">9</button>
+        <button class="btn btn-op" aria-label="Multiply">×</button>
+
+        <!-- Row 3 -->
+        <button class="btn" aria-label="4">4</button>
+        <button class="btn" aria-label="5">5</button>
+        <button class="btn" aria-label="6">6</button>
+        <button class="btn btn-op" aria-label="Subtract">−</button>
+
+        <!-- Row 4 -->
+        <button class="btn" aria-label="1">1</button>
+        <button class="btn" aria-label="2">2</button>
+        <button class="btn" aria-label="3">3</button>
+        <button class="btn btn-op" aria-label="Add">+</button>
+
+        <!-- Row 5 -->
+        <button class="btn btn-zero" aria-label="0">0</button>
+        <button class="btn" aria-label="Decimal point">.</button>
+        <button class="btn btn-eq" aria-label="Equals">=</button>
+
+      </div>
+    </main>
+
+  </div>
+</body>
+</html>

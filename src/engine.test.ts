@@ -45,4 +45,16 @@ describe('inputDigit', () => {
     const state = inputDigit(initialState(), '0');
     expect(state.entryBuffer).toBe('0');
   });
+
+  it('fresh start after justEvaluated — digit replaces prior result, flag cleared (E-038) (T-017)', () => {
+    // Simulate post-equals state: result '42' displayed, justEvaluated flagged
+    const postEquals = { ...initialState(), entryBuffer: '42', justEvaluated: true };
+
+    const state = inputDigit(postEquals, '9');
+
+    // Must start fresh — '9', not '429'
+    expect(state.entryBuffer).toBe('9');
+    // Flag must be cleared
+    expect(state.justEvaluated).toBe(false);
+  });
 });

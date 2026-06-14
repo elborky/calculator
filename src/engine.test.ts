@@ -76,4 +76,11 @@ describe('inputDecimal', () => {
     const state = inputDecimal(initialState());
     expect(state.entryBuffer).toBe('0.');
   });
+
+  it('second decimal press is no-op (E-009, E-010) (T-021)', () => {
+    // Buffer already contains a decimal; pressing decimal again must not append
+    const withDecimal = { ...initialState(), entryBuffer: '3.' };
+    const state = inputDecimal(withDecimal);
+    expect(state.entryBuffer).toBe('3.');
+  });
 });

@@ -2,10 +2,10 @@
 
 ## Current State
 
-- **Phase:** BUILD M1 (calculation engine) — Group 17 final verification
-- **Sub-context:** M1 Calculation Engine fully specified — 6 concern files + cross-file audit PASS; 78/80 active tasks done, 59 tests passing
-- **Last decision:** M1 stack = TypeScript + decimal.js + Vitest; repeated-equals dropped as out-of-scope (= twice = no-op); engine state = 5 fields
-- **Next step:** T-082 DONE — M1 BUILD complete, ready for REVIEW
+- **Phase:** BUILD M1 complete → next is REVIEW M1
+- **Sub-context:** M1 Calculation Engine built — 80/80 active tasks DONE, tsc clean, 59 tests green (0 failures)
+- **Last decision:** M1 stack = TypeScript + decimal.js + Vitest; repeated-equals dropped (= twice = no-op); engine state = 5 fields; overflow bound = toExpPos:21/toExpNeg:-7
+- **Next step:** Run `/storm-review` for M1 (Calculation Engine)
 
 ## STORM Config
 

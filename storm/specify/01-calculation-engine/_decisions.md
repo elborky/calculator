@@ -185,3 +185,26 @@ must retain the last rhs and last operator post-evaluation to support this; exac
 implementation detail. No scope creep — repeated `=` is inherent to the "resolve pending operation"
 contract (F3) applied idempotently.
 **Source:** `05-edge-cases.md` E-022, E-053.
+
+---
+
+> Index decision (CP-7 autonomous — BUILD task list encoding). Authoritative task list lives in
+> `_index.md`; this entry is the index reference.
+
+## D-016 — BUILD task list: 82 atomic tasks, TDD-first, grouped by handler
+
+**Decision:** Encode M1's BUILD task list in `_index.md` as 82 atomic tasks (T-001–T-082) in 17
+groups: scaffold (T-001–T-005), type definitions (T-006–T-010), decimal.js config (T-011–T-012),
+digit handler + tests (T-013–T-018), decimal handler + tests (T-019–T-024), arithmetic resolve
+helper + tests (T-025–T-031), operator handler + tests (T-032–T-039), equals handler + tests
+(T-040–T-047), repeated-equals (T-048–T-051), CE handler + tests (T-052–T-056), AC handler +
+tests (T-057–T-060), display-value API + tests (T-061–T-063), edge-case batches (T-064–T-080),
+final clean check (T-081–T-082).
+**Rationale:** Granularity discipline: each task ≤ 1 file or 1 logical unit, no "and"-joined tasks.
+57 of 82 tasks are test tasks (TDD-first where natural — M1 is pure logic with no side effects,
+the ideal TDD target). Test tasks carry R-NNN / E-NNN tags to link directly to the spec's 27 rules
+and 60 edge cases. The handler split (digit / decimal / operator / equals / CE / AC / display-value)
+mirrors the state-machine transitions in `01-data-model.md §2` and prevents any single task from
+touching multiple state pathways.
+**Source:** `_index.md` BUILD task list; derived from `01-data-model.md`, `02-flows.md`,
+`03-rules.md`, `05-edge-cases.md`, `06-tech-choices.md`.

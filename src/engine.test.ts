@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { initialState, inputDigit, inputDecimal, inputOperator, resolveOperation } from './engine';
+import { initialState, inputDigit, inputDecimal, inputOperator, inputEquals, resolveOperation } from './engine';
 import { Decimal } from './decimal-config';
 
 describe('initialState', () => {
@@ -247,5 +247,21 @@ describe('resolveOperation', () => {
     // Guard must fire exactly as for integer '0'
     const result = resolveOperation(new Decimal('9'), 'divide', new Decimal('0.0'));
     expect(result).toBe('divide-by-zero');
+  });
+});
+
+describe('inputEquals', () => {
+  it('normal resolve — 5 × 4 = 20 (T-041)', () => {
+    // Sequence: digit '5' → op 'multiply' → digit '4' → equals
+    const s0 = initialState();
+    const s1 = inputDigit(s0, '5');
+    const s2 = inputOperator(s1, 'multiply');
+    const s3 = inputDigit(s2, '4');
+    const s4 = inputEquals(s3);
+
+    expect(s4.entryBuffer).toBe('20');
+    expect(s4.pendingOperator).toBeNull();
+    expect(s4.justEvaluated).toBe(true);
+    expect(s4.errorState).toBeNull();
   });
 });

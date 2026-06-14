@@ -16,5 +16,7 @@ import { getState, render } from './state';
 // the initial EngineState (entryBuffer="0") immediately on load (UR-005 fresh state).
 render(getState());
 
-// Group 7/8: click + keyboard binding — pending (T-147..T-160)
-export {}
+// Group 7/8: click + keyboard binding (T-147..T-160)
+import { setupClickBinding, setupKeyboardBinding } from './bindings';
+setupClickBinding();
+setupKeyboardBinding();

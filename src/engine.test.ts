@@ -511,6 +511,20 @@ describe('getDisplayValue — normal states', () => {
 });
 
 describe('decimal.js correctness via engine — Group 12 (E-045–E-049)', () => {
+  it('0.3 - 0.2 = 0.1 via engine (E-046) (T-065)', () => {
+    const s0 = initialState();
+    const s1 = inputDigit(s0, '0');
+    const s2 = inputDecimal(s1);
+    const s3 = inputDigit(s2, '3');
+    const s4 = inputOperator(s3, 'subtract');
+    const s5 = inputDigit(s4, '0');
+    const s6 = inputDecimal(s5);
+    const s7 = inputDigit(s6, '2');
+    const s8 = inputEquals(s7);
+    expect(s8.entryBuffer).toBe('0.1');
+    expect(s8.errorState).toBeNull();
+  });
+
   it('0.1 + 0.2 = 0.3 via full engine sequence (E-045) (T-064)', () => {
     const s0 = initialState();
     const s1 = inputDigit(s0, '0');

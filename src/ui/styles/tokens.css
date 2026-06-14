@@ -45,6 +45,13 @@
     linear-gradient(135deg, #160d3a 0%, #2a1052 50%, #3a0e44 100%);
   --bg-blob:   radial-gradient(circle, rgba(255, 94, 122, 0.55) 0%, rgba(124, 92, 255, 0.4) 45%, transparent 70%);
 
+  /* ---- Motion tokens (T-167..T-170, Group 11) ---- */
+  --motion-press:           80ms ease-out;   /* button :active scale duration */
+  --motion-hover-bg:       120ms ease;       /* hover background fade */
+  --motion-hover-shadow:   150ms ease;       /* hover glow/shadow transition */
+  --motion-result-rise:    200ms ease-out;   /* equals result fade+rise (F11) */
+  --glass-glow-hover:      rgba(255, 255, 255, 0.12); /* digit key hover glow tint */
+
   /* ---- Glass-recipe structural tokens (T-122; structural literals per UR-029) ---- */
   --radius-body:    30px;
   --radius-display: 22px;

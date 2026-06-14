@@ -21,6 +21,17 @@ import { OPERATOR_TO_GLYPH } from './operator-map';
 const readoutEl  = document.querySelector<HTMLElement>('.display .readout');
 const pendingEl  = document.querySelector<HTMLElement>('.display .pending-line');
 
+// ---------------------------------------------------------------------------
+// T-170/T-171 — result rise animation deduplication guard.
+//
+// Tracks the LAST display value that fired the animation. On equals press,
+// render() fires the fade+rise class only when the display value actually
+// changes (T-171: repeated = re-evaluates with same operands → same result →
+// no re-animation). Stored as a module-level string (not in EngineState —
+// this is pure render-layer bookkeeping, not data-model state, UR-018).
+// ---------------------------------------------------------------------------
+let _lastAnimatedValue: string = '';
+
 if (!readoutEl || !pendingEl) {
   throw new Error(
     '[render] Required DOM elements not found. ' +
@@ -183,6 +194,37 @@ export function render(state: EngineState): void {
     : (displayValue as string);
 
   readoutEl!.textContent = readoutText;
+
+  // T-170 — result fade+rise animation on equals (F11, §7 motion).
+  // T-171 — guard: only re-trigger when the displayed value is NEW.
+  //
+  // Fires when justEvaluated is true AND the readout text differs from the
+  // last value that triggered the animation. This means:
+  //   - First equals press:  new result → animates.
+  //   - Repeated = (same operands, same result): value unchanged → no re-fire.
+  //   - New operand then =: result differs → animates again.
+  //   - Error state: isError is true → skip (no result animation on errors).
+  //
+  // The class is force-removed then re-added in the same microtask so the
+  // browser resets the animation even if the same value appears later.
+  if (state.justEvaluated && !isError) {
+    if (readoutText !== _lastAnimatedValue) {
+      _lastAnimatedValue = readoutText;
+      // Force CSS animation restart: remove class, flush layout, re-add.
+      readoutEl!.classList.remove('readout--result');
+      // requestAnimationFrame ensures the class removal is painted before re-add,
+      // so the browser resets the animation origin correctly.
+      requestAnimationFrame(() => {
+        readoutEl!.classList.add('readout--result');
+      });
+    }
+  } else if (!state.justEvaluated) {
+    // Clear the animation class when the user starts typing a new operand
+    // (so the next equals fires a fresh animation from a clean state).
+    readoutEl!.classList.remove('readout--result');
+    // Reset the guard so the same result value can animate again next time.
+    _lastAnimatedValue = '';
+  }
 
   // T-145 — error CSS class toggle (UR-016, INT-6)
   // Derived from live state — never stored as a UI flag (UR-018).

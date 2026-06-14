@@ -33,24 +33,31 @@
   box-shadow:
     0 4px 16px rgba(0, 0, 0, 0.22),
     inset 0 1px 0 rgba(255, 255, 255, 0.22);
-  transition: transform 80ms ease-out, background 120ms ease, box-shadow 150ms ease;
+  transition:
+    transform var(--motion-press),
+    background var(--motion-hover-bg),
+    box-shadow var(--motion-hover-shadow),
+    filter var(--motion-press);
   -webkit-tap-highlight-color: transparent;
 }
 
+/* T-168 — hover: fill-alpha lift + subtle white glow (UR-029: glow via token) */
 .key:hover {
   background: var(--glass-fill-hover);
   box-shadow:
     0 6px 22px rgba(0, 0, 0, 0.28),
-    0 0 18px rgba(255, 255, 255, 0.10),
+    0 0 18px var(--glass-glow-hover),
     inset 0 1px 0 rgba(255, 255, 255, 0.30);
 }
 
+/* T-167 — :active press-scale (80ms, drops on reduced-motion via T-172 block) */
 .key:active {
   transform: scale(0.96);
   filter: brightness(1.12);
 }
 
-/* visible focus ring — accent, 3px solid + 3px offset (HARD FLOOR, T-169) */
+/* T-169 — visible focus ring: 3px accent + 3px offset (HARD FLOOR — SPECIFY audit fixed 2px→3px;
+   NEVER regress to 2px). Transitions suppressed under reduced-motion (T-172). */
 .key:focus-visible {
   outline: 3px solid var(--accent);
   outline-offset: 3px;
@@ -125,12 +132,26 @@
   }
 }
 
-/* -------- REDUCED MOTION (HARD FLOOR — T-172, not optional) -------- */
+/* -------- REDUCED MOTION (HARD FLOOR — T-172, a11y non-negotiable) --------
+   Under prefers-reduced-motion: reduce, ALL motion must be instant/static.
+   Covered: aurora drift, blob orbit, result fade+rise, press-scale,
+   hover glow transitions, backdrop/filter transitions, slab tilt.      */
 @media (prefers-reduced-motion: reduce) {
+  /* Aurora + blob animations → instant static background (layout.css animated layers) */
   body::before { animation: none; }
   body::after  { animation: none; }
-  .readout     { animation: none; }
-  .key         { transition: background 1ms; }
-  .key:active  { transform: none; }
-  .calc        { transform: none; }            /* no tilt when motion reduced */
+
+  /* Result rise animation on .readout (T-170, T-172) */
+  .readout,
+  .readout--result { animation: none !important; }
+
+  /* Button press/hover/glow transitions → instant (all transition axes zeroed) */
+  .key {
+    transition: none;
+  }
+  /* Press-scale: no transform on active */
+  .key:active  { transform: none; filter: none; }
+
+  /* Slab perspective tilt (layout.css) → instant flat */
+  .calc        { transform: none; }
 }

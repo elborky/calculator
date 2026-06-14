@@ -106,12 +106,12 @@ storm-depends-on:
 - [DONE] T-166 — exponent strings render fully
 
 ## Group 11 — Motion + reduced-motion (F11, UR-025)
-- [PENDING] T-167 — button `:active` press-scale
-- [PENDING] T-168 — `:hover` fill-alpha + glow
-- [PENDING] T-169 — focus ring 3px accent + 3px offset
-- [PENDING] T-170 — result fade+rise on equals
-- [PENDING] T-171 — guard repeated `=` no re-fire
-- [PENDING] T-172 — `prefers-reduced-motion` → instant
+- [DONE] T-167 — button `:active` press-scale
+- [DONE] T-168 — `:hover` fill-alpha + glow
+- [DONE] T-169 — focus ring 3px accent + 3px offset
+- [DONE] T-170 — result fade+rise on equals
+- [DONE] T-171 — guard repeated `=` no re-fire
+- [DONE] T-172 — `prefers-reduced-motion` → instant
 
 ## Group 12 — Responsive layout + reserved M3/M4 slots
 - [PENDING] T-173 — body max-width 360px centered (desktop)

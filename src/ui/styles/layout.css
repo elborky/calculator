@@ -241,6 +241,15 @@ body::after {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* T-170 — result fade+rise on equals: toggled by render.ts via .readout--result class.
+   T-171 guard: render.ts only adds/removes the class when the displayed value CHANGES,
+   so repeated = presses (repeat-equals re-evaluate with same second operand) only
+   re-trigger the animation when the result value is actually new.
+   Dropped under prefers-reduced-motion (T-172, keypad.css reduced-motion block). */
+.readout--result {
+  animation: resultRise var(--motion-result-rise) both;
+}
+
 /* -------- backdrop-filter fallback — legibility never sacrificed (T-126) -------- */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .calc    { background: rgba(26, 18, 56, 0.88); }

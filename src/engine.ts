@@ -221,3 +221,64 @@ export function inputOperator(state: EngineState, op: Operator): EngineState {
     justEvaluated: false,
   };
 }
+
+/**
+ * Handles the equals button press ('=').
+ *
+ * Rules applied (in order):
+ *   R-014 / E-023  — error no-op: if errorState is set, return state unchanged.
+ *   D-017 / E-022 / E-053 — equals-after-equals: if justEvaluated is true and
+ *                    no pendingOperator is set, repeated '=' is a no-op (5-field
+ *                    model: no lastOperator/lastRhs → no re-apply; just return unchanged).
+ *   E-020 / R-006  — no pending operator, not evaluated: set justEvaluated = true
+ *                    (display stays same — pressing '=' on a bare number is a no-op
+ *                    apart from latching justEvaluated).
+ *   Main path      — pendingOperator is set: resolve accumulator op entryBuffer.
+ *                    On success: update entryBuffer + accumulator, clear pendingOperator,
+ *                    set justEvaluated = true, clear errorState.
+ *                    On error: set errorState, clear pendingOperator, justEvaluated = false.
+ *
+ * Never mutates state; always returns a new EngineState object.
+ */
+export function inputEquals(state: EngineState): EngineState {
+  // R-014 / E-023 — error no-op
+  if (state.errorState !== null) {
+    return state;
+  }
+
+  if (state.pendingOperator === null) {
+    // D-017 / E-022 / E-053 — equals-after-equals no-op (already evaluated)
+    if (state.justEvaluated) {
+      return state;
+    }
+    // E-020 / R-006 — no pending op, not yet evaluated: latch justEvaluated
+    return { ...state, justEvaluated: true };
+  }
+
+  // Main path — resolve the pending operation
+  // accumulator is guaranteed non-null when pendingOperator is set (inputOperator always
+  // sets accumulator before setting pendingOperator).
+  const right = new Decimal(state.entryBuffer);
+  const result = resolveOperation(state.accumulator!, state.pendingOperator, right);
+
+  if (typeof result === 'string') {
+    // Error result — latch error, clear pending op, clear justEvaluated
+    return {
+      ...state,
+      errorState: result,
+      pendingOperator: null,
+      justEvaluated: false,
+    };
+  }
+
+  // Successful resolve
+  const resultStr = result.toString();
+  return {
+    ...state,
+    entryBuffer: resultStr,
+    accumulator: result,
+    pendingOperator: null,
+    justEvaluated: true,
+    errorState: null,
+  };
+}

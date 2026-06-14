@@ -93,7 +93,7 @@ storm-depends-on:
 
 | # | Task | Status |
 |---|---|---|
-| T-040 | Implement `inputEquals(state)` in `src/engine.ts` | [PENDING] |
+| T-040 | Implement `inputEquals(state)` in `src/engine.ts` | [DONE] |
 | T-041 | Test: `inputEquals — normal resolve (5 × 4 = 20)` | [PENDING] |
 | T-042 | Test: `inputEquals — no pending operator is no-op (E-020, R-006)` | [PENDING] |
 | T-043 | Test: `inputEquals — fresh state equals gives 0 (E-021)` | [PENDING] |

@@ -2,10 +2,10 @@
 
 ## Current State
 
-- **Phase:** BUILD M1 (calculation engine) — Group 0 scaffold in progress
+- **Phase:** BUILD M1 (calculation engine) — Group 7 equals handler
 - **Sub-context:** M1 Calculation Engine fully specified — 6 concern files + cross-file audit PASS (headless module: UI/mockup deferred to M2)
 - **Last decision:** M1 stack = TypeScript + decimal.js + Vitest; repeated-equals dropped as out-of-scope (= twice = no-op); engine state = 5 fields
-- **Next step:** BUILD M1 in progress — current task: T-019 — Implement inputDecimal
+- **Next step:** BUILD M1 — T-041 onwards (inputEquals tests + CE/AC handlers); 40 tasks done (T-001–T-040), 40 pending
 
 ## STORM Config
 

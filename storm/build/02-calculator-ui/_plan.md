@@ -18,7 +18,7 @@ storm-depends-on:
 > **Status tracking:** [PENDING] → [IN PROGRESS] → [DONE]
 
 ## Group 0 — Vite scaffold over the existing M1 package
-- [PENDING] T-101 — add `vite@8.0.16` dev-dependency to root `package.json`
+- [DONE] T-101 — add `vite@8.0.16` dev-dependency to root `package.json`
 - [PENDING] T-102 — add `"dev": "vite"` script
 - [PENDING] T-103 — add `"build": "tsc --noEmit && vite build"` script
 - [PENDING] T-104 — add `"preview": "vite preview"` script

@@ -128,6 +128,19 @@ describe('inputOperator', () => {
     // Entry buffer reset
     expect(s2.entryBuffer).toBe('0');
   });
+
+  it('operator-first uses implicit 0 as left operand — E-015, D-010 (T-034)', () => {
+    // Sequence: initialState() (entryBuffer='0') → operator 'add'
+    const s0 = initialState();
+    const s1 = inputOperator(s0, 'add');
+
+    // Implicit 0 committed to accumulator
+    expect(s1.accumulator!.toString()).toBe('0');
+    // Pending operator set
+    expect(s1.pendingOperator).toBe('add');
+    // Entry buffer reset
+    expect(s1.entryBuffer).toBe('0');
+  });
 });
 
 describe('resolveOperation', () => {

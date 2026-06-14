@@ -126,4 +126,10 @@ describe('resolveOperation', () => {
     expect(result).toBeInstanceOf(Decimal);
     expect((result as Decimal).toString()).toBe('6');
   });
+
+  it('multiplication correct — 3 × 7 = 21 (T-028)', () => {
+    const result = resolveOperation(new Decimal('3'), 'multiply', new Decimal('7'));
+    expect(result).toBeInstanceOf(Decimal);
+    expect((result as Decimal).toString()).toBe('21');
+  });
 });

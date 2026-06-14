@@ -71,7 +71,7 @@ storm-depends-on:
 | T-025 | Implement `resolveOperation(left, op, right)` in `src/engine.ts` | [DONE] |
 | T-026 | Test: `resolveOperation — addition (1.1 + 2.2 = 3.3 exact)` | [DONE] |
 | T-027 | Test: `resolveOperation — subtraction` | [DONE] |
-| T-028 | Test: `resolveOperation — multiplication` | [PENDING] |
+| T-028 | Test: `resolveOperation — multiplication` | [DONE] |
 | T-029 | Test: `resolveOperation — division (10 ÷ 4 = 2.5)` | [PENDING] |
 | T-030 | Test: `resolveOperation — divide by zero → 'divide-by-zero' (E-001, R-010)` | [PENDING] |
 | T-031 | Test: `resolveOperation — "0.0" as divisor (E-003)` | [PENDING] |

@@ -2,10 +2,10 @@
 
 ## Current State
 
-- **Phase:** BUILD M2 (Calculator UI) — IN PROGRESS. Group 0/14 done (T-101–T-108).
-- **Sub-context:** Vite 8.0.16 scaffolded over the M1 package (D-002); `npm run build` emits static `dist/`. Build target = v3 Wildcard mockup; a11y floor non-negotiable. Next = Group 1 (HTML structure, 15-key grid, T-109–T-119).
+- **Phase:** BUILD M2 (Calculator UI) — IN PROGRESS. Groups 0–3 done (T-101–T-136); first visual render LANDED (static glass UI, desktop+phone screenshots in `_evidence/`).
+- **Sub-context:** Vite static build green. v3 aurora-glass UI ported (index.html markup + tokens/layout/keypad CSS, all theme colour via tokens). NOT yet interactive — M1 wiring + render + input binding = Groups 4–8 next. Fonts (self-hosted Inter, D-004) = Group 13. Build target = v3 Wildcard; a11y floor non-negotiable.
 - **Last decision:** BUILD execution runs **inline on opus** (not forked sonnet) — forked dispatch blocked by #FF-008 (1M-context usage credits); owner chose unblocked progress over tier-purity (2026-06-15). Commits tagged `Model: opus` honestly; measurement-tier deviation noted.
-- **Next step:** Continue BUILD M2 → Group 1 (T-109 calculator body wrapper).
+- **Next step:** Continue BUILD M2 → Group 4 (M1 import + held-state wiring, T-137–T-139), then Groups 5–8 to make it interactive.
 
 ## STORM Config
 

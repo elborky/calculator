@@ -78,22 +78,22 @@ storm-depends-on:
 - [DONE] T-146 — call `render(state)` once at app start
 
 ## Group 7 — Click binding (click ≡ keyboard convergence)
-- [PENDING] T-147 — digit-button clicks → inputDigit
-- [PENDING] T-148 — `.` click → inputDecimal
-- [PENDING] T-149 — operator clicks → inputOperator (via map)
-- [PENDING] T-150 — `=` click → inputEquals
-- [PENDING] T-151 — `CE` click → inputClearEntry
-- [PENDING] T-152 — `AC` click → inputAllClear
+- [DONE] T-147 — digit-button clicks → inputDigit
+- [DONE] T-148 — `.` click → inputDecimal
+- [DONE] T-149 — operator clicks → inputOperator (via map)
+- [DONE] T-150 — `=` click → inputEquals
+- [DONE] T-151 — `CE` click → inputClearEntry
+- [DONE] T-152 — `AC` click → inputAllClear
 
 ## Group 8 — Keyboard binding + whitelist (INT-4, flow 8)
-- [PENDING] T-153 — single document-level keydown listener
-- [PENDING] T-154 — early-return on ctrl/meta/alt
-- [PENDING] T-155 — whitelist digits 0–9
-- [PENDING] T-156 — whitelist `.`
-- [PENDING] T-157 — whitelist `+ - * /` (preventDefault on `/`)
-- [PENDING] T-158 — whitelist Enter + `=`
-- [PENDING] T-159 — whitelist Escape → all-clear
-- [PENDING] T-160 — non-whitelisted keys early-return (Backspace no-op)
+- [DONE] T-153 — single document-level keydown listener
+- [DONE] T-154 — early-return on ctrl/meta/alt
+- [DONE] T-155 — whitelist digits 0–9
+- [DONE] T-156 — whitelist `.`
+- [DONE] T-157 — whitelist `+ - * /` (preventDefault on `/`)
+- [DONE] T-158 — whitelist Enter + `=`
+- [DONE] T-159 — whitelist Escape → all-clear
+- [DONE] T-160 — non-whitelisted keys early-return (Backspace no-op)
 
 ## Group 9 — Error-state rendering polish (INT-2, INT-6)
 - [PENDING] T-161 — error sentence style (color + words)

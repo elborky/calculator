@@ -138,4 +138,9 @@ describe('resolveOperation', () => {
     expect(result).toBeInstanceOf(Decimal);
     expect((result as Decimal).toString()).toBe('2.5');
   });
+
+  it('divide by zero returns string "divide-by-zero" — not Infinity, not NaN (E-001, R-010) (T-030)', () => {
+    const result = resolveOperation(new Decimal('5'), 'divide', new Decimal('0'));
+    expect(result).toBe('divide-by-zero');
+  });
 });

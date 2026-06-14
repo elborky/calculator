@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Calculator — M2 Mockup v2 (Bold)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* =========================================================================
+     M2 Calculator — Mockup v2 "BOLD"
+     Dark theme (§3.2 + R4 Linear reference) — dialed-up glass, still on-token.
+     Every color is a design-system token (F4). Pushed: deeper blur, stronger
+     saturate, larger radii, bigger display, more dominant equals, more
+     pronounced elevation/sheen — but palette + glass identity unchanged.
+     ========================================================================= */
+
+  :root {
+    /* --- §3.2 Dark-theme tokens (verbatim from design-system) --- */
+    --bg-gradient: linear-gradient(135deg, #1a1a3e 0%, #2d1b4e 50%, #3d1f4e 100%);
+    --glass-fill: rgba(255, 255, 255, 0.08);
+    --glass-fill-display: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.18);
+    --text-primary: #f5f5fa;
+    --text-secondary: rgba(245, 245, 250, 0.55);
+    --accent: #a29bfe;          /* indigo — equals, focus ring */
+    --operator-accent: #ff9f9f; /* coral — operators */
+    --error: #ff7675;
+
+    /* --- BOLD derivations (alpha lifts only; NO new hues — UR-027 contrast guard) --- */
+    /* Bold pushes blur/scale/elevation; where the lift risks contrast we RAISE
+       panel alpha (mandated order, §8 / UR-028) rather than darken text. */
+    --glass-fill-bold:        rgba(255, 255, 255, 0.11);  /* body — raised alpha so deeper blur still legible */
+    --glass-fill-display-bold: rgba(255, 255, 255, 0.07); /* display — raised vs 0.05 to hold ≥4.5:1 under big number */
+    --glass-border-bold:      rgba(255, 255, 255, 0.28);  /* brighter edge — bold sheen */
+
+    /* operator coral as a translucent tinted-glass fill (still --operator-accent hue) */
+    --operator-fill:   rgba(255, 159, 159, 0.20);
+    --operator-fill-2: rgba(255, 159, 159, 0.10);
+    --operator-edge:   rgba(255, 159, 159, 0.45);
+
+    /* equals indigo — the dominant commit action, glossier */
+    --accent-fill:   rgba(162, 155, 254, 0.32);
+    --accent-fill-2: rgba(162, 155, 254, 0.14);
+    --accent-edge:   rgba(162, 155, 254, 0.65);
+
+    /* depth tokens (pushed elevation — bigger drop + inner sheen) */
+    --elev-outer: 0 24px 70px rgba(0, 0, 0, 0.45);
+    --elev-sheen: inset 0 1px 0 rgba(255, 255, 255, 0.32);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--bg-gradient);
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 20px;
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* BOLD: ambient colored bloom behind the glass — same gradient stops, just
+     a dramatic radial wash so the glass object reads as floating in light. */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: -20%;
+    background:
+      radial-gradient(40% 50% at 22% 28%, rgba(162, 155, 254, 0.30), transparent 70%),
+      radial-gradient(45% 45% at 80% 78%, rgba(255, 159, 159, 0.18), transparent 70%);
+    filter: blur(40px);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* --- §5 layout: flex wrapper RESERVES the M3 history slot (no markup) --- */
+  .app-layout {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    width: 100%;
+  }
+  /* reserved history aside (M3) — kept empty, just holds the side room */
+  .history-slot { width: 0; flex: 0 0 auto; }
+  @media (min-width: 900px) {
+    .history-slot { width: 240px; }  /* desktop side-by-side room reserved */
+  }
+
+  /* =========================== CALCULATOR BODY =========================== */
+  /* BOLD: larger max-width, bigger radius, deeper blur, pronounced elevation. */
+  .calculator {
+    position: relative;
+    width: 100%;
+    max-width: 420px;             /* pushed from 360 — bigger, more present */
+    padding: 26px;
+    border-radius: 34px;          /* pushed from 24 — softer, more premium */
+    background: var(--glass-fill-bold);
+    backdrop-filter: blur(28px) saturate(180%);          /* pushed: 16→28, 140→180 */
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border: 1px solid var(--glass-border-bold);
+    box-shadow: var(--elev-outer), var(--elev-sheen);
+  }
+
+  /* reserved M4 theme-toggle corner (top-right) — empty, no M2 content here */
+  .toggle-slot {
+    position: absolute;
+    top: 18px; right: 18px;
+    width: 44px; height: 24px;
+    pointer-events: none;
+  }
+
+  /* =============================== DISPLAY =============================== */
+  /* BOLD: taller recessed window, bigger number, generous breathing. */
+  .display {
+    border-radius: 26px;
+    background: var(--glass-fill-display-bold);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid var(--glass-border-bold);
+    box-shadow:
+      0 10px 36px rgba(0, 0, 0, 0.28),
+      inset 0 1px 0 rgba(255, 255, 255, 0.20);
+    min-height: 132px;            /* pushed from ~96 — bigger display */
+    padding: 22px 24px;
+    margin-bottom: 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;        /* right-aligned */
+    justify-content: flex-end;    /* bottom-aligned — reads from bottom-right */
+    overflow: hidden;
+  }
+
+  /* pending line — reserves its own row so showing/hiding never shoves the
+     big number (UR-008 no-layout-jump). */
+  .pending {
+    font-size: 1rem;              /* pushed slightly for bold legibility */
+    font-weight: 400;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+    min-height: 1.4em;            /* reserved space — collapses content, not box */
+    line-height: 1.4;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .pending.is-hidden { visibility: hidden; }
+
+  /* primary readout — BOLD: bigger clamp ceiling for drama, weight 300 */
+  .readout {
+    font-size: clamp(2.75rem, 14vw, 4.75rem);  /* pushed ceiling 4→4.75, vw 12→14 */
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    width: 100%;
+    word-break: break-word;
+  }
+  /* error mode — sentence wraps/scales inside the glass (§2 note, UR-016) */
+  .readout.is-error {
+    color: var(--error);
+    font-size: clamp(1.5rem, 6vw, 2.1rem);  /* scales down so the sentence fits */
+    font-weight: 400;
+    line-height: 1.25;
+  }
+
+  /* =============================== KEYPAD =============================== */
+  /* §3 exact 4-col grid. BOLD: bigger gap, taller rows for a commanding pad. */
+  .keypad {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 13px;                    /* pushed to upper bound */
+  }
+
+  .key {
+    font-family: inherit;
+    font-size: 1.7rem;            /* pushed from 1.5 — bolder faces */
+    font-weight: 500;
+    color: var(--text-primary);
+    min-height: 70px;             /* ≥64 floor, pushed bigger */
+    border: 1px solid var(--glass-border-bold);
+    border-radius: 22px;          /* pushed from 16 */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    /* glass pane — buttons get their own lighter blur so they don't over-soften */
+    background: var(--glass-fill-bold);
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    box-shadow:
+      0 6px 18px rgba(0, 0, 0, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    transition: transform 80ms ease-out, background 120ms ease, box-shadow 150ms ease;
+  }
+
+  .key:hover {
+    background: rgba(255, 255, 255, 0.16);
+    box-shadow:
+      0 8px 24px rgba(0, 0, 0, 0.28),
+      0 0 20px rgba(162, 155, 254, 0.12),    /* faint glow (§7) */
+      inset 0 1px 0 rgba(255, 255, 255, 0.24);
+  }
+
+  .key:active {
+    transform: scale(0.96);
+    background: rgba(255, 255, 255, 0.22);
+  }
+
+  /* HARD FLOOR — visible focus ring, never bare outline:none (UR-020, §8) */
+  .key:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* --- type styling --- */
+
+  /* clears AC/CE — util, de-emphasized label (--text-secondary) */
+  .key--util {
+    color: var(--text-secondary);
+    font-size: 1.25rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+
+  /* operators — coral fill + glyph together (not color alone, UR-024) */
+  .key--op {
+    color: var(--operator-accent);
+    font-weight: 500;
+    background:
+      linear-gradient(160deg, var(--operator-fill) 0%, var(--operator-fill-2) 100%);
+    border-color: var(--operator-edge);
+    box-shadow:
+      0 6px 20px rgba(255, 159, 159, 0.14),
+      inset 0 1px 0 rgba(255, 255, 255, 0.20);
+  }
+  .key--op:hover {
+    background:
+      linear-gradient(160deg, rgba(255, 159, 159, 0.30) 0%, rgba(255, 159, 159, 0.16) 100%);
+    box-shadow:
+      0 8px 26px rgba(255, 159, 159, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.26);
+  }
+  .key--op:active { background: rgba(255, 159, 159, 0.36); }
+
+  /* equals — BOLD: the dominant commit action. Glossier indigo, spans 2 rows. */
+  .key--eq {
+    grid-column: 4;
+    grid-row: 4 / 6;             /* spans rows 4–5 (right column) */
+    color: var(--text-primary);
+    font-size: 2.2rem;
+    font-weight: 600;
+    background:
+      linear-gradient(160deg, var(--accent-fill) 0%, var(--accent-fill-2) 100%);
+    border-color: var(--accent-edge);
+    box-shadow:
+      0 10px 30px rgba(162, 155, 254, 0.30),
+      inset 0 1px 0 rgba(255, 255, 255, 0.32);
+  }
+  .key--eq:hover {
+    background:
+      linear-gradient(160deg, rgba(162, 155, 254, 0.42) 0%, rgba(162, 155, 254, 0.20) 100%);
+    box-shadow:
+      0 12px 38px rgba(162, 155, 254, 0.40),
+      0 0 26px rgba(162, 155, 254, 0.20),
+      inset 0 1px 0 rgba(255, 255, 255, 0.38);
+  }
+  .key--eq:active { background: rgba(162, 155, 254, 0.48); }
+
+  /* zero — spans 2 cols, label left-aligned to echo the digit column above */
+  .key--zero {
+    grid-column: 1 / 3;          /* row 5, cols 1–2 */
+    justify-content: flex-start;
+    padding-left: 30px;
+  }
+
+  /* explicit grid placement so the layout is locked & unambiguous */
+  .k-ac { grid-area: 1 / 1; }
+  .k-ce { grid-area: 1 / 2; }
+  .k-div{ grid-area: 1 / 3; }
+  .k-mul{ grid-area: 1 / 4; }
+  .k-7  { grid-area: 2 / 1; }
+  .k-8  { grid-area: 2 / 2; }
+  .k-9  { grid-area: 2 / 3; }
+  .k-sub{ grid-area: 2 / 4; }
+  .k-4  { grid-area: 3 / 1; }
+  .k-5  { grid-area: 3 / 2; }
+  .k-6  { grid-area: 3 / 3; }
+  .k-add{ grid-area: 3 / 4; }
+  .k-1  { grid-area: 4 / 1; }
+  .k-2  { grid-area: 4 / 2; }
+  .k-3  { grid-area: 4 / 3; }
+  .k-zero { grid-area: 5 / 1 / 6 / 3; }
+  .k-dot{ grid-area: 5 / 3; }
+
+  /* =============================== FALLBACK =============================== */
+  /* §5: if backdrop-filter unsupported → higher-alpha solid-ish fill so text
+     stays legible — never transparent-with-no-blur. */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .calculator { background: rgba(30, 30, 50, 0.90); }
+    .display    { background: rgba(30, 30, 50, 0.80); }
+    .key        { background: rgba(50, 50, 75, 0.92); }
+    .key--op    { background: rgba(120, 70, 70, 0.92); }
+    .key--eq    { background: rgba(70, 65, 120, 0.94); }
+  }
+
+  /* ============================ RESPONSIVE ============================ */
+  /* §5: phone full-width, 16px margin; same single-column stack. */
+  @media (max-width: 480px) {
+    body { padding: 16px; }
+    .calculator { max-width: none; padding: 20px; border-radius: 28px; }
+    .key { min-height: 64px; font-size: 1.55rem; }
+    .keypad { gap: 11px; }
+  }
+
+  /* ========================== REDUCED MOTION ========================== */
+  /* §7 / §8 — not optional: drop transforms/translates → instant changes. */
+  @media (prefers-reduced-motion: reduce) {
+    .key { transition: background 1ms; }
+    .key:active { transform: none; }
+    .readout { animation: none; }
+  }
+
+  /* result motion (display, on =) — fade+rise (§4.3). Static mockup shows a
+     RESULT frame; the keyframe documents the intended motion. */
+  @keyframes result-rise {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+  <div class="app-layout">
+    <!-- reserved M3 history slot (no markup rendered — §5) -->
+    <div class="history-slot" aria-hidden="true"></div>
+
+    <main class="calculator" aria-label="Calculator">
+      <!-- reserved M4 theme-toggle corner (no toggle in M2 — §5) -->
+      <div class="toggle-slot" aria-hidden="true"></div>
+
+      <!-- DISPLAY — live region (UR-023). Realistic MID-ENTRY state shown:
+           accumulator 12, operator ×, currently typing 3.5 -->
+      <div class="display" role="status" aria-live="polite">
+        <div class="pending" id="pending">12 ×</div>
+        <div class="readout" id="readout">3.5</div>
+      </div>
+
+      <!-- KEYPAD — exact §3 layout, all 15 keys, true-Unicode operator glyphs -->
+      <div class="keypad">
+        <button class="key key--util k-ac"  aria-label="All clear">AC</button>
+        <button class="key key--util k-ce"  aria-label="Clear entry">CE</button>
+        <button class="key key--op   k-div" aria-label="Divide">&#247;</button>
+        <button class="key key--op   k-mul" aria-label="Multiply">&#215;</button>
+
+        <button class="key k-7">7</button>
+        <button class="key k-8">8</button>
+        <button class="key k-9">9</button>
+        <button class="key key--op k-sub" aria-label="Subtract">&#8722;</button>
+
+        <button class="key k-4">4</button>
+        <button class="key k-5">5</button>
+        <button class="key k-6">6</button>
+        <button class="key key--op k-add" aria-label="Add">+</button>
+
+        <button class="key k-1">1</button>
+        <button class="key k-2">2</button>
+        <button class="key k-3">3</button>
+        <button class="key key--eq" aria-label="Equals">=</button>
+
+        <button class="key key--zero k-zero">0</button>
+        <button class="key k-dot" aria-label="Decimal point">.</button>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

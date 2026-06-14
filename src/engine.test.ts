@@ -587,6 +587,20 @@ describe('decimal.js correctness via engine — Group 12 (E-045–E-049)', () =>
 });
 
 describe('chaining and multi-operator — Group 13 (E-025–E-027)', () => {
+  it('1 + 1 + 1 + 1 = 4 — long same-op chain (E-026) (T-070)', () => {
+    const s0 = initialState();
+    const s1 = inputDigit(s0, '1');
+    const s2 = inputOperator(s1, 'add');
+    const s3 = inputDigit(s2, '1');
+    const s4 = inputOperator(s3, 'add'); // auto-resolves 1+1=2
+    const s5 = inputDigit(s4, '1');
+    const s6 = inputOperator(s5, 'add'); // auto-resolves 2+1=3
+    const s7 = inputDigit(s6, '1');
+    const s8 = inputEquals(s7); // 3+1=4
+    expect(s8.entryBuffer).toBe('4');
+    expect(s8.errorState).toBeNull();
+  });
+
   it('2 + 3 × 4 = 20 left-to-right, no operator precedence (E-025, R-004) (T-069)', () => {
     const s0 = initialState();
     const s1 = inputDigit(s0, '2');

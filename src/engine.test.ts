@@ -396,4 +396,19 @@ describe('inputClearEntry', () => {
     expect(s4.accumulator!.toString()).toBe('5');
     expect(s4.pendingOperator).toBe('add');
   });
+
+  it('escapes error latch — errorState cleared after CE (E-032, R-015) (T-054)', () => {
+    // Construct a state with errorState set (e.g. via divide-by-zero)
+    const s0 = initialState();
+    const s1 = inputDigit(s0, '5');
+    const s2 = inputOperator(s1, 'divide');
+    const s3 = inputDigit(s2, '0');
+    const s4 = inputEquals(s3); // errorState = 'divide-by-zero'
+
+    expect(s4.errorState).toBe('divide-by-zero'); // confirm error is latched
+
+    const s5 = inputClearEntry(s4);
+    expect(s5.errorState).toBeNull(); // CE clears the error latch
+    expect(s5.entryBuffer).toBe('0');
+  });
 });

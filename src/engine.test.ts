@@ -132,4 +132,10 @@ describe('resolveOperation', () => {
     expect(result).toBeInstanceOf(Decimal);
     expect((result as Decimal).toString()).toBe('21');
   });
+
+  it('division correct — 10 ÷ 4 = 2.5 exact (T-029)', () => {
+    const result = resolveOperation(new Decimal('10'), 'divide', new Decimal('4'));
+    expect(result).toBeInstanceOf(Decimal);
+    expect((result as Decimal).toString()).toBe('2.5');
+  });
 });

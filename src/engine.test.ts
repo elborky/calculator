@@ -511,6 +511,27 @@ describe('getDisplayValue — normal states', () => {
 });
 
 describe('decimal.js correctness via engine — Group 12 (E-045–E-049)', () => {
+  it('0.1 + 0.2 - 0.3 = 0 exactly — no floating point residual (E-049) (T-068)', () => {
+    // Step 1: 0.1 + 0.2 = 0.3
+    const s0 = initialState();
+    const s1 = inputDigit(s0, '0');
+    const s2 = inputDecimal(s1);
+    const s3 = inputDigit(s2, '1');
+    const s4 = inputOperator(s3, 'add');
+    const s5 = inputDigit(s4, '0');
+    const s6 = inputDecimal(s5);
+    const s7 = inputDigit(s6, '2');
+    const s8 = inputEquals(s7); // s8.entryBuffer === '0.3'
+    // Step 2: subtract 0.3
+    const s9 = inputOperator(s8, 'subtract');
+    const s10 = inputDigit(s9, '0');
+    const s11 = inputDecimal(s10);
+    const s12 = inputDigit(s11, '3');
+    const s13 = inputEquals(s12);
+    expect(s13.entryBuffer).toBe('0');
+    expect(s13.errorState).toBeNull();
+  });
+
   it('1 ÷ 3 is finite, no error — repeating decimal truncated to precision (E-048) (T-067)', () => {
     const s0 = initialState();
     const s1 = inputDigit(s0, '1');

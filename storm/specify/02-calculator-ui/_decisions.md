@@ -103,3 +103,27 @@ ever ships a `deleteLastChar` reducer (out of M1's frozen scope — F9).
 buffer-hygiene constraint verified against `_briefing.md` INT-4 + `01-data-model.md §4`.
 **Source:** `03-rules.md` UR-011/UR-012; `_briefing.md` INT-4; `01-calculation-engine/03-rules.md`
 R-017.
+
+## D-006 — Long-number display is auto-shrink → horizontal-scroll (never truncate)
+
+**Decision:** When a result/entry is wider than the display panel, M2 **auto-shrinks the display
+font** (measure rendered text width against the panel, step the size down from the
+`clamp(2.5rem, 12vw, 4rem)` default toward a `~1.25rem` floor); if it still overflows at the floor,
+the display line becomes **horizontally scrollable** (`overflow-x`, **right-anchored** so the
+least-significant digits, exponent suffix, and sign stay in view). `font-variant-numeric: tabular-nums`
+is preserved throughout. M2 **never truncates or ellipsizes a numeric result.** Error *sentences*
+(text, no precision to lose) may wrap to a 2nd line or shrink, but do not scroll.
+**Rationale:** decimal.js can emit up to ~21 significant digits plus exponent notation (E-007, E-036,
+E-048); the fixed glass display panel cannot always fit that. Truncation/ellipsis would silently hide
+digits — a correctness/trust failure on the product's single quality axis (a readable, premium,
+*accurate* calculator). Shrink-then-scroll keeps every digit reachable while respecting the display
+panel's fixed footprint (`08-design-system.md §6`) and the `tabular-nums` discipline (`§4`). M2 renders
+the engine string faithfully and does not re-round (F2).
+**Tradeoff (CP-15):** chose full-precision visibility (shrink+scroll) over a single fixed glance-size
+display; **sacrificed** the always-same-font-size aesthetic for very long values — accepted because
+accuracy/legibility outranks a fixed type-size for this product (§8 readability discipline, craft
+floor C3).
+**Verification:** native CSS/DOM capability (`overflow-x`, text measurement) — no third-party library,
+no version gate. Display sizing + `tabular-nums` mandated by `08-design-system.md §4, §6`.
+**Source:** `05-edge-cases.md` §"Long-number display approach" + UE-001..UE-007; `08-design-system.md
+§4, §6, §8`.

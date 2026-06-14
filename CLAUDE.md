@@ -2,10 +2,10 @@
 
 ## Current State
 
-- **Phase:** REVIEW M1 PASS → next is SPECIFY M2 (UI)
-- **Sub-context:** M1 Calculation Engine reviewed (L7+L8) — PASS. L8-01 P1 bug fixed (digit-after-equals now nulls accumulator, D-009). 61 tests green, tsc clean.
-- **Last decision:** M1 overflow bound corrected — `toExpPos:21` is display-notation only; real overflow guard = `!isFinite()` at `Decimal.maxE` (L8-02). Engine state stays 5 fields.
-- **Next step:** Run `/storm-specify 02` for M2 (UI module)
+- **Phase:** SPECIFY M2 APPROVED → next is BUILD M2 (UI)
+- **Sub-context:** M2 Calculator UI fully specified — 7 concerns + 3 mockups + cross-file audit PASS. Visual baseline LOCKED = v3 Wildcard (aurora glass, `04-ui/_picked.md`). Tech: vanilla TS + Vite 8 static build. 87 BUILD tasks staged (T-101–T-187). 7 sub-agent decisions D-001..D-007.
+- **Last decision:** M2 visual baseline = **v3 Wildcard** (owner pick, "dorong sampai mentok"). Cascade noted: M4 (theming) must reconcile design-system §3 tokens to the v3 baseline when specified.
+- **Next step:** Run `/storm-build 02` for M2 — first demo-able surface (ends the dark stretch).
 
 ## STORM Config
 

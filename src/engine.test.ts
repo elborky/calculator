@@ -264,4 +264,15 @@ describe('inputEquals', () => {
     expect(s4.justEvaluated).toBe(true);
     expect(s4.errorState).toBeNull();
   });
+
+  it('no pending operator — equals latches justEvaluated, buffer unchanged (E-020, R-006) (T-042)', () => {
+    // initialState() has no pendingOperator — pressing equals is a no-op except latching flag
+    const s0 = initialState();
+    const s1 = inputEquals(s0);
+
+    expect(s1.justEvaluated).toBe(true);
+    expect(s1.entryBuffer).toBe('0');
+    expect(s1.pendingOperator).toBeNull();
+    expect(s1.errorState).toBeNull();
+  });
 });

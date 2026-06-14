@@ -57,4 +57,15 @@ describe('inputDigit', () => {
     // Flag must be cleared
     expect(state.justEvaluated).toBe(false);
   });
+
+  it('no-op in error state — inputDigit returns state unchanged (E-040, R-014) (T-018)', () => {
+    // Simulate error state (e.g., divide-by-zero)
+    const errorState = { ...initialState(), entryBuffer: 'Error', errorState: 'divide-by-zero' as const };
+
+    const state = inputDigit(errorState, '5');
+
+    // State must be completely unchanged
+    expect(state.entryBuffer).toBe('Error');
+    expect(state.errorState).toBe('divide-by-zero');
+  });
 });

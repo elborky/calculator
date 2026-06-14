@@ -223,6 +223,32 @@ export function inputOperator(state: EngineState, op: Operator): EngineState {
 }
 
 /**
+ * Handles the Clear Entry (CE) button press.
+ *
+ * Rules applied:
+ *   R-017 — CE resets only the current entry buffer, NOT the accumulator or pending operator.
+ *   R-015 — CE escapes the error latch (clears errorState).
+ *
+ * Specifically:
+ *   - Sets entryBuffer = '0'
+ *   - Sets errorState = null (clears any error latch)
+ *   - Sets justEvaluated = false
+ *   - Leaves accumulator and pendingOperator INTACT
+ *
+ * This is NOT a full reset (C/AC) — it only clears the current entry and error.
+ *
+ * Never mutates state; always returns a new EngineState object.
+ */
+export function inputClearEntry(state: EngineState): EngineState {
+  return {
+    ...state,
+    entryBuffer: '0',
+    errorState: null,
+    justEvaluated: false,
+  };
+}
+
+/**
  * Handles the equals button press ('=').
  *
  * Rules applied (in order):

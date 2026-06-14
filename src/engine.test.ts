@@ -83,4 +83,14 @@ describe('inputDecimal', () => {
     const state = inputDecimal(withDecimal);
     expect(state.entryBuffer).toBe('3.');
   });
+
+  it('fresh "0." after justEvaluated, flag cleared (E-013) (T-022)', () => {
+    // Post-equals state: result '42' displayed, justEvaluated flagged
+    const postEquals = { ...initialState(), entryBuffer: '42', justEvaluated: true };
+    const state = inputDecimal(postEquals);
+    // Must start fresh with '0.', not append to '42'
+    expect(state.entryBuffer).toBe('0.');
+    // Flag must be cleared
+    expect(state.justEvaluated).toBe(false);
+  });
 });

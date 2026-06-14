@@ -758,3 +758,35 @@ describe('justEvaluated matrix — Group 16 (E-050–E-055)', () => {
     expect(s5.errorState).toBeNull();
   });
 });
+
+describe('D-009 fresh-start — digit after equals nulls accumulator (L8-03)', () => {
+  it('inputDigit — digit after = nulls accumulator (D-009)', () => {
+    // sequence: 3 + 4 = (yields accumulator=7, JE=true), then digit 9
+    let s = initialState();
+    s = inputDigit(s, '3');
+    s = inputOperator(s, 'add');
+    s = inputDigit(s, '4');
+    s = inputEquals(s);
+    // Now s.accumulator = Decimal(7), s.justEvaluated = true
+    s = inputDigit(s, '9');
+    expect(s.accumulator).toBeNull();    // D-009: fresh start, no stale left operand
+    expect(s.pendingOperator).toBeNull();
+    expect(s.entryBuffer).toBe('9');
+    expect(s.justEvaluated).toBe(false);
+  });
+
+  it('inputDigit → inputOperator after = uses new operand, not prior result (E-057)', () => {
+    // 3 + 4 = 9 + 5 = → should be 14, not 12
+    let s = initialState();
+    s = inputDigit(s, '3');
+    s = inputOperator(s, 'add');
+    s = inputDigit(s, '4');
+    s = inputEquals(s);      // result: 7
+    s = inputDigit(s, '9'); // fresh start — accumulator must be nulled (D-009)
+    s = inputOperator(s, 'add');
+    s = inputDigit(s, '5');
+    s = inputEquals(s);      // should be 9 + 5 = 14
+    expect(s.entryBuffer).toBe('14');
+    expect(s.errorState).toBeNull();
+  });
+});

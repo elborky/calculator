@@ -158,6 +158,15 @@ number; the config is a one-line change at BUILD. OQ2 is resolved to the contrac
 BUILD-owned.
 **Source:** `03-rules.md` R-012, R-013.
 
+**Clarification (L8-02 fix, 2026-06-15):** `toExpPos: 21` in `decimal-config.ts` is a **display-notation
+threshold only** — it causes `Decimal.toString()` to render numbers ≥ 10^21 in exponential form. It does
+NOT make values non-finite and is NOT the overflow bound. The real overflow guard is `!result.isFinite()`
+in `resolveOperation`, which fires only at `Decimal.maxE` (~9e+9000000000000000) — effectively unreachable
+for consumer calculator inputs. A result like `1e25` is a valid, non-error result (displayed in exp
+notation); overflow would require inputs that exceed `Decimal.maxE`. This is consistent with the code as
+built and the test suite (E-006/E-007); the prior comment in `decimal-config.ts` was inaccurate and has
+been corrected.
+
 ## D-014 — M1/M2 display boundary is final; M1 does not round or format for display
 
 **Decision:** M1 exposes a full-precision `Decimal` value (and `toString()`) to M2. M1 never truncates,

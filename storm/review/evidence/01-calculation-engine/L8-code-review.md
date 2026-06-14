@@ -140,9 +140,9 @@ coverage hole.
 ## Findings Summary
 | # | Severity | File:Line | Description | Proposed fix (1-2 lines) |
 |---|---|---|---|---|
-| L8-01 | P1 | src/engine.ts:86-92 | D-009 violated — `inputDigit` does not null `accumulator` on digit-after-equals; `3 + 4 = 9 + 5 =` yields `12` not `14` (stale left operand). | In the `justEvaluated` branch of `inputDigit`, also set `accumulator: null` and `pendingOperator: null` so a digit after `=` starts a genuinely fresh calculation (per D-009). Add tests per L8-03. |
-| L8-02 | P2 | src/decimal-config.ts:8, src/engine.ts:44 | Overflow boundary mismatch — `toExpPos:21` is notation-only, NOT a magnitude bound; real overflow fires only at `Decimal.maxE`. Spec/comment (R-012/D-013) overstate the threshold. | Correct the comment + D-013 to state the real bound is `Decimal.maxE` (overflow effectively unreachable for consumer values), OR add an explicit `result.e >= N` magnitude check if a display ceiling is truly wanted (likely YAGNI). |
-| L8-03 | P2 | src/engine.test.ts | No test for digit-after-equals-then-operator (D-009 / E-057); the gap let L8-01 pass 59 green tests. | Add: (1) assert `accumulator === null` after digit post-`=`; (2) e2e `3 + 4 = 9 + 5 =` → `14`. Land with the L8-01 fix. |
+| L8-01 | P1 | src/engine.ts:86-92 | D-009 violated — `inputDigit` does not null `accumulator` on digit-after-equals; `3 + 4 = 9 + 5 =` yields `12` not `14` (stale left operand). | In the `justEvaluated` branch of `inputDigit`, also set `accumulator: null` and `pendingOperator: null` so a digit after `=` starts a genuinely fresh calculation (per D-009). Add tests per L8-03. | Resolved: see fix commit |
+| L8-02 | P2 | src/decimal-config.ts:8, src/engine.ts:44 | Overflow boundary mismatch — `toExpPos:21` is notation-only, NOT a magnitude bound; real overflow fires only at `Decimal.maxE`. Spec/comment (R-012/D-013) overstate the threshold. | Correct the comment + D-013 to state the real bound is `Decimal.maxE` (overflow effectively unreachable for consumer values), OR add an explicit `result.e >= N` magnitude check if a display ceiling is truly wanted (likely YAGNI). | Resolved: see fix commit |
+| L8-03 | P2 | src/engine.test.ts | No test for digit-after-equals-then-operator (D-009 / E-057); the gap let L8-01 pass 59 green tests. | Add: (1) assert `accumulator === null` after digit post-`=`; (2) e2e `3 + 4 = 9 + 5 =` → `14`. Land with the L8-01 fix. | Resolved: see fix commit |
 
 ## Verdict
 P0: 0 | P1: 1 | P2: 2 | P3: 0

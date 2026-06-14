@@ -82,12 +82,16 @@ export function inputDigit(state: EngineState, digit: string): EngineState {
     return state;
   }
 
-  // E-038 — fresh start after a completed evaluation
+  // E-038 / D-009 — fresh start after a completed evaluation
+  // D-009: accumulator is nulled here so a digit after = unconditionally starts a
+  // brand-new calculation with no stale left-hand value.
   if (state.justEvaluated) {
     return {
       ...state,
       entryBuffer: digit === '0' ? '0' : digit,
       justEvaluated: false,
+      accumulator: null,
+      pendingOperator: null,
     };
   }
 

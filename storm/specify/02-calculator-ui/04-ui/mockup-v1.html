@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculator — M2 Mockup v1 (Conservative)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* =====================================================================
+       M2 Calculator UI — v1 CONSERVATIVE
+       Tokens are the LIGHT theme from design-system §3.1, verbatim.
+       M4 will swap these custom properties; M2 ships light only (UR-029).
+       ===================================================================== */
+    :root {
+      /* §3.1 Light theme — EXACT values */
+      --bg-gradient: linear-gradient(135deg, #a8c0ff 0%, #c2a8ff 50%, #ffb3d9 100%);
+      --glass-fill: rgba(255, 255, 255, 0.45);
+      --glass-fill-display: rgba(255, 255, 255, 0.30);
+      --glass-border: rgba(255, 255, 255, 0.60);
+      --text-primary: #1a1a2e;
+      --text-secondary: rgba(26, 26, 46, 0.60);
+      --accent: #6c5ce7;
+      --operator-accent: #ff7675;
+      --error: #d63031;
+
+      /* §5 elevation layers — outer drop + inner top sheen */
+      --elevation:
+        0 8px 32px rgba(0, 0, 0, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+
+      /* §5 radii */
+      --radius-body: 24px;
+      --radius-display: 20px;
+      --radius-button: 16px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { height: 100%; }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      /* §6 full-viewport gradient canvas */
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* §5 reserved-slot wrapper — flex row on desktop (history sibling room),
+       column on phone. M2 renders NO history markup; this only must not
+       preclude M3 dropping a sibling in. (UR-032, F3) */
+    .app-layout {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    /* ---- Calculator body — single glass panel (§5 / §6, UR-031) ---- */
+    .calculator {
+      position: relative;
+      width: 100%;
+      max-width: 360px;
+      padding: 22px;
+      border-radius: var(--radius-body);
+      background: var(--glass-fill);
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--elevation);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* §5 reserved theme-toggle corner (M4, F4) — kept empty on purpose.
+       Nothing M2 needs lives in the top-right inset corner. */
+
+    /* ---- Display sub-panel — recessed window (§2) ---- */
+    .display {
+      min-height: 96px;
+      padding: 18px 20px;
+      border-radius: var(--radius-display);
+      background: var(--glass-fill-display);
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--elevation);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: flex-end;
+      text-align: right;
+      overflow: hidden;
+    }
+
+    /* Pending-expression line — secondary, smaller, on top (§2 line 1).
+       Reserve its vertical space so showing/hiding never shoves the big
+       number (UR-008). min-height holds the row even when empty. */
+    .display__pending {
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: var(--text-secondary);
+      font-variant-numeric: tabular-nums;
+      min-height: 1.25rem;
+      line-height: 1.25rem;
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Primary readout — large (§2 line 2 / §4) */
+    .display__primary {
+      font-size: clamp(2.5rem, 12vw, 4rem);
+      font-weight: 300;
+      color: var(--text-primary);
+      font-variant-numeric: tabular-nums;
+      line-height: 1.05;
+      width: 100%;
+      word-break: break-word;
+    }
+
+    /* Error rendering — sentence wraps/scales, color + words (UR-016/026, §8).
+       Conveyed by text, never color alone. */
+    .display--error .display__primary {
+      color: var(--error);
+      font-size: clamp(1.25rem, 6vw, 1.75rem);
+      font-weight: 400;
+      line-height: 1.2;
+    }
+
+    /* ---- Keypad grid — 4-col (§3, UR-030) ---- */
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: minmax(64px, 1fr);
+      gap: 11px;
+    }
+
+    .key {
+      font-family: inherit;
+      font-size: 1.5rem;
+      font-weight: 500;
+      min-height: 64px;
+      min-width: 64px;
+      border-radius: var(--radius-button);
+      background: var(--glass-fill);
+      /* §5 buttons use lighter blur than body */
+      backdrop-filter: blur(9px) saturate(140%);
+      -webkit-backdrop-filter: blur(9px) saturate(140%);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--elevation);
+      color: var(--text-primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      /* §7 press + hover transitions */
+      transition: transform 80ms ease-out, background 120ms ease, box-shadow 150ms ease;
+    }
+
+    /* §7 hover — subtle fill-alpha increase + faint glow */
+    .key:hover {
+      background: rgba(255, 255, 255, 0.58);
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+        0 0 12px rgba(255, 255, 255, 0.35);
+    }
+
+    /* §7 press — scale 0.96 + brief brightness lift, springs back, no bounce */
+    .key:active {
+      transform: scale(0.96);
+      background: rgba(255, 255, 255, 0.62);
+    }
+
+    /* §8 / UR-020 — visible focus ring, never bare outline:none */
+    .key:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* Util keys (AC / CE) — de-emphasized label (§3 button styling) */
+    .key--util {
+      color: var(--text-secondary);
+    }
+
+    /* Operator keys — coral fill + glyph together (UR-024, no color alone) */
+    .key--operator {
+      background: var(--operator-accent);
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.45);
+    }
+    .key--operator:hover {
+      background: #ff8a89;
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+        0 0 12px rgba(255, 118, 117, 0.45);
+    }
+    .key--operator:active {
+      background: #ff8f8e;
+    }
+
+    /* Equals — indigo accent, high-emphasis commit action (§3) */
+    .key--equals {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.40);
+      /* spans 2 rows in the right column (rows 4–5) */
+      grid-column: 4;
+      grid-row: 4 / span 2;
+    }
+    .key--equals:hover {
+      background: #7d6ef0;
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25),
+        0 0 14px rgba(108, 92, 231, 0.50);
+    }
+    .key--equals:active {
+      background: #8273f2;
+    }
+
+    /* Zero — spans 2 cols (row 5, cols 1–2), left-aligned label */
+    .key--zero {
+      grid-column: 1 / span 2;
+      justify-content: flex-start;
+      padding-left: 26px;
+    }
+
+    /* ---- Responsive (§5) ---- */
+    @media (max-width: 640px) {
+      body { padding: 0; }
+      .app-layout { flex-direction: column; width: 100%; }
+      .calculator {
+        max-width: none;
+        width: calc(100% - 32px);
+        margin: 16px;
+      }
+    }
+
+    /* §7 / §8 / UR-025 — reduced motion: drop transforms, instant changes */
+    @media (prefers-reduced-motion: reduce) {
+      .key { transition: background 120ms ease; }
+      .key:active { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- §5 reserved-slot wrapper: leaves a sibling slot for M3 history.
+       M2 ships only the calculator child. -->
+  <div class="app-layout">
+    <main class="calculator" aria-label="Calculator">
+
+      <!-- Display — live region announces results + errors (UR-023, §8).
+           Shown here in MID-ENTRY state: pending "12 ×" + primary "12". -->
+      <div class="display" role="status" aria-live="polite" aria-atomic="true">
+        <div class="display__pending" aria-hidden="false">12 ×</div>
+        <div class="display__primary">12</div>
+      </div>
+
+      <!-- Keypad — exact §3 layout. Real <button>s, aria-labels spell glyphs. -->
+      <div class="keypad">
+        <!-- Row 1 — clears + two operators -->
+        <button class="key key--util" type="button" aria-label="All clear">AC</button>
+        <button class="key key--util" type="button" aria-label="Clear entry">CE</button>
+        <button class="key key--operator" type="button" aria-label="Divide">&#247;</button>
+        <button class="key key--operator" type="button" aria-label="Multiply">&#215;</button>
+
+        <!-- Row 2 -->
+        <button class="key" type="button" aria-label="7">7</button>
+        <button class="key" type="button" aria-label="8">8</button>
+        <button class="key" type="button" aria-label="9">9</button>
+        <button class="key key--operator" type="button" aria-label="Subtract">&#8722;</button>
+
+        <!-- Row 3 -->
+        <button class="key" type="button" aria-label="4">4</button>
+        <button class="key" type="button" aria-label="5">5</button>
+        <button class="key" type="button" aria-label="6">6</button>
+        <button class="key key--operator" type="button" aria-label="Add">+</button>
+
+        <!-- Row 4 — 1 2 3, then equals spans rows 4–5 in col 4 -->
+        <button class="key" type="button" aria-label="1">1</button>
+        <button class="key" type="button" aria-label="2">2</button>
+        <button class="key" type="button" aria-label="3">3</button>
+        <button class="key key--equals" type="button" aria-label="Equals">=</button>
+
+        <!-- Row 5 — zero spans cols 1–2, decimal; equals already occupies col 4 -->
+        <button class="key key--zero" type="button" aria-label="0">0</button>
+        <button class="key" type="button" aria-label="Decimal point">.</button>
+      </div>
+
+    </main>
+  </div>
+</body>
+</html>

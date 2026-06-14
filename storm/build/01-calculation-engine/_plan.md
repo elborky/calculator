@@ -100,7 +100,7 @@ storm-depends-on:
 | T-044 | Test: `inputEquals — negative result (E-041, R-021): 3 - 5 = -2` | [DONE] |
 | T-045 | Test: `inputEquals — divide by zero sets errorState (E-001, R-010)` | [DONE] |
 | T-046 | Test: `inputEquals — no-op in error state (E-023)` | [DONE] |
-| T-047 | Test: `inputEquals — zero result is not error (E-024, E-039)` | [PENDING] |
+| T-047 | Test: `inputEquals — zero result is not error (E-024, E-039)` | [DONE] |
 
 ## Group 8 — Equals-after-equals no-op (D-017)
 

@@ -322,4 +322,18 @@ describe('inputEquals', () => {
     expect(result).toBe(errorState);
     expect(result.errorState).toBe('divide-by-zero');
   });
+
+  it('zero result is not an error — 5 - 5 = 0, errorState null (E-024, E-039) (T-047)', () => {
+    // Sequence: digit '5' → op 'subtract' → digit '5' → equals → result 0
+    const s0 = initialState();
+    const s1 = inputDigit(s0, '5');
+    const s2 = inputOperator(s1, 'subtract');
+    const s3 = inputDigit(s2, '5');
+    const s4 = inputEquals(s3);
+
+    // Zero is a valid result — NOT an error
+    expect(s4.errorState).toBeNull();
+    expect(s4.entryBuffer).toBe('0');
+    expect(s4.justEvaluated).toBe(true);
+  });
 });

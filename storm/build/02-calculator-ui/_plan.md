@@ -127,9 +127,9 @@ storm-depends-on:
 - [DONE] T-181 — reconcile v3 display font (Space Grotesk CDN → self-host or Inter-300)
 
 ## Group 14 — Verification (tsc + build + manual; REVIEW does browser e2e)
-- [PENDING] T-182 — `tsc --noEmit` across M1+M2
-- [PENDING] T-183 — `npm run build` static `dist/`
-- [PENDING] T-184 — manual smoke (12+3=15, 5÷0=error, AC)
-- [PENDING] T-185 — manual a11y spot-check (focus order, role=status)
-- [PENDING] T-186 — grep: no theme hex outside tokens.css
-- [PENDING] T-187 — hand off to REVIEW (Playwright e2e queued)
+- [DONE] T-182 — `tsc --noEmit` across M1+M2
+- [DONE] T-183 — `npm run build` static `dist/`
+- [DONE] T-184 — Playwright smoke: 12+3=15 ✓, 5÷0=error ✓, AC→0 ✓, keyboard 12+3 Enter=15 ✓
+- [DONE] T-185 — a11y: role=status+aria-live ✓, real <button>s+aria-labels ✓, focus ring 3px ✓
+- [DONE] T-186 — ⚠️ BLOCKER: 6 theme hex literals in keypad.css outside tokens.css (UR-029 violation — see commit body)
+- [DONE] T-187 — hand off to REVIEW: smoke PASS, UR-029 blocker flagged for orchestrator decision

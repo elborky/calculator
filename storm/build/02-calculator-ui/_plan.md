@@ -23,7 +23,7 @@ storm-depends-on:
 - [DONE] T-103 — add `"build": "tsc --noEmit && vite build"` script
 - [DONE] T-104 — add `"preview": "vite preview"` script
 - [DONE] T-105 — create `vite.config.ts` (minimal, default root, default dist)
-- [PENDING] T-106 — create `index.html` with `#app` mount + module script
+- [DONE] T-106 — create `index.html` with `#app` mount + module script
 - [PENDING] T-107 — create placeholder `src/ui/main.ts` stub
 - [PENDING] T-108 — verify `npm run build` emits static `dist/`
 

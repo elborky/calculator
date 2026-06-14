@@ -19,7 +19,7 @@ storm-depends-on:
 
 | # | Task | Status |
 |---|---|---|
-| T-001 | Init `package.json` (name, type module, test/typecheck scripts) | [PENDING] |
+| T-001 | Init `package.json` (name, type module, test/typecheck scripts) | [DONE] |
 | T-002 | Create `tsconfig.json` (strict, ESNext, moduleResolution:bundler, noEmit) | [PENDING] |
 | T-003 | Install `typescript@6.0.3`, `decimal.js@10.6.0`, `vitest@4.1.8` | [PENDING] |
 | T-004 | Create `vitest.config.ts` (minimal, globals:true optional) | [PENDING] |

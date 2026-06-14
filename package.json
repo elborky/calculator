@@ -1,0 +1,13 @@
+{
+  "name": "calculator",
+  "version": "0.1.0",
+  "description": "Web-based calculator — STORM framework field-test vehicle",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT"
+}

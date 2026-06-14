@@ -16,7 +16,7 @@
 
 ## Project Identity
 
-- **What:** Calculator app — refine in `/storm-capture` (set from directory name at init)
+- **What:** Web-based calculator, intentionally simple. Primary goal = **field-test the STORM framework** end-to-end (the process is what's being exercised; the product is deliberately minimal).
 - **Builder:** Default profile — Bahasa Indonesia primary, zero-code, ADHD-like (override in CAPTURE if needed)
 
 ## User Profile

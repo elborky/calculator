@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+# STORM commit-msg hook — measurement integrity (per #FF-017 + #FF-018)
+#
+# Rejects any commit whose subject matches `^storm:` unless `Model:` and
+# `Felt:` are present as PARSEABLE trailers in the final trailer block
+# (per `git interpret-trailers --parse`). Catches:
+#   (a) absent trailers entirely (#FF-017 original)
+#   (b) trailers present in body but separated from final trailer block by
+#       a blank line — silently invisible to the extraction pipeline
+#       (#FF-018: Model:/Felt: above a blank line then Co-Authored-By:)
+#
+# The previous regex-only check passed (b) and broke measurement.
+# `git interpret-trailers --parse` is git's canonical extraction tool,
+# the same one used by `git log --pretty='%(trailers:key=...)'`.
+#
+# Install: enable in your repo with one of:
+#   git config core.hooksPath .githooks   (project-local opt-in)
+#   bash scripts/install-storm-hooks.sh   (helper)
+#
+# Bypass for emergencies: `git commit --no-verify` (NOT recommended;
+# audit log will show absence of trailers and you lose measurement integrity).
+
+set -euo pipefail
+
+msg_file="${1:-}"
+[[ -z "$msg_file" || ! -r "$msg_file" ]] && exit 0  # not a commit-msg run
+
+# Skip merge / squash / fixup / revert commits — those don't carry tier intent
+first_line=$(head -n1 "$msg_file" || true)
+case "$first_line" in
+  Merge*|Revert*|fixup!*|squash!*|amend!*) exit 0 ;;
+esac
+
+# Only enforce on storm:-prefixed commits
+if ! grep -qE '^storm:' "$msg_file"; then
+  exit 0
+fi
+
+# Parse the trailer block as git itself would. This is what the extraction
+# pipeline (`git log --pretty='%(trailers:key=Model,valueonly=true)'`) sees.
+parsed_trailers=$(git interpret-trailers --parse <"$msg_file" 2>/dev/null || true)
+
+missing=()
+malformed=0
+
+if ! grep -qE '^Model: [A-Za-z0-9_.+-]+' <<<"$parsed_trailers"; then
+  missing+=("Model:")
+fi
+if ! grep -qE '^Felt: [A-Za-z0-9_.+-]+' <<<"$parsed_trailers"; then
+  missing+=("Felt:")
+fi
+
+# Distinguish "absent" from "present-but-not-parseable" for a clearer error.
+if (( ${#missing[@]} > 0 )); then
+  body_has_model=0
+  body_has_felt=0
+  grep -qE '^Model: [A-Za-z0-9_.+-]+' "$msg_file" && body_has_model=1
+  grep -qE '^Felt: [A-Za-z0-9_.+-]+'  "$msg_file" && body_has_felt=1
+  if (( body_has_model == 1 || body_has_felt == 1 )); then
+    malformed=1
+  fi
+fi
+
+if (( ${#missing[@]} > 0 )); then
+  echo "" >&2
+  echo "✗ STORM commit-msg gate (#FF-017 / #FF-018 measurement integrity):" >&2
+  if (( malformed == 1 )); then
+    echo "  Trailer(s) PRESENT IN BODY but NOT IN PARSED TRAILER BLOCK: ${missing[*]}" >&2
+    echo "" >&2
+    echo "  Cause: a blank line between Model:/Felt: and another trailer" >&2
+    echo "  (typically Co-Authored-By:) truncates the parseable trailer block." >&2
+    echo "  git's trailer parser only sees ONE contiguous block at the end." >&2
+    echo "" >&2
+    echo "  Fix: put ALL trailers in one contiguous block, no blank lines:" >&2
+    echo "" >&2
+    echo "    storm:PHASE:::subject - short desc" >&2
+    echo "" >&2
+    echo "    optional body" >&2
+    echo "" >&2
+    echo "    Model: sonnet" >&2
+    echo "    Felt: ok" >&2
+    echo "    Co-Authored-By: Claude ... <noreply@anthropic.com>" >&2
+  else
+    echo "  Missing required trailer(s): ${missing[*]}" >&2
+    echo "" >&2
+    echo "  Every storm: commit MUST carry:" >&2
+    echo "    Model: <sonnet|opus|haiku>   (actual dispatched tier)" >&2
+    echo "    Felt:  <ok|snappy|long>      (sub-agent self-assessment)" >&2
+    echo "" >&2
+    echo "  Use HEREDOC to include trailers:" >&2
+    echo "    git commit -m \"\$(cat <<'EOF'" >&2
+    echo "    storm:PHASE:::subject - short desc" >&2
+    echo "" >&2
+    echo "    optional body" >&2
+    echo "" >&2
+    echo "    Model: sonnet" >&2
+    echo "    Felt: ok" >&2
+    echo "    EOF" >&2
+    echo "    )\"" >&2
+  fi
+  echo "" >&2
+  echo "  Bypass (emergencies only): git commit --no-verify" >&2
+  exit 1
+fi
+
+exit 0

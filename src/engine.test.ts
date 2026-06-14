@@ -143,4 +143,12 @@ describe('resolveOperation', () => {
     const result = resolveOperation(new Decimal('5'), 'divide', new Decimal('0'));
     expect(result).toBe('divide-by-zero');
   });
+
+  it('"0.0" decimal form as divisor is treated as zero — div-by-zero guard fires (E-003) (T-031)', () => {
+    // Confirm pre-condition: decimal.js isZero() returns true for '0.0'
+    expect(new Decimal('0.0').isZero()).toBe(true);
+    // Guard must fire exactly as for integer '0'
+    const result = resolveOperation(new Decimal('9'), 'divide', new Decimal('0.0'));
+    expect(result).toBe('divide-by-zero');
+  });
 });

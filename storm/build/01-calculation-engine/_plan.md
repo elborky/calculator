@@ -74,7 +74,7 @@ storm-depends-on:
 | T-028 | Test: `resolveOperation — multiplication` | [DONE] |
 | T-029 | Test: `resolveOperation — division (10 ÷ 4 = 2.5)` | [DONE] |
 | T-030 | Test: `resolveOperation — divide by zero → 'divide-by-zero' (E-001, R-010)` | [DONE] |
-| T-031 | Test: `resolveOperation — "0.0" as divisor (E-003)` | [PENDING] |
+| T-031 | Test: `resolveOperation — "0.0" as divisor (E-003)` | [DONE] |
 
 ## Group 6 — Operator input handler
 

@@ -41,4 +41,56 @@ guarantees the user is never stuck — a friction/UX-safety call within technica
 rounding mode, and overflow threshold; states the *contract* and defers the values to `06-tech-choices.md`
 (OQ1, OQ2). **Rationale:** These are tied to the number-representation choice (native vs decimal lib),
 which is a verified tech decision belonging in tech-choices, not the data model. Avoids premature
-coupling. **Source:** `01-data-model.md` §1 note, §4, OQ1/OQ2.
+coupling. **Source:** `01-data-model.md` §1 note, §4, OQ1/OQ2. *(Resolved by D-006 below.)*
+
+---
+
+> Tech-choices decisions (CP-6 verified). Each carries a live-tool verification cite (Context7 primary,
+> npm-registry / WebFetch cross-check, time-anchored to June 2026). Authoritative rationale lives in
+> `06-tech-choices.md`; this is the index.
+
+## D-005 — Language: TypeScript 6.0.3
+
+**Decision:** Author the engine in TypeScript, compiled to plain JS for the static target.
+**Rationale:** Type-safety on the operand/operator state machine (F7); AI owns all code forever so type
+cost is AI-absorbed; compiles to plain JS → zero runtime, fits Dokploy Static (NGINX) target.
+**Source:** `06-tech-choices.md` §1.
+**Verification:** TypeScript 6.0.3 latest stable — npm registry `registry.npmjs.org/typescript/latest`
+(2026-06). TS out-of-the-box test support — Context7 `/vitest-dev/vitest` (2026-06).
+
+## D-006 — Number representation: decimal.js 10.6.0 (resolves the D-004 deferral)
+
+**Decision:** Use decimal.js for all arithmetic instead of native IEEE-754 `number`. THE key M1 tech
+decision; sets OQ1 (precision) + OQ2 (overflow threshold) that D-004 deferred here.
+**Rationale:** "Basics are flawless" (`01-vision.md`) forbids `0.1 + 0.2 = 0.30000000000000004`. Native
+float leaks that by default; the hand-rolled fix is *more* bespoke code (#FF-004 less-bespoke tiebreaker →
+decimal.js wins on both correctness AND simplicity). Gives a defined overflow threshold for the F5 error
+state vs silent Infinity.
+**Source:** `06-tech-choices.md` §2.
+**Verification:** decimal.js 10.6.0 latest, actively maintained — npm registry
+`registry.npmjs.org/decimal.js/latest`, `modified 2025-07-06` (2026-06 check). Arithmetic API + 0.1+0.2
+correctness — Context7 `/mikemcl/decimal.js` (benchmark 93.8, High, 2026-06). big.js 7.0.1 (npm, 2026-06)
+noted as lighter fallback, not chosen.
+
+## D-007 — Test framework: Vitest 4.1.8
+
+**Decision:** Unit-test the engine with Vitest.
+**Rationale:** The arithmetic core IS the craft bar (F12, C3) → needs a first-class unit runner; zero-config
+TS (no ts-jest); Vite-native → one toolchain shared with M2's Vite bundler. node:test + Jest set aside
+(config burden / pipeline split).
+**Source:** `06-tech-choices.md` §3.
+**Verification:** Vitest 4.1.8 latest — npm registry `registry.npmjs.org/vitest/latest` (2026-06); v4.x +
+Vitest-over-Jest-for-Vite recommendation — WebFetch vitest.dev/guide/comparisons (time-anchored 2026-06);
+TS out-of-the-box — Context7 `/vitest-dev/vitest` (2026-06).
+
+## D-008 — Build tooling: none at M1; app bundler deferred to M2 (Vite 8.0.16 recommended)
+
+**Decision:** No app bundler for the headless engine. M1 needs only `tsc` compile/type-check, an ES-module
+export for import, and Vitest for tests. The static-bundle bundler is M2's decision; Vite 8.0.16 recommended
+(non-binding).
+**Rationale:** Bundling produces the app's static `index.html`+JS for the Dokploy Static target — that's the
+UI module's output, not the logic core's. Bundling M1 alone = premature (CP-13 YAGNI). Tooling runtime:
+Node LTS v24 (Krypton).
+**Source:** `06-tech-choices.md` §4.
+**Verification:** Vite 8.0.16 latest — npm registry `registry.npmjs.org/vite/latest` (2026-06). Node LTS v24
+Krypton newest active LTS — `nodejs.org/dist/index.json` (2026-06).

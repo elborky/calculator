@@ -129,6 +129,22 @@ describe('inputOperator', () => {
     expect(s2.entryBuffer).toBe('0');
   });
 
+  it('chaining div-by-zero sets error, new op NOT registered — D-011, E-002 (T-038)', () => {
+    // Sequence: digit '5' → op 'divide' → decimal → digit '0' → op 'add'
+    // The right operand is '0.' (numerically 0) — uses inputDecimal to bypass
+    // the operator-swap guard (which checks entryBuffer === '0' exactly).
+    // Pressing 'add' auto-resolves 5÷0. → error; 'add' must NOT be registered.
+    const s0 = initialState();
+    const s1 = inputDigit(s0, '5');
+    const s2 = inputOperator(s1, 'divide');
+    const s3 = inputDecimal(s2); // buffer: '0.'  — bypasses swap guard
+    const s4 = inputDigit(s3, '0'); // buffer: '0.0' — still zero
+    const s5 = inputOperator(s4, 'add'); // triggers 5÷0.0 resolve → error
+
+    expect(s5.errorState).toBe('divide-by-zero');
+    expect(s5.pendingOperator).toBeNull(); // D-011: new op NOT set
+  });
+
   it('chaining auto-resolves LTR: 3 + 5 × → accumulator=8, pendingOp=multiply — E-018, R-004 (T-037)', () => {
     // Sequence: digit '3' → op 'add' → digit '5' → op 'multiply'
     // Pressing 'multiply' auto-resolves 3+5=8 first

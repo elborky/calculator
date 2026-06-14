@@ -129,6 +129,18 @@ describe('inputOperator', () => {
     expect(s2.entryBuffer).toBe('0');
   });
 
+  it('operator-swap different op — pendingOperator changes, no resolve, no error — E-017 (T-036)', () => {
+    // Sequence: digit '3' → op 'add' → op 'multiply' (no right operand)
+    const s0 = initialState();
+    const s1 = inputDigit(s0, '3');
+    const s2 = inputOperator(s1, 'add');      // commits '3', sets 'add'
+    const s3 = inputOperator(s2, 'multiply'); // swap to 'multiply', no resolve
+
+    expect(s3.pendingOperator).toBe('multiply');
+    expect(s3.accumulator!.toString()).toBe('3');
+    expect(s3.errorState).toBeNull();
+  });
+
   it('operator-swap same op — no resolve, pendingOperator stays same, no error — E-016 (T-035)', () => {
     // Sequence: digit '3' → op 'add' → op 'add' (same, no right operand)
     const s0 = initialState();

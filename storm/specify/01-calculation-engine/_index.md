@@ -42,7 +42,7 @@ the one-module "dark stretch" that everything else builds on (`_briefing.md` —
 | [`03-rules.md`](03-rules.md) | Arithmetic behaviour contract: 27 numbered rules covering the 4 operations (R-001–R-003), chaining / left-to-right (R-004–R-006), decimal (R-007–R-009), div-by-zero (R-010–R-011), overflow (R-012–R-013), latch/escape (R-014–R-016), CE/AC (R-017–R-020), negatives (R-021–R-023), precision boundary (R-024), leading-zero/trailing-decimal (R-025–R-027). Every rule maps to at least one Vitest case. |
 | [`05-edge-cases.md`](05-edge-cases.md) | 60 enumerated edge cases (E-001–E-060) across 12 categories: div-by-zero, overflow, decimal entry, operator-before-operand, equals behaviour, chaining, CE/AC from various states, long operand, negatives, decimal.js correctness, `justEvaluated` matrix, compound states. Each row is a discrete Vitest test scenario. |
 | [`06-tech-choices.md`](06-tech-choices.md) | CP-6-verified tech decisions: TypeScript vs JS, decimal.js vs native float, Vitest vs Jest/node:test, no bundler. All claims carry live-tool verification cites (Context7 + npm registry, June 2026). |
-| [`_decisions.md`](_decisions.md) | Index of 15 AI-autonomous technical decisions (D-001–D-015) logged during SPECIFY: state shape, string buffer, error latch, number-type deferral, TS/decimal.js/Vitest picks, flow semantics (post-equals, operator-first, chaining-error), rules choices (left-to-right, overflow contract, M1/M2 boundary), edge-case choices (repeated-equals, operator-swap). |
+| [`_decisions.md`](_decisions.md) | Index of 17 AI-autonomous technical decisions (D-001–D-017) logged during SPECIFY: state shape, string buffer, error latch, number-type deferral, TS/decimal.js/Vitest picks, flow semantics (post-equals, operator-first, chaining-error), rules choices (left-to-right, overflow contract, M1/M2 boundary), edge-case choices (operator-swap, equals-after-equals no-op per D-017). Note: D-015 (repeated-equals re-apply) is REVERSED; D-017 records the authoritative no-op decision. |
 
 ---
 
@@ -84,7 +84,7 @@ the one-module "dark stretch" that everything else builds on (`_briefing.md` —
 
 | # | Task | Done when |
 |---|---|---|
-| T-011 | Create `src/decimal-config.ts` — configure decimal.js `Decimal.set({ precision: 21, rounding: Decimal.ROUND_HALF_UP })` and export the configured `Decimal` class | Module exports `Decimal`; config applied before any engine use. tsc passes. |
+| T-011 | Create `src/decimal-config.ts` — configure decimal.js `Decimal.set({ precision: 21, rounding: Decimal.ROUND_HALF_UP, toExpPos: <N>, toExpNeg: <N> })` (overflow-bound knob per R-012 / D-013; concrete `<N>` values are BUILD-owned per D-013 — the knob's **presence** in the config call is mandatory) and export the configured `Decimal` class | Module exports `Decimal`; config applied before any engine use; `toExpPos` and `toExpNeg` (or `Decimal.maxE`/`Decimal.minE`) are explicitly set alongside precision. tsc passes. |
 | T-012 | Write unit test `decimal.js correctness — 0.1 + 0.2 = 0.3` (E-045) to confirm the configured instance eliminates the IEEE-754 artifact | 1 test passes: `new Decimal('0.1').plus('0.2').toString() === '0.3'`. |
 
 ---
@@ -148,7 +148,7 @@ the one-module "dark stretch" that everything else builds on (`_briefing.md` —
 
 | # | Task | Done when |
 |---|---|---|
-| T-040 | Implement `inputEquals(state: EngineState): EngineState` in `src/engine.ts` — no-op if `errorState` set (R-014, E-023); no-op if no `pendingOperator` but sets `justEvaluated` (E-020, R-006); resolves pending op via `resolveOperation`; on success updates `entryBuffer` to result string, `accumulator` to result, `pendingOperator = null`, `justEvaluated = true`; on error sets `errorState`; stores `lastOperator` and `lastRhs` for repeated-equals (D-015) | Function exported; tsc passes. |
+| T-040 | Implement `inputEquals(state: EngineState): EngineState` in `src/engine.ts` — no-op if `errorState` set (R-014, E-023); no-op if no `pendingOperator` AND `justEvaluated` true (E-022/E-053 — equals-after-equals is a no-op per D-017); no-op if no `pendingOperator` AND not `justEvaluated` but sets `justEvaluated = true` (E-020, R-006); resolves pending op via `resolveOperation`; on success updates `entryBuffer` to result string, `accumulator` to result, `pendingOperator = null`, `justEvaluated = true`; on error sets `errorState`. No `lastOperator`/`lastRhs` fields (D-017, 5-field model) | Function exported; tsc passes. |
 | T-041 | Write test `inputEquals — normal resolve (5 × 4 = 20, flow §3.1)` | 1 pass. |
 | T-042 | Write test `inputEquals — no pending operator is no-op (E-020, R-006)` | 1 pass: state unchanged except JE = true. |
 | T-043 | Write test `inputEquals — fresh state equals gives 0 (E-021)` | 1 pass. |
@@ -159,14 +159,18 @@ the one-module "dark stretch" that everything else builds on (`_briefing.md` —
 
 ---
 
-### 8 — Repeated-equals (D-015)
+### 8 — Equals-after-equals no-op assertion (D-017 — replaces dropped repeated-equals group)
+
+> ~~Repeated-equals group (D-015 / `lastOperator` / `lastRhs` field expansion) DROPPED by orchestrator
+> as out-of-scope. Original T-048 (field extension) and T-049 (logic update) are removed. T-050 and
+> T-051 are repurposed to assert the correct no-op behaviour per D-017.~~
 
 | # | Task | Done when |
 |---|---|---|
-| T-048 | Extend `EngineState` (or use a sibling store) to carry `lastOperator: Operator \| null` and `lastRhs: Decimal \| null` fields — updated on each successful `=` resolve | Fields added to `EngineState` or equivalent; `_decisions.md` D-015 encoding confirmed. tsc passes. |
-| T-049 | Update `inputEquals` to use `lastOperator + lastRhs` when `justEvaluated = true` (D-015, E-022) | Logic implemented; tsc passes. |
-| T-050 | Write test `inputEquals — repeated equals re-applies op (E-022): 3 + 4 = = → 11` | 1 pass. |
-| T-051 | Write test `inputEquals — third repeated equals (E-053): 3 + 4 = = = → 15` | 1 pass. |
+| T-048 | *(removed — field extension for repeated-equals was out-of-scope per D-017; `EngineState` stays 5 fields)* | — |
+| T-049 | *(removed — inputEquals repeated-equals logic is out-of-scope per D-017; T-040 no-op path covers it)* | — |
+| T-050 | Write test `inputEquals — equals after equals is no-op (E-022/E-053, D-017): 3 + 4 = = → result stays 7` | 1 pass: second `=` leaves state unchanged (result `7`, JE true). |
+| T-051 | Write test `inputEquals — multiple repeated equals remain no-op (D-017): 3 + 4 = = = → result stays 7` | 1 pass: each subsequent `=` is a no-op; result stays `7`. |
 
 ---
 
@@ -250,7 +254,7 @@ the one-module "dark stretch" that everything else builds on (`_briefing.md` —
 | # | Task | Done when |
 |---|---|---|
 | T-078 | Write test `operator after equals carries result forward (E-051, §3.3)` — result becomes ACC, PO set | 1 pass. |
-| T-079 | Write test `equals after equals is identity / no-op (E-053 without D-015)` — covered by T-050/T-051; confirm no double-action | 1 pass (or skip as duplicate of T-050). |
+| T-079 | Write test `equals after equals is no-op — result unchanged (E-053, D-017)` — covered by T-050/T-051; this task is a named pointer: if T-050/T-051 cover the scenario, mark T-079 as covered-by T-050 and do not add a duplicate test | Covered by T-050 (assert E-053 no-op passes there); 0 net new test files if T-050 already asserts E-053. |
 | T-080 | Write test `AC after equals gives full reset (E-055, E-035)` | 1 pass. |
 
 ---
@@ -271,6 +275,7 @@ Logged in `_decisions.md` as D-016 (see below; this index is the authority for t
 
 ---
 
-*Total tasks: 82 (T-001 – T-082). Each task is atomic (≤ 1 file or 1 logical unit; no "and"-joins).*
-*Test tasks: 57 of 82. Non-test tasks: 25 (scaffold, type defs, implementation functions).*
+*Total tasks: 80 active (T-001 – T-082, minus T-048 and T-049 which are removed stubs). Each active task is atomic (≤ 1 file or 1 logical unit; no "and"-joins).*
+*Test tasks: 55 of 80 active. Non-test tasks: 25 (scaffold, type defs, implementation functions).*
 *Coverage: all 27 rules (R-001–R-027) and all 60 edge cases (E-001–E-060) are addressed by named test tasks.*
+*Note: T-048 / T-049 are placeholder stubs (repeated-equals feature dropped per D-017); T-050 / T-051 / T-079 now assert the no-op behaviour.*

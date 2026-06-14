@@ -174,37 +174,59 @@ precision taste slice (OQ1) is deferred to M2.
 > Edge-cases decisions (CP-7 autonomous — boundary behaviour choices surfaced during enumeration).
 > Authoritative rationale lives in `05-edge-cases.md`; this is the index.
 
-## D-015 — Repeated equals re-applies last operator + last right-hand operand
+## D-015 — ~~Repeated equals re-applies last operator + last right-hand operand~~ **REVERSED — see D-017**
 
-**Decision:** When `=` is pressed while `justEvaluated = true`, the engine re-applies the last resolved
-operator to the current result using the same right-hand operand from the prior evaluation. Each subsequent
-`=` repeats the same (operator, rhs) pair. Example: `3 + 4 = = =` → 7, 11, 15.
-**Rationale:** Standard basic-calculator "chained equals" convention — the most common expectation for
-repeated `=` presses. The alternative (no-op) would violate the principle of least surprise. The engine
-must retain the last rhs and last operator post-evaluation to support this; exact encoding is a BUILD
-implementation detail. No scope creep — repeated `=` is inherent to the "resolve pending operation"
-contract (F3) applied idempotently.
-**Source:** `05-edge-cases.md` E-022, E-053.
+> ⚠️ **REVERSED by orchestrator decision, 2026-06-14. Superseded by D-017.**
+> D-015 specified a "chained equals" re-apply pattern requiring `lastOperator` / `lastRhs` fields.
+> The orchestrator determined this feature is out-of-scope (not in `04-scope.md` F3: "equals resolves
+> the pending operation to a result — singular, no repeat"). The 5-field state model (D-001) is
+> authoritative. Do NOT implement repeated-equals re-apply or add `lastOperator`/`lastRhs` fields.
+
+**Original decision (archived for audit trail):** When `=` is pressed while `justEvaluated = true`,
+the engine re-applies the last resolved operator to the current result using the same right-hand
+operand from the prior evaluation. Each subsequent `=` repeats the same (operator, rhs) pair.
+Example: `3 + 4 = = =` → 7, 11, 15.
+**Source (original):** `05-edge-cases.md` E-022, E-053 (both corrected to no-op per D-017).
+
+## D-017 — Repeated equals is a no-op (reverses D-015; restores 5-field model)
+
+**Decision:** Pressing `=` when `justEvaluated = true` (i.e. immediately after a prior `=`) is a
+**no-op** — the current result is displayed unchanged, no re-application of any prior operation.
+The `EngineState` object remains exactly 5 fields as defined in D-001. `lastOperator` and `lastRhs`
+fields are NOT added.
+**Rationale:** The repeated-equals re-apply pattern (D-015) was identified as **out-of-scope** by
+the orchestrator (2026-06-14). `04-scope.md` F3 states: "equals resolves the pending operation to
+a result" — singular. No-repeat is within scope; chained-equals re-apply is not. The 5-field state
+model (D-001) is the canonical authority; adding 2 more fields for an out-of-scope feature is
+over-engineering (CP-13 YAGNI). The no-op treatment is also the simpler implementation: the equals
+handler already checks for `pendingOperator === null`; when `justEvaluated` is true and there is no
+pending operator, that path is taken naturally with no extra state.
+**Supersedes:** D-015 (marked REVERSED above).
+**Cascade:** `05-edge-cases.md` E-022 / E-053 corrected to no-op; `_index.md` T-040 / T-048 / T-049 /
+T-050 / T-051 / T-079 updated or removed; `02-flows.md` §3.3 table already described the no-op and
+requires no change.
+**Source:** Orchestrator instruction, 2026-06-14 SPECIFY-fix pass.
 
 ---
 
 > Index decision (CP-7 autonomous — BUILD task list encoding). Authoritative task list lives in
 > `_index.md`; this entry is the index reference.
 
-## D-016 — BUILD task list: 82 atomic tasks, TDD-first, grouped by handler
+## D-016 — BUILD task list: 80 active tasks (T-001–T-082 with T-048/T-049 removed), TDD-first, grouped by handler
 
-**Decision:** Encode M1's BUILD task list in `_index.md` as 82 atomic tasks (T-001–T-082) in 17
-groups: scaffold (T-001–T-005), type definitions (T-006–T-010), decimal.js config (T-011–T-012),
-digit handler + tests (T-013–T-018), decimal handler + tests (T-019–T-024), arithmetic resolve
-helper + tests (T-025–T-031), operator handler + tests (T-032–T-039), equals handler + tests
-(T-040–T-047), repeated-equals (T-048–T-051), CE handler + tests (T-052–T-056), AC handler +
-tests (T-057–T-060), display-value API + tests (T-061–T-063), edge-case batches (T-064–T-080),
-final clean check (T-081–T-082).
-**Rationale:** Granularity discipline: each task ≤ 1 file or 1 logical unit, no "and"-joined tasks.
-57 of 82 tasks are test tasks (TDD-first where natural — M1 is pure logic with no side effects,
-the ideal TDD target). Test tasks carry R-NNN / E-NNN tags to link directly to the spec's 27 rules
-and 60 edge cases. The handler split (digit / decimal / operator / equals / CE / AC / display-value)
-mirrors the state-machine transitions in `01-data-model.md §2` and prevents any single task from
-touching multiple state pathways.
+**Decision:** Encode M1's BUILD task list in `_index.md` as T-001–T-082 in 17 groups: scaffold
+(T-001–T-005), type definitions (T-006–T-010), decimal.js config (T-011–T-012), digit handler +
+tests (T-013–T-018), decimal handler + tests (T-019–T-024), arithmetic resolve helper + tests
+(T-025–T-031), operator handler + tests (T-032–T-039), equals handler + tests (T-040–T-047),
+equals-after-equals no-op tests (T-048–T-051, was repeated-equals — T-048/T-049 are removed stubs
+per D-017; T-050/T-051 assert no-op), CE handler + tests (T-052–T-056), AC handler + tests
+(T-057–T-060), display-value API + tests (T-061–T-063), edge-case batches (T-064–T-080),
+final clean check (T-081–T-082). **80 active tasks** (82 IDs minus 2 removed stubs).
+**Rationale:** Granularity discipline: each active task ≤ 1 file or 1 logical unit, no "and"-joined
+tasks. 55 of 80 active tasks are test tasks (TDD-first where natural — M1 is pure logic with no
+side effects, the ideal TDD target). Test tasks carry R-NNN / E-NNN tags to link directly to the
+spec's 27 rules and 60 edge cases. The handler split (digit / decimal / operator / equals / CE / AC
+/ display-value) mirrors the state-machine transitions in `01-data-model.md §2` and prevents any
+single task from touching multiple state pathways.
 **Source:** `_index.md` BUILD task list; derived from `01-data-model.md`, `02-flows.md`,
 `03-rules.md`, `05-edge-cases.md`, `06-tech-choices.md`.

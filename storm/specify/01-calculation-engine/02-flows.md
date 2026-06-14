@@ -297,5 +297,5 @@ common compositional paths:
   divide-by-zero, overflow detection). Flows here describe *when* resolve fires; rules file
   describes *what computation* happens.
 - `05-edge-cases.md` — exhaustive enumeration of boundary inputs (operator-first, equals-first,
-  double-decimal, repeated-equals, etc.). Flows here show the happy paths and the primary error
+  double-decimal, equals-after-equals no-op, etc.). Flows here show the happy paths and the primary error
   paths; edge cases extend them.

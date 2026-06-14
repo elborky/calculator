@@ -95,7 +95,7 @@ Abbreviations: `EB` = `entryBuffer`, `ACC` = `accumulator`, `PO` = `pendingOpera
 |---|---|---|---|
 | E-020 | **Equals with no pending operation** | `7 =` | ACC is null, PO is null. `=` has nothing to resolve. Engine treats this as identity: result = current EB parsed as a number (i.e. `7`). JE set true. No error. |
 | E-021 | **Equals immediately at startup** | `=` (fresh state) | EB = `"0"`, ACC = null, PO = null. Same as E-020 with operand = `0`. Result = `0`, JE = true. |
-| E-022 | **Repeated equals — re-apply last operation** | `3 + 4 = =` | First `=`: `3 + 4 = 7`, JE true. Second `=`: re-applies last operator (`+`) with last right-hand operand (`4`) to the current result (`7`) → `7 + 4 = 11`. JE true. Each subsequent `=` re-applies the same pair. (D-009 — see §9.) |
+| E-022 | **Equals after equals — no-op** | `3 + 4 = =` | First `=`: `3 + 4 = 7`, JE true. Second `=`: `pendingOperator` is null, `justEvaluated` is true — no pending operation to resolve. **No-op:** result unchanged (`7`), JE stays true, state unchanged. (D-017 — see §11.) |
 | E-023 | **Equals in error state** | (ERR set) `=` | No-op. Engine latched. |
 | E-024 | **Equals resolving to exactly zero** | `5 - 5 =` | ERR null; result = `Decimal('0')`. Not an error — zero is a valid result; only dividing BY zero is the error (E-001). |
 
@@ -183,7 +183,7 @@ Abbreviations: `EB` = `entryBuffer`, `ACC` = `accumulator`, `PO` = `pendingOpera
 | E-050 | **Digit after equals** | `3 + 4 = 5` | See E-038. JE cleared; new number entry starts. |
 | E-051 | **Operator after equals** | `3 + 4 = +` | JE true, then `+` arrives. The result (`7`) is committed as the new ACC (carry-forward). PO = 'add'. JE cleared. User continues building expression from the result. |
 | E-052 | **Decimal after equals** | `3 + 4 = .` | See E-013. JE true → `.` starts fresh `"0."`. |
-| E-053 | **Equals after equals** | `3 + 4 = =` | See E-022. Repeated-equals pattern — re-applies last op + last rhs. |
+| E-053 | **Equals after equals** | `3 + 4 = =` | See E-022. Pressing `=` again with no new pending operation is a **no-op** — result unchanged. (D-017) |
 | E-054 | **CE after equals** | `3 + 4 = CE` | See E-031. EB → `"0"`, JE cleared. |
 | E-055 | **AC after equals** | `3 + 4 = AC` | See E-035. Full reset. |
 

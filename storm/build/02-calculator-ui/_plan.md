@@ -28,38 +28,38 @@ storm-depends-on:
 - [DONE] T-108 — verify `npm run build` emits static `dist/`
 
 ## Group 1 — HTML structure (port v3 markup, 15-key grid)
-- [PENDING] T-109 — calculator body glass-panel wrapper in `#app`
-- [PENDING] T-110 — display sub-panel container `role="status"` + `aria-live="polite"`
-- [PENDING] T-111 — pending-expression line element
-- [PENDING] T-112 — primary readout element (init `0`)
-- [PENDING] T-113 — keypad grid container
-- [PENDING] T-114 — row-1 `AC CE ÷ ×` buttons + aria-labels
-- [PENDING] T-115 — row-2 `7 8 9 −` buttons (subtract U+2212)
-- [PENDING] T-116 — row-3 `4 5 6 +` buttons
-- [PENDING] T-117 — row-4/5 `1 2 3 =` (= spans 2 rows)
-- [PENDING] T-118 — row-5 `0` (span 2 cols) + `.`
-- [PENDING] T-119 — stable data-attr identifier per button (INT-4)
+- [DONE] T-109 — calculator body glass-panel wrapper in `#app`
+- [DONE] T-110 — display sub-panel container `role="status"` + `aria-live="polite"`
+- [DONE] T-111 — pending-expression line element
+- [DONE] T-112 — primary readout element (init `0`)
+- [DONE] T-113 — keypad grid container
+- [DONE] T-114 — row-1 `AC CE ÷ ×` buttons + aria-labels
+- [DONE] T-115 — row-2 `7 8 9 −` buttons (subtract U+2212)
+- [DONE] T-116 — row-3 `4 5 6 +` buttons
+- [DONE] T-117 — row-4/5 `1 2 3 =` (= spans 2 rows)
+- [DONE] T-118 — row-5 `0` (span 2 cols) + `.`
+- [DONE] T-119 — stable data-attr identifier per button (INT-4)
 
 ## Group 2 — Design tokens as CSS custom properties
-- [PENDING] T-120 — `src/ui/styles/tokens.css` v3 color tokens on `:root`
-- [PENDING] T-121 — aurora/background gradient tokens
-- [PENDING] T-122 — glass-recipe structural tokens (blur/radius/shadow)
-- [PENDING] T-123 — import `tokens.css` first in stylesheet entry
+- [DONE] T-120 — `src/ui/styles/tokens.css` v3 color tokens on `:root`
+- [DONE] T-121 — aurora/background gradient tokens
+- [DONE] T-122 — glass-recipe structural tokens (blur/radius/shadow)
+- [DONE] T-123 — import `tokens.css` first in stylesheet entry
 
 ## Group 3 — Glass CSS (port v3 visual, token-driven)
-- [PENDING] T-124 — `src/ui/styles/layout.css` gradient canvas + flex-center body
-- [PENDING] T-125 — calculator-body glass recipe (backdrop-filter + -webkit- twin)
-- [PENDING] T-126 — `@supports not` higher-alpha fallback
-- [PENDING] T-127 — display sub-panel recessed contrast scrim
-- [PENDING] T-128 — primary readout type (clamp, tabular-nums)
-- [PENDING] T-129 — pending-line type (reserved vertical space)
-- [PENDING] T-130 — `src/ui/styles/keypad.css` 4-col grid
-- [PENDING] T-131 — `=` 2-row span + `0` 2-col span
-- [PENDING] T-132 — digit button style (≥64px glass pane)
-- [PENDING] T-133 — operator button style (accent fill + glyph)
-- [PENDING] T-134 — equals button style (accent, high-emphasis)
-- [PENDING] T-135 — AC/CE util button de-emphasis
-- [PENDING] T-136 — v3 signature effects (aurora drift, glow, sheen)
+- [DONE] T-124 — `src/ui/styles/layout.css` gradient canvas + flex-center body
+- [DONE] T-125 — calculator-body glass recipe (backdrop-filter + -webkit- twin)
+- [DONE] T-126 — `@supports not` higher-alpha fallback
+- [DONE] T-127 — display sub-panel recessed contrast scrim
+- [DONE] T-128 — primary readout type (clamp, tabular-nums)
+- [DONE] T-129 — pending-line type (reserved vertical space)
+- [DONE] T-130 — `src/ui/styles/keypad.css` 4-col grid
+- [DONE] T-131 — `=` 2-row span + `0` 2-col span
+- [DONE] T-132 — digit button style (≥64px glass pane)
+- [DONE] T-133 — operator button style (accent fill + glyph)
+- [DONE] T-134 — equals button style (accent, high-emphasis)
+- [DONE] T-135 — AC/CE util button de-emphasis
+- [DONE] T-136 — v3 signature effects (aurora drift, glow, sheen)
 
 ## Group 4 — M1 import + held-state wiring (INT-1)
 - [PENDING] T-137 — `src/ui/state.ts` import M1 public API

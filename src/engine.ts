@@ -322,3 +322,21 @@ export function inputEquals(state: EngineState): EngineState {
     errorState: null,
   };
 }
+
+/**
+ * Returns the value that should be shown on the calculator display.
+ *
+ * Rules applied:
+ *   Error state  — if errorState is set, return the ErrorTag string so the UI
+ *                  can render "Error" or the specific tag.
+ *   Normal state — return entryBuffer, which holds either the number being
+ *                  typed mid-entry OR the resolved result after equals.
+ *
+ * Pure function — no state mutated.
+ */
+export function getDisplayValue(state: EngineState): string | ErrorTag {
+  if (state.errorState !== null) {
+    return state.errorState;
+  }
+  return state.entryBuffer;
+}

@@ -2,10 +2,10 @@
 
 ## Current State
 
-- **Phase:** BUILD M2 (Calculator UI) — IN PROGRESS. Groups 0–3 done (T-101–T-136); first visual render LANDED (static glass UI, desktop+phone screenshots in `_evidence/`).
-- **Sub-context:** Vite static build green. v3 aurora-glass UI ported (index.html markup + tokens/layout/keypad CSS, all theme colour via tokens). NOT yet interactive — M1 wiring + render + input binding = Groups 4–8 next. Fonts (self-hosted Inter, D-004) = Group 13. Build target = v3 Wildcard; a11y floor non-negotiable.
-- **Last decision:** BUILD execution runs **inline on opus** (not forked sonnet) — forked dispatch blocked by #FF-008 (1M-context usage credits); owner chose unblocked progress over tier-purity (2026-06-15). Commits tagged `Model: opus` honestly; measurement-tier deviation noted.
-- **Next step:** Continue BUILD M2 → Group 4 (M1 import + held-state wiring, T-137–T-139), then Groups 5–8 to make it interactive.
+- **Phase:** BUILD M2 (Calculator UI) — **COMPLETE**. All 15 groups / 87 tasks DONE (T-101–T-187). Calculator is fully interactive + verified. Ready for REVIEW M2.
+- **Sub-context:** Vite static build GREEN. v3 aurora-glass UI live + interactive (click ≡ keyboard convergence via `handleKeyIntent`). M1 engine wired (state.ts → render.ts loop). Self-hosted Inter (300/400/500). Motion + reduced-motion + responsive + reserved M3/M4 slots. UR-029 token-purity clean (0 theme-hex outside tokens.css). Playwright smoke PASS: `12+3=`→15, `5÷0=`→"Cannot divide by zero", AC→0, keyboard path→15. Screenshots in `_evidence/smoke-*.png`. a11y: role=status, 3px focus ring, real `<button>`s.
+- **Last decision:** Forked-sonnet dispatch **RESTORED** for Groups 4–14 (#FF-008 credits-gate no longer blocking, 2026-06-15) — owner re-confirmed "coba lagi forked sonnet". All M2 task commits this session tagged `Model: sonnet` (tier-purity recovered; supersedes prior inline-opus session for Groups 0–3 only).
+- **Next step:** Enter REVIEW M2 (`/storm-review`) — Playwright e2e suite, full a11y audit, visual regression vs v3 baseline, L7 static guards + L8 adversarial review.
 
 ## STORM Config
 

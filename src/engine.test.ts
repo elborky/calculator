@@ -311,4 +311,15 @@ describe('inputEquals', () => {
 
     expect(s3.errorState).toBe('divide-by-zero');
   });
+
+  it('no-op in error state — inputEquals returns state unchanged (E-023) (T-046)', () => {
+    // Construct state with errorState set
+    const errorState = { ...initialState(), errorState: 'divide-by-zero' as const };
+
+    const result = inputEquals(errorState);
+
+    // Must return the same object reference (guard returns state unchanged)
+    expect(result).toBe(errorState);
+    expect(result.errorState).toBe('divide-by-zero');
+  });
 });

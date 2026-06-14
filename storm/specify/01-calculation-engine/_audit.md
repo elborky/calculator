@@ -4,77 +4,80 @@ storm-module: 01-calculation-engine
 storm-canonical: false
 ---
 
-# M1 Calculation Engine — Cross-File Consistency Audit
+# M1 Calculation Engine — Cross-File Consistency Audit (Re-audit, pass 2)
 
-> Adversarial cross-file consistency audit of the M1 SPECIFY concern set (opus tier).
+> Adversarial cross-file consistency re-audit of the M1 SPECIFY concern set (opus tier), after the
+> orchestrator fix-pass (commit `7480270`: repeated-equals D-015 dropped, decimal.js exp-knob added,
+> T-079 reworded). Files re-read fresh from disk.
 > Subjects: `_briefing.md`, `_index.md`, `01-data-model.md`, `02-flows.md`, `03-rules.md`,
 > `05-edge-cases.md`, `06-tech-choices.md`, `_decisions.md`.
 > Upstream cross-refs: `03-modules.md`, `04-scope.md`, `06-build-order.md`, `00-domain-lens.md`.
->
-> Headless-by-design: no `04-ui.md`, no mockups (deferred to M2 per `_briefing.md:50-54`). NOT flagged.
 
 ---
 
-## VERDICT: **FIX-REQUIRED** — 3 findings
+## VERDICT: **FIX-REQUIRED** — 1 finding (all 3 prior findings RESOLVED; 1 new minor count drift)
 
-- **F1 (BLOCKING):** State-machine field-set divergence — `lastOperator` / `lastRhs` (repeated-equals, D-015) are required by `_index.md` T-040/T-048 but absent from the canonical 5-field state object in `01-data-model.md §1` and D-001, which both lock the set at exactly 5 fields. The data-model is the canonical source and does not include them.
-- **F2 (MINOR):** Decimal.js config divergence — `_index.md` T-011 hard-codes `precision: 21` + `ROUND_HALF_UP` only, omitting the overflow-bound config (`toExpPos`/`toExpNeg`) that `03-rules.md R-012` and the overflow edge-cases (E-006/E-008, tasks T-075–T-077) depend on to fire `errorState = 'overflow'`.
-- **F3 (MINOR):** `_index.md` T-079 references "E-053 without D-015" and a duplicate-of-T-050 escape ("or skip as duplicate"), creating an ambiguous / contradictory task instruction against E-053's actual D-015-dependent definition in `05-edge-cases.md`.
+- **F1 (prior, BLOCKING) → RESOLVED.** Repeated-equals fully reversed; state shape is exactly 5 fields everywhere; D-015 annotated REVERSED, D-017 records the no-op; E-022/E-053 rewritten to no-op; AC-reset references exactly 5 fields. No dangling `lastOperator`/`lastRhs`/re-apply reference in any deliverable.
+- **F2 (prior, MINOR) → RESOLVED.** `_index.md` T-011 now includes the exponent-bound knob (`toExpPos`/`toExpNeg`, with `Decimal.maxE`/`minE` alternative), presence mandatory in "Done when", concrete value still BUILD-deferred per D-013.
+- **F3 (prior, MINOR) → RESOLVED.** `_index.md` T-079 no longer contradicts E-053; now a clean "covered-by T-050/T-051" no-op pointer.
+- **F4 (NEW, MINOR — introduced/left by the fix pass):** the task-count metadata in `_index.md` footer + D-016 ("55 of 80 active tasks are test tasks … Non-test tasks: 25") does not match the actual file content (**60** test tasks, **20** non-test active). The two errors offset to 80, masking the drift.
 
-R-NNN existence ✓, E-NNN existence ✓, D-NNN collisions ✓, chaining semantics ✓, number-representation contract ✓, div-by-zero/latch contract ✓, library/version pins ✓, scope adherence ✓ — see "Clean axes" below.
-
----
-
-## Findings (numbered)
-
-### F1 — BLOCKING — State field-set divergence: `lastOperator` / `lastRhs` not in canonical state object
-
-**Files:** `01-data-model.md:34-40` (§1) + `_decisions.md:13-20` (D-001) **vs** `_index.md:151` (T-040), `_index.md:166` (T-048), `_index.md:77` (T-008).
-
-**The divergence:**
-- `01-data-model.md §1` (`:34-40`) defines the state object as **exactly 5 fields**: `entryBuffer`, `accumulator`, `pendingOperator`, `justEvaluated`, `errorState`. D-001 (`_decisions.md:13-20`) reinforces this hard: *"five fields cover all transitions… more would be over-engineering (CP-13)."* T-008 (`_index.md:77`) codes the `EngineState` interface as those same 5 fields.
-- But repeated-equals (D-015, `_decisions.md:177-187`; E-022/E-053, `05-edge-cases.md:98,186`) requires the engine to retain the **last operator** and **last right-hand operand** after a resolve. `_index.md` T-040 (`:151`) states the equals handler *"stores `lastOperator` and `lastRhs` for repeated-equals (D-015)"*, and T-048 (`:166`) says *"Extend `EngineState` (or use a sibling store) to carry `lastOperator: Operator \| null` and `lastRhs: Decimal \| null` fields."*
-- These two fields are **not** in the data-model's canonical set and are **not** reconciled there. D-015 itself punts (`:186`: *"exact encoding is a BUILD implementation detail"*) and T-048 hedges (*"or use a sibling store"*) — so the canonical state shape is left genuinely ambiguous: is the engine state 5 fields or 7? `01-data-model.md` (the authoritative source for the field set) answers "5" and is silent on the other two; `_index.md` answers "7 (or a sibling store)". This is exactly the suspect flagged in the audit brief.
-
-**Why it matters (not cosmetic):** `01-data-model.md` is the canonical state-shape source; every other file (flows notation `[EB|ACC|PO|JE|ERR]` at `02-flows.md:21`, the latch/no-op contract, T-058's "all 5 fields at initial values" assertion at `_index.md:190`) is written against a **5-field** model. A BUILD agent reading T-048 will add fields the data-model never sanctioned, and tests like T-058 (`inputAllClear — all 5 fields at initial values`) become under-specified — must `lastOperator`/`lastRhs` also reset on AC? (They must, for E-059 "no residual after AC" at `05-edge-cases.md:199` to hold — but no file says so.)
-
-**The fix (pick one, then cascade):**
-- **Preferred — reconcile into the data-model.** Update `01-data-model.md §1` to include `lastOperator` (`Operator \| null`, initial `null`) and `lastRhs` (`Decimal \| null`, initial `null`) as fields 6 & 7, with a one-line purpose ("retained post-`=` to support repeated-equals, D-015") and an explicit note in §2 that **both reset on AC** and are **set on each successful `=`**. Amend D-001 (currently "5-field") → "7-field" with the repeated-equals rationale so it no longer contradicts (`_decisions.md:13-20`). Update the §1 initial-value column + the flows notation header (`02-flows.md:21`) if the team wants the canonical tuple to show all fields (optional — notation MAY stay 5-wide if a footnote names the 2 hidden retention fields).
-- **Alternative — sibling store.** If the owner prefers the state object stay at 5, then `01-data-model.md` must **explicitly** document the repeated-equals retention as a separate internal store (named, typed, reset-on-AC stated), and T-048 must drop the "Extend `EngineState`" wording in favour of the sibling-store path only. Either way the ambiguity ("or") must be removed and the chosen shape stated in the canonical file.
-- **Cascade on fix:** `01-data-model.md §1/§2`, `_decisions.md` D-001 (and a cross-note in D-015), `_index.md` T-008/T-040/T-048/T-058, and confirm E-059 (`05-edge-cases.md:199`) AC-reset coverage names the new fields.
+R-NNN existence ✓, E-NNN existence ✓, T-NNN contiguity ✓, D-NNN numbering/supersession ✓, chaining semantics ✓, number-representation contract ✓, div-by-zero/latch contract ✓, library/version pins ✓, scope adherence ✓ — see "Clean axes."
 
 ---
 
-### F2 — MINOR — Decimal.js config in T-011 omits the overflow-bound config the overflow contract depends on
+## Re-verification of the 3 prior findings
 
-**Files:** `_index.md:87` (T-011) **vs** `03-rules.md:99-109` (R-012) + `05-edge-cases.md:50-57` (E-006–E-008) + `_index.md:242-244` (T-075–T-077).
+### F1 — RESOLVED (was BLOCKING — state field-set divergence)
 
-**The divergence:** T-011 (`:87`) specifies the decimal.js config as exactly `Decimal.set({ precision: 21, rounding: Decimal.ROUND_HALF_UP })`. But R-012 (`03-rules.md:99-109`) defines the overflow error state as firing when a result *"exceeds the configured precision and **exponent range**"* and names `toExpPos`/`toExpNeg` as the controlling config; E-006/E-008 (`05-edge-cases.md:55,57`) and the overflow test tasks T-075–T-077 (`_index.md:242-244`) require a configured **magnitude/exponent bound** to fire `errorState = 'overflow'`. With only `precision` + `rounding` set (T-011), decimal.js does **not** raise an overflow on large exponents by default — `toExpPos`/`maxE` govern that, and they are unset. The overflow tests would have no configured ceiling to trip.
+Verified against the four required sub-conditions:
 
-**Note:** D-013 (`_decisions.md:149-159`) legitimately defers the *concrete value* of the overflow threshold to BUILD — that deferral is fine and is NOT the divergence. The divergence is that T-011, the one task that *applies* the decimal.js config, enumerates a closed config object (`precision` + `rounding` only) that silently drops the exponent-bound knob R-012's contract is built on. A BUILD agent following T-011 verbatim ships a config under which T-075–T-077 cannot pass.
+1. **No file still references repeated-equals re-application.** Full grep sweep (`repeated.equal|re-appl|reappl|lastOperator|lastRhs|last operator|last right`) across the concern set returns only: (a) properly-annotated REVERSED/DROPPED references in `_decisions.md` D-015/D-017 and `_index.md` (audit-trail — correct, required for traceability); (b) the generic phrase "repeated equals" as an *example of an enumerated edge case* in `01-data-model.md:136` and `03-rules.md:219` — these are pointers to E-022/E-053, which now define it as a **no-op**, so the pointers remain valid; (c) this `_audit.md` itself (not a spec file). **Zero re-apply assertions remain in deliverable content.** ✓
+2. **State shape is exactly 5 fields everywhere.** `01-data-model.md §1` (unchanged, 5 fields), `_index.md` T-008 (5 fields), `_index.md` concern table `:40` (5 fields named), `02-flows.md:21` notation tuple (`[EB|ACC|PO|JE|ERR]`, 5-wide). T-040 (`:151`) explicitly states *"No `lastOperator`/`lastRhs` fields (D-017, 5-field model)."* ✓
+3. **E-022 / E-053 now describe no-op.** E-022 (`05-edge-cases.md:98`): *"Second `=`: `pendingOperator` is null, `justEvaluated` is true … No-op: result unchanged (`7`) … (D-017)."* E-053 (`:186`): *"Pressing `=` again with no new pending operation is a **no-op** — result unchanged. (D-017)."* `02-flows.md §3.3` (`:158`): *"`=` again | No pending op → no-op (displays `20`)."* Consistent across all three. ✓
+4. **AC-reset references exactly 5 fields; D-015 annotated.** T-058 (`:194`) *"all 5 fields at initial values."* E-059 (`:199`) "no residual after AC" now holds trivially — there are no extra retention fields to reset (the gap I flagged in pass 1 is closed by removing the fields, not by adding reset logic). D-015 (`_decisions.md:177`) struck-through + *"REVERSED — see D-017"*; D-017 (`:191`) records the no-op decision, supersession, and cascade. ✓
 
-**The fix:** Amend T-011 (`_index.md:87`) so the config object is not closed at `precision` + `rounding` — either (a) add the overflow-bound config to the `Decimal.set({...})` call (e.g. include `toExpPos`/`toExpNeg` or document reliance on `Decimal.maxE`/`minE`), or (b) reword T-011 to "configure precision + rounding **and** the overflow exponent bound per R-012; concrete bound value is BUILD-owned (D-013)" so the task explicitly carries the third knob. Keep the value BUILD-deferred per D-013, but the *presence* of the knob must be in the config task, not only in the rules prose.
+### F2 — RESOLVED (was MINOR — decimal.js exp-knob)
+
+`_index.md` T-011 (`:87`) now reads: `Decimal.set({ precision: 21, rounding: Decimal.ROUND_HALF_UP, toExpPos: <N>, toExpNeg: <N> })` with the parenthetical *"overflow-bound knob per R-012 / D-013; concrete `<N>` values are BUILD-owned per D-013 — the knob's presence in the config call is mandatory"*, and the "Done when" now requires *"`toExpPos` and `toExpNeg` (or `Decimal.maxE`/`Decimal.minE`) are explicitly set alongside precision."* The overflow tests T-075–T-077 now have a configured bound to trip. Value-deferral to BUILD (D-013) preserved. ✓
+
+### F3 — RESOLVED (was MINOR — T-079 contradiction)
+
+`_index.md` T-079 (`:257`) now reads: *"Write test `equals after equals is no-op — result unchanged (E-053, D-017)` — covered by T-050/T-051; this task is a named pointer … do not add a duplicate test."* The contradictory *"identity / no-op (E-053 without D-015)"* phrasing is gone; the task now agrees with E-053's actual no-op definition and the dup-avoidance is explicit. ✓
 
 ---
 
-### F3 — MINOR — T-079 task instruction is ambiguous / self-contradictory against E-053's D-015 definition
+## New finding
 
-**Files:** `_index.md:253` (T-079) **vs** `05-edge-cases.md:186` (E-053) + `05-edge-cases.md:98` (E-022) + `_decisions.md:177-187` (D-015).
+### F4 — MINOR — task-count metadata in `_index.md` footer + D-016 is wrong (offsetting errors mask it)
 
-**The divergence:** T-079 (`:253`) reads: *"Write test `equals after equals is identity / no-op (E-053 without D-015)` — covered by T-050/T-051; confirm no double-action … (or skip as duplicate of T-050)."* But E-053 (`05-edge-cases.md:186`) is **defined** as the repeated-equals re-apply pattern (*"See E-022. Repeated-equals pattern — re-applies last op + last rhs"*), which is the **opposite** of "identity / no-op." E-022 (`:98`) and D-015 (`_decisions.md:177-187`) both make `= =` re-apply `(lastOp, lastRhs)` → `3 + 4 = =` yields `11`, explicitly **not** a no-op / identity. T-079's parenthetical "(E-053 without D-015)" describes a behaviour the spec does not have, and its "identity / no-op" framing directly contradicts E-053's actual expected result. The "(or skip as duplicate of T-050)" escape compounds the ambiguity — leaving a BUILD agent unsure whether E-053 is a real second test or a no-op stub.
+**Files:** `_index.md:226` (D-016 body) + `_index.md:278-281` (footer) + `_decisions.md:215-224` (D-016).
 
-**The fix:** Rewrite T-079 to match E-053's real definition — either fold it cleanly into the repeated-equals coverage (it is already exercised by T-050/T-051, so make T-079 an explicit *"covered-by"* pointer with **no** "identity/no-op" wording), or delete T-079 and renumber, noting in `_index.md` that E-053 is covered by T-050/T-051. Remove the contradictory "(E-053 without D-015)" / "identity / no-op" phrasing so no task asserts a behaviour the spec contradicts.
+**The divergence:** Both the `_index.md` footer (`:279`) and D-016 state *"Test tasks: **55** of 80 active. Non-test tasks: **25**."* A precise per-row count of the live file disagrees:
+
+- Total task IDs: **82** (T-001–T-082, contiguous, verified). ✓
+- Removed stubs: T-048, T-049 = **2** → active = **80**. ✓ (this number is correct)
+- Test tasks (Task-cell begins "Write test/Write unit test"): **60** (machine-counted, deduped).
+- Non-test active tasks (scaffold/type-def/Implement/Run): **20**.
+- Check: 60 + 20 = 80 ✓ (active total is right); but 55 + 25 = 80 only because the **−5 test error and +5 non-test error offset**.
+
+The fix pass updated the headline active-task number correctly (82 → 80) but mis-recomputed the test/non-test split: it appears to have subtracted the 2 removed tasks from the *test* bucket (57 → 55) when in fact the 2 removed tasks (old T-048 "Extend EngineState", old T-049 "Update inputEquals") were **non-test implementation** tasks, and old T-050/T-051 (tests) were *retained* (repurposed to no-op assertions, still tests). So the correct post-fix split is **60 test / 20 non-test**, not 55 / 25. (The pre-fix "57 / 25" was itself imprecise; the fix neither caused nor corrected that, but it restated the wrong numbers.)
+
+**Why it matters (low severity, but real):** D-016 is the authoritative task-list decision; a wrong test/non-test tally is a small but durable inaccuracy a BUILD agent or progress tracker could trust ("how many tests should exist when done?"). It is metadata-only — no task content, numbering, or coverage is affected — hence MINOR, not blocking.
+
+**The fix:** Update both occurrences to the verified counts — *"Test tasks: 60 of 80 active. Non-test tasks: 20."* — in `_index.md:279` (footer) and `_index.md:226` / `_decisions.md` D-016 body. No task rows change; only the two summary numbers. (Optional re-verify: `grep -E '^\| T-[0-9]{3} \| Write ' _index.md | wc -l` → 60.)
 
 ---
 
-## Clean axes (verified, not rubber-stamped)
+## Clean axes (re-verified, not rubber-stamped)
 
-- **R-NNN existence:** every R-reference in `_index.md` / `05-edge-cases.md` (R-004, R-005, R-006, R-007, R-010, R-011, R-012, R-014, R-015, R-016, R-017, R-018, R-021, R-024, R-025) resolves to a real rule in `03-rules.md` (R-001–R-027, contiguous). No dangling R-ref. ✓
-- **E-NNN existence:** `_index.md` references E-001…E-060; `05-edge-cases.md` defines E-001–E-060 contiguously across 12 categories. The index header count ("60 edge cases") matches. No dangling E-ref. ✓
-- **D-NNN collisions / contradictions:** D-001…D-016 are unique, no number reused. The D-004→D-006 hand-off is a **clean** deferral-then-resolution (D-004 `:38-44` explicitly says *"Resolved by D-006 below"*; D-006 `:61-69` says *"resolves the D-004 deferral"*) — not a contradiction. ✓
-- **Operator-chaining semantics:** left-to-right / no-precedence stated identically in `02-flows.md §2.2` (`:89-107`), `03-rules.md R-004` (`:43-50`), `05-edge-cases.md E-025` (`:111`), `_decisions.md D-012` (`:139-147`). `2 + 3 × 4 = 20` consistent everywhere. ✓
-- **Number representation:** decimal.js 10.6.0 + the `0.1 + 0.2 = 0.3` correctness contract consistent across `06-tech-choices.md §2`, `03-rules.md R-003` (`:30-37`), `05-edge-cases.md §10` (E-045–E-049), `_index.md:29`, `_decisions.md D-006`. Native-float prohibition (`03-rules.md R-011`) consistent with the decimal.js pick. ✓
-- **Div-by-zero + latch contract:** `errorState` tagged-value latch, no-op-while-set, CE-and-AC-both-escape stated identically across `01-data-model.md §3` (`:74-95`), `03-rules.md R-010/R-014/R-015` (`:82-133`), `02-flows.md §5` (`:206-262`), `05-edge-cases.md §1/§12`, `_decisions.md D-003`. ✓
-- **Library/version pins:** TypeScript 6.0.3 / decimal.js 10.6.0 / Vitest 4.1.8 / Vite 8.0.16 (M2-deferred) / Node v24 pinned identically in `06-tech-choices.md`, `_index.md:28-32,53,63-66`, `_decisions.md D-005–D-008`. No version contradiction. (Note: `06-tech-choices.md:112-114` candidly records npm `4.1.8` vs vitest.dev-header `4.1.7` — same major line, disclosed, not a contradiction.) ✓
-- **Scope adherence:** no scope leak. All concern files stay headless — no DOM/rendering/button-wiring (every file disclaims it and routes to M2), no memory keys / scientific / percent / ± (R-001 + R-022 + F9 honour `04-scope.md:50-52` / `03-modules.md:52-53`), no persistence (`01-data-model.md §5` + F8), no history (routed to M3 per F10). Repeated-equals (D-015), operator-first implicit-0 (D-010), and CE-clears-error are all *within* the F3/F4 "equals + clear" pre-approved scope, not additions. ✓
+- **R-NNN existence:** R-001–R-027 defined contiguously in `03-rules.md` (machine-verified); every R-ref in `_index.md`/`05-edge-cases.md` resolves. No dangling R-ref. ✓
+- **E-NNN existence:** E-001–E-060 defined contiguously in `05-edge-cases.md` (machine count = 60); index header "60 edge cases" matches; all E-refs in `_index.md` resolve. E-022/E-053 rewritten in place — same IDs, no renumber, no dangling row. ✓
+- **T-NNN contiguity:** T-001–T-082, no gaps, no duplicates (machine-verified). T-048/T-049 retained as labelled removed-stubs (audit-trail preserved) rather than deleted-and-renumbered — this is the *correct* choice (renumbering would break every downstream T-ref). No task references T-048/T-049 as a dependency. ✓
+- **D-NNN numbering / supersession:** D-001–D-017 unique. D-015 REVERSED, cleanly superseded by D-017 (bidirectional cross-ref: D-015→"see D-017", D-017→"Supersedes D-015"). D-004→D-006 deferral hand-off still clean. `_index.md` concern table updated to "17 decisions (D-001–D-017)". No collision, no orphan. ✓
+- **Operator-chaining semantics:** left-to-right / no-precedence identical across `02-flows.md §2.2`, `03-rules.md R-004`, `05-edge-cases.md E-025`, `_decisions.md D-012`. Untouched by the fix. ✓
+- **Number representation:** decimal.js 10.6.0 + `0.1+0.2=0.3` contract consistent across `06-tech-choices.md §2`, `03-rules.md R-003`, `05-edge-cases.md §10`, `_index.md:29`, `_decisions.md D-006`. ✓
+- **Div-by-zero + latch contract:** tagged-value latch / no-op-while-set / CE-and-AC-escape identical across `01-data-model.md §3`, `03-rules.md R-010/R-014/R-015`, `02-flows.md §5`, `05-edge-cases.md §1/§12`, `_decisions.md D-003`. The added equals-after-equals no-op slots cleanly into the existing "no pending operator → no-op" path (R-006) — no contradiction with the latch contract. ✓
+- **Library/version pins:** TypeScript 6.0.3 / decimal.js 10.6.0 / Vitest 4.1.8 / Vite 8.0.16 (M2) / Node v24 consistent across `06-tech-choices.md`, `_index.md`, `_decisions.md D-005–D-008`. T-011 config change touched no version pin. ✓
+- **Scope adherence:** no scope leak. Dropping repeated-equals *tightened* scope toward `04-scope.md` F3 ("equals resolves the pending operation to a result" — singular). Headless throughout; no DOM/memory-keys/persistence/history. The equals-after-equals no-op is within the F3 equals contract, not an addition. ✓
 - **Headless omission of `04-ui.md` + mockups:** by design (`_briefing.md:50-54`), correctly NOT flagged. ✓

@@ -586,6 +586,21 @@ describe('decimal.js correctness via engine — Group 12 (E-045–E-049)', () =>
   });
 });
 
+describe('chaining and multi-operator — Group 13 (E-025–E-027)', () => {
+  it('2 + 3 × 4 = 20 left-to-right, no operator precedence (E-025, R-004) (T-069)', () => {
+    const s0 = initialState();
+    const s1 = inputDigit(s0, '2');
+    const s2 = inputOperator(s1, 'add');
+    const s3 = inputDigit(s2, '3');
+    // pressing multiply auto-resolves 2+3=5, then sets pending op to multiply
+    const s4 = inputOperator(s3, 'multiply');
+    const s5 = inputDigit(s4, '4');
+    const s6 = inputEquals(s5);
+    expect(s6.entryBuffer).toBe('20');
+    expect(s6.errorState).toBeNull();
+  });
+});
+
 describe('getDisplayValue — error states', () => {
   it('returns errorState tag when error is set (T-063)', () => {
     // Scenario 1: divide-by-zero error state

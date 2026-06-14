@@ -275,4 +275,14 @@ describe('inputEquals', () => {
     expect(s1.pendingOperator).toBeNull();
     expect(s1.errorState).toBeNull();
   });
+
+  it('fresh state equals gives 0 — not an error, not a blank (E-021) (T-043)', () => {
+    // initialState() → equals: result displayed is '0', not error, justEvaluated set
+    const s0 = initialState();
+    const s1 = inputEquals(s0);
+
+    expect(s1.entryBuffer).toBe('0');
+    expect(s1.justEvaluated).toBe(true);
+    expect(s1.errorState).toBeNull();
+  });
 });

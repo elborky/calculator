@@ -2,10 +2,10 @@
 
 ## Current State
 
-- **Phase:** SPECIFY M2 APPROVED → next is BUILD M2 (UI)
-- **Sub-context:** M2 Calculator UI fully specified — 7 concerns + 3 mockups + cross-file audit PASS. Visual baseline LOCKED = v3 Wildcard (aurora glass, `04-ui/_picked.md`). Tech: vanilla TS + Vite 8 static build. 87 BUILD tasks staged (T-101–T-187). 7 sub-agent decisions D-001..D-007.
-- **Last decision:** M2 visual baseline = **v3 Wildcard** (owner pick, "dorong sampai mentok"). Cascade noted: M4 (theming) must reconcile design-system §3 tokens to the v3 baseline when specified.
-- **Next step:** Run `/storm-build 02` for M2 — first demo-able surface (ends the dark stretch).
+- **Phase:** BUILD M2 (Calculator UI) — IN PROGRESS. Group 0/14 done (T-101–T-108).
+- **Sub-context:** Vite 8.0.16 scaffolded over the M1 package (D-002); `npm run build` emits static `dist/`. Build target = v3 Wildcard mockup; a11y floor non-negotiable. Next = Group 1 (HTML structure, 15-key grid, T-109–T-119).
+- **Last decision:** BUILD execution runs **inline on opus** (not forked sonnet) — forked dispatch blocked by #FF-008 (1M-context usage credits); owner chose unblocked progress over tier-purity (2026-06-15). Commits tagged `Model: opus` honestly; measurement-tier deviation noted.
+- **Next step:** Continue BUILD M2 → Group 1 (T-109 calculator body wrapper).
 
 ## STORM Config
 

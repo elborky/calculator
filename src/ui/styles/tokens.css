@@ -14,6 +14,11 @@
   --operator-glow:    rgba(255, 94, 122, 0.50);
   --error:            #ff8a8a;
 
+  /* D-006 — fitDisplay() font-size floor (px value read by JS in render.ts).
+     At this floor and below, horizontal scroll activates (Group 10, T-164..T-165).
+     Error sentences never shrink-scroll — they wrap instead (T-161). */
+  --readout-font-floor: 1.25rem;
+
   /* Text — on the dark display scrim the readout is near-white for AA+ */
   --text-on-scrim:        #ffffff;                 /* display number → ~17:1 on scrim */
   --text-on-scrim-soft:   rgba(255, 255, 255, 0.66); /* pending line */

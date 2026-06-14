@@ -96,9 +96,9 @@ storm-depends-on:
 - [DONE] T-160 — non-whitelisted keys early-return (Backspace no-op)
 
 ## Group 9 — Error-state rendering polish (INT-2, INT-6)
-- [PENDING] T-161 — error sentence style (color + words)
-- [PENDING] T-162 — pending line hidden during error (assertion hook)
-- [PENDING] T-163 — CE/AC reachable during error
+- [DONE] T-161 — error sentence style (color + words)
+- [DONE] T-162 — pending line hidden during error (assertion hook)
+- [DONE] T-163 — CE/AC reachable during error
 
 ## Group 10 — Long-number display: shrink → scroll (D-006)
 - [PENDING] T-164 — `fitDisplay()` shrink font toward floor

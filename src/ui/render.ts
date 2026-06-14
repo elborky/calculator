@@ -3,6 +3,7 @@
 // INT-2: Display value = getDisplayValue(state); M2 owns the error sentences.
 // INT-3: Pending-expression line is M2-derived (accumulator + pendingOperator + glyph map).
 // INT-6: Error styling is derived from state, not stored as a UI flag.
+// D-006: fitDisplay() — shrink font toward floor; horizontal scroll as fallback (Group 10).
 //
 // render() is a PURE derivation pass followed by targeted DOM writes.
 // It reads state once and writes the two display elements; it never stores
@@ -84,7 +85,8 @@ function pendingLine(state: EngineState): string {
 // T-145 — error CSS class toggle is DERIVED (not stored):
 //   state.errorState !== null  →  add    'display--error'
 //   otherwise                  →  remove 'display--error'
-//   The class routes to var(--error) in CSS; it never stores a UI-only boolean.
+//   The class routes to var(--error) in CSS (via .display--error .readout rule in
+//   layout.css); it never stores a UI-only boolean (INT-6 / UR-018).
 // ---------------------------------------------------------------------------
 export function render(state: EngineState): void {
   const displayValue = getDisplayValue(state);
@@ -101,6 +103,8 @@ export function render(state: EngineState): void {
 
   // T-145 — error CSS class toggle (UR-016, INT-6)
   // Derived from live state — never stored as a UI flag (UR-018).
+  // layout.css .display--error .readout applies: color var(--error), smaller
+  // font-size, white-space:normal so the sentence wraps (not colour alone — UR-026).
   const displayEl = readoutEl!.closest<HTMLElement>('.display');
   if (displayEl) {
     displayEl.classList.toggle('display--error', isError);
@@ -113,6 +117,10 @@ export function render(state: EngineState): void {
   pendingEl!.textContent  = pendingText;
   // Toggle the HTML `hidden` attribute — the line reserves space when visible
   // (CSS uses `visibility`/`min-height`), and is fully collapsed when hidden.
+  // T-162 ASSERTION HOOK: during error, pendingLine() returns "" (errorState !== null
+  // check at line 69 above), so pendingEl always has [hidden] set in error state.
+  // REVIEW e2e assertion: document.querySelector('.pending-line[hidden]') is truthy
+  // whenever the calculator is in an error state.
   if (hasPending) {
     pendingEl!.removeAttribute('hidden');
   } else {

@@ -182,14 +182,59 @@ body::after {
   width: 100%;
   word-break: break-word;       /* error sentence wraps, never overflows */
   text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
+  /* D-006 horizontal scroll: off by default, activated by fitDisplay() via data-attr */
+  overflow-x: hidden;
+  white-space: nowrap;          /* keep numeric content on one line for scroll to work */
 }
-/* error rendering: colour + the words (not colour alone — UR-026); Group 9 wires the toggle */
-.readout.error {
+
+/* -------- LONG-NUMBER DISPLAY: SHRINK → SCROLL (Group 10 — T-164..T-166, D-006) --------
+   fitDisplay() (render.ts) measures overflow and:
+   1. Steps font-size down to var(--readout-font-floor) while text overflows.
+   2. If STILL overflowing at the floor, sets data-overflow="scroll" on .readout.
+   3. On a value that fits (short entry), clears inline font-size + data-overflow.
+
+   Right-anchor technique: overflow-x: scroll + direction: rtl on the element.
+   RTL direction makes the scroll origin the right edge, so least-significant digits
+   and exponent suffix stay visible without JS scroll-left juggling. Content is
+   re-wrapped in a span with direction: ltr to keep digit order correct. */
+.readout[data-overflow="scroll"] {
+  overflow-x: scroll;
+  direction: rtl;              /* right-anchor: scroll origin = right edge (least-sig. digit visible) */
+  scrollbar-width: none;       /* hide scrollbar (mobile-style) — content still scrollable */
+  -ms-overflow-style: none;
+  white-space: nowrap;
+  /* ensure smooth scroll on iOS */
+  -webkit-overflow-scrolling: touch;
+}
+.readout[data-overflow="scroll"]::-webkit-scrollbar {
+  display: none;
+}
+/* ltr span inside rtl container restores digit order (T-166 exponent strings) */
+.readout[data-overflow="scroll"] .readout-inner {
+  direction: ltr;
+  display: inline-block;
+  unicode-bidi: isolate;
+}
+/* -------- ERROR-STATE RENDERING (Group 9 — T-161..T-163, INT-6) -------- */
+/* render.ts toggles 'display--error' on .display (derived from state, never stored — INT-6).
+   Selector: .display--error .readout — consistent with the toggle in render.ts.
+   Colour via --error token (UR-029 — no inline hex).
+   Not colour alone: the *sentence text* (INT-2) is the second signal (UR-026). */
+.display--error .readout {
   color: var(--error);
   font-size: clamp(1.4rem, 6vw, 2rem);
   font-weight: 500;
   line-height: 1.25;
+  word-break: break-word;  /* error sentences may wrap on narrow viewports */
+  white-space: normal;     /* override nowrap from base .readout — sentences wrap, never scroll */
+  overflow: visible;       /* sentences wrap, never scroll */
+  overflow-x: visible;
 }
+
+/* T-162: pending line is hidden during error because pendingLine() returns ""
+   when errorState !== null (render.ts:68), which sets [hidden] on .pending-line.
+   The [hidden] attr is the stable assertion hook REVIEW e2e checks:
+     document.querySelector('.pending-line[hidden]') must be truthy during error. */
 
 @keyframes resultRise {
   from { opacity: 0; transform: translateY(6px); }

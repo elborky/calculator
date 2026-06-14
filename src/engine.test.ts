@@ -454,6 +454,24 @@ describe('inputAllClear', () => {
     expect(s4.errorState).toBeNull();
   });
 
+  it('no residual after AC — fresh calculation 2+3=5 succeeds cleanly (E-059) (T-060)', () => {
+    // Build some dirty mid-expression state, then AC
+    const s0 = inputDigit(initialState(), '9');
+    const s1 = inputOperator(s0, 'multiply');
+    const s2 = inputDigit(s1, '7');
+    const s3 = inputAllClear(s2);
+
+    // Now perform a fresh calculation from AC-clean state
+    const s4 = inputDigit(s3, '2');
+    const s5 = inputOperator(s4, 'add');
+    const s6 = inputDigit(s5, '3');
+    const s7 = inputEquals(s6);
+
+    expect(s7.entryBuffer).toBe('5');
+    expect(s7.justEvaluated).toBe(true);
+    expect(s7.errorState).toBeNull();
+  });
+
   it('escapes error latch — AC clears overflow errorState, all fields reset (E-034, R-015) (T-059)', () => {
     // Construct a dirty state with errorState: 'overflow'
     const dirtyState = {

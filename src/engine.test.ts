@@ -742,4 +742,19 @@ describe('justEvaluated matrix — Group 16 (E-050–E-055)', () => {
     expect(s5.entryBuffer).toBe('0');
     expect(s5.justEvaluated).toBe(false);
   });
+
+  it('AC after equals gives full reset of all 5 fields (E-055, E-035) (T-080)', () => {
+    // 3 + 4 = 7 (justEvaluated=true), then AC → full reset
+    const s0 = initialState();
+    const s1 = inputDigit(s0, '3');
+    const s2 = inputOperator(s1, 'add');
+    const s3 = inputDigit(s2, '4');
+    const s4 = inputEquals(s3); // result=7, justEvaluated=true
+    const s5 = inputAllClear(s4);
+    expect(s5.entryBuffer).toBe('0');
+    expect(s5.accumulator).toBeNull();
+    expect(s5.pendingOperator).toBeNull();
+    expect(s5.justEvaluated).toBe(false);
+    expect(s5.errorState).toBeNull();
+  });
 });

@@ -255,7 +255,7 @@ the one-module "dark stretch" that everything else builds on (`_briefing.md` —
 |---|---|---|
 | T-078 [DONE] | Write test `operator after equals carries result forward (E-051, §3.3)` — result becomes ACC, PO set | 1 pass. |
 | T-079 [SKIP] | Write test `equals after equals is no-op — result unchanged (E-053, D-017)` — covered by T-050/T-051; this task is a named pointer: if T-050/T-051 cover the scenario, mark T-079 as covered-by T-050 and do not add a duplicate test | Covered by T-050 (assert E-053 no-op passes there); 0 net new test files if T-050 already asserts E-053. |
-| T-080 | Write test `AC after equals gives full reset (E-055, E-035)` | 1 pass. |
+| T-080 [DONE] | Write test `AC after equals gives full reset (E-055, E-035)` | 1 pass. |
 
 ---
 

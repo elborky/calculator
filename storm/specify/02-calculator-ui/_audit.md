@@ -23,10 +23,19 @@ storm-depends-on:
 > divergence below was confirmed by reading the cited `file:line` (and the v3 mockup source), not
 > inferred.
 
-## VERDICT: **FIX-REQUIRED — 1 finding**
+## VERDICT: **FIX-REQUIRED — 1 finding** → **RESOLVED (orchestrator, 2026-06-15)**
 
 One genuine cross-file divergence (focus-ring px value). All other audit dimensions PASS, including
 the known font tension (T-181 reconciles it correctly → RESOLVED, not a finding).
+
+> **Resolution stamp (orchestrator, post-audit fix).** F-01 fixed: all concrete focus-ring
+> instructions aligned to the locked v3 baseline **`3px solid var(--accent)` / `3px` offset** (which
+> exceeds the `08-design-system.md:145` 2px floor). Updated in SIX locations — the four the auditor
+> cited (`03-rules.md` UR-020, `04-ui.md:192`+`:230`, `_index.md` T-169) **plus two more the
+> orchestrator's own grep caught** (`02-flows.md:269`, `05-edge-cases.md` UE-027). Grep-verified: zero
+> concrete focus-ring instructions still say 2px; remaining "2px" mentions are floor-reference language
+> (`_index.md:67` "≥2px" floor) and this audit record. Net verdict after fix: **PASS** — M2 is
+> internally consistent and M1-contract-faithful. APPROVED marker cleared to fire.
 
 ---
 

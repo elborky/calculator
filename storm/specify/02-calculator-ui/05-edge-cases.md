@@ -98,7 +98,7 @@ are text, not numbers) may wrap to a 2nd line OR shrink, but never scroll (no pr
 
 | # | Scenario | Expected M2 behavior | Ties to |
 |---|---|---|---|
-| UE-027 | **Focus ring visible on every button, both themes.** Tab through the keypad. | Each `<button>` shows `2px solid var(--accent)` + `2px` offset on `:focus-visible`; never `outline: none` without replacement. `--accent` chosen visible on both glass themes. | §8 (focus states), §3 |
+| UE-027 | **Focus ring visible on every button, both themes.** Tab through the keypad. | Each `<button>` shows `3px solid var(--accent)` + `3px` offset on `:focus-visible` (v3 baseline; exceeds §8 2px floor); never `outline: none` without replacement. `--accent` chosen visible on both glass themes. | §8 (focus states), §3 |
 | UE-028 | **Tap target ≥44px on smallest phone.** 320px-wide viewport. | Buttons stay `≥44×44px` (spec target 64px) even when the grid shrinks to fit 320px; never sub-44px. | §8 (min tap target), §6 |
 | UE-029 | **Focus not lost after a press.** User presses a button via keyboard/click. | Focus remains on a sensible element (the pressed button or a stable anchor) after re-render — the imperative `render(state)` must not blow away + recreate focused DOM such that focus is dropped to `<body>`. | §8 (focus states), INT-1 (re-render) |
 | UE-030 | **No focus trap.** User can Tab forward and Shift+Tab backward through all buttons and out. | Focus order follows reading order across the 4-col grid (§8); no element traps focus; Tab eventually leaves the keypad. | §8 (focus order) |

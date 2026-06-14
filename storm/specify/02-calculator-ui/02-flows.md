@@ -266,7 +266,7 @@ adding one would be scope-creep; if desired it is `04-ui.md`'s call, not assumed
 3. **Initial render:** primary display shows `"0"`; pending line hidden (fresh state, §3.2); no error
    styling.
 4. **Focus handling:** the keypad is keyboard-operable from load. Per design §8, focus follows reading
-   order across the grid and every button shows a visible focus ring (`2px solid var(--accent)`); the
+   order across the grid and every button shows a visible focus ring (`3px solid var(--accent)`, v3 baseline); the
    global keydown handler (flow 8) is attached so number/operator keys work **without** first clicking a
    button. (Whether to set initial DOM focus on a specific element, e.g. the body or AC, is a small UX
    choice for `04-ui.md`; the requirement here is that keyboard input is live from load — flow 8 is

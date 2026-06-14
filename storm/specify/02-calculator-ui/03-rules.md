@@ -195,9 +195,10 @@ no error flag to manually unset.
 Buttons are natively keyboard-operable and screen-reader-announced (`08-design-system.md:147`).
 Verifiable: every clickable control's tag name is `BUTTON`.
 
-**UR-020** Every button shows a **visible focus ring** = `2px solid var(--accent)` with `2px` offset
-(`08-design-system.md:145`). `outline: none` is **never** used without an equivalent visible
-replacement. Verifiable: tab to any button → a ≥2px accent ring is rendered.
+**UR-020** Every button shows a **visible focus ring** = `3px solid var(--accent)` with `3px` offset
+(matches the locked v3 baseline `04-ui/_picked.md`; exceeds the `08-design-system.md:145` 2px floor).
+`outline: none` is **never** used without an equivalent visible replacement. Verifiable: tab to any
+button → a ≥3px accent ring is rendered.
 
 **UR-021** **Focus order follows reading order** across the keypad (`08-design-system.md:145`) —
 left-to-right, top-to-bottom, matching DOM source order. No positive `tabindex` reordering. Verifiable:

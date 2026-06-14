@@ -262,7 +262,7 @@ contrast scrim (~17:1) to clear AA against the animated backdrop.
 |---|---|---|
 | T-167 | Add the button `:active` press-scale `0.96` + fill-brightness lift (`transform 80ms`, `background 120ms`) (`04-ui.md §4.3`, design §7) | Pressing a button (mouse) scales it briefly and springs back. |
 | T-168 | Add the `:hover` fill-alpha + faint glow (`150ms`) on desktop (`04-ui.md §4.3`) | Hovering a button raises its fill subtly. |
-| T-169 | Add the focus ring: `2px solid var(--accent)` + `2px` offset on `:focus-visible`, never bare `outline:none` (UR-020, UE-027, UE-032) | Tabbing to any button shows a ≥2px accent ring fully outside the rounded edge (not clipped). |
+| T-169 | Add the focus ring: `3px solid var(--accent)` + `3px` offset on `:focus-visible` (v3 baseline; exceeds §8 2px floor), never bare `outline:none` (UR-020, UE-027, UE-032) | Tabbing to any button shows a ≥3px accent ring fully outside the rounded edge (not clipped). |
 | T-170 | Add the result fade+rise on the readout for equals: `opacity 0→1` + `translateY(6px→0)` over `200ms ease-out` (`04-ui.md §4.3`, flow 4, UE-049) | The genuine equals result animates in once. |
 | T-171 | Guard the result animation so a state-unchanged repeated `=` does NOT re-fire it (UE-047, UE-048, D-017 no-op) | `3 + 4 = =` does not re-trigger the fade on the second `=`; no flicker. |
 | T-172 | Add `@media (prefers-reduced-motion: reduce)` block dropping all transforms/translates (press, hover-glow motion, result rise) → instant (UR-025, UE-044, UE-046) | With reduced-motion emulated, no transform/translate transition fires; value swaps are instant. |

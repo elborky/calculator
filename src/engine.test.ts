@@ -39,4 +39,10 @@ describe('inputDigit', () => {
     // Must be '7', not '07'
     expect(state.entryBuffer).toBe('7');
   });
+
+  it('double-zero stays "0" — pressing 0 when buffer is "0" keeps "0" (E-037) (T-016)', () => {
+    // Buffer starts at '0' (initial state); pressing '0' must not produce '00'
+    const state = inputDigit(initialState(), '0');
+    expect(state.entryBuffer).toBe('0');
+  });
 });

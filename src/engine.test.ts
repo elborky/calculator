@@ -683,3 +683,18 @@ describe('getDisplayValue — error states', () => {
     expect(getDisplayValue(overflowState)).toBe('overflow');
   });
 });
+
+describe('overflow — Group 15 (E-006–E-008)', () => {
+  it('overflow on result exceeding configured bound sets errorState (E-006) (T-075)', () => {
+    // Construct state with accumulator near Decimal.maxE (9e+9000000000000000)
+    // 9e+9000000000000000 × 10 exceeds maxE → decimal.js returns Infinity → 'overflow'
+    const state = {
+      ...initialState(),
+      accumulator: new Decimal('9e+9000000000000000'),
+      pendingOperator: 'multiply' as const,
+      entryBuffer: '10',
+    };
+    const result = inputEquals(state);
+    expect(result.errorState).toBe('overflow');
+  });
+});

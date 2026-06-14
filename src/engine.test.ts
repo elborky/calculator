@@ -129,6 +129,21 @@ describe('inputOperator', () => {
     expect(s2.entryBuffer).toBe('0');
   });
 
+  it('chaining auto-resolves LTR: 3 + 5 × → accumulator=8, pendingOp=multiply — E-018, R-004 (T-037)', () => {
+    // Sequence: digit '3' → op 'add' → digit '5' → op 'multiply'
+    // Pressing 'multiply' auto-resolves 3+5=8 first
+    const s0 = initialState();
+    const s1 = inputDigit(s0, '3');
+    const s2 = inputOperator(s1, 'add');
+    const s3 = inputDigit(s2, '5');
+    const s4 = inputOperator(s3, 'multiply'); // triggers LTR resolve
+
+    expect(s4.accumulator!.toString()).toBe('8');
+    expect(s4.pendingOperator).toBe('multiply');
+    expect(s4.entryBuffer).toBe('0');
+    expect(s4.errorState).toBeNull();
+  });
+
   it('operator-swap different op — pendingOperator changes, no resolve, no error — E-017 (T-036)', () => {
     // Sequence: digit '3' → op 'add' → op 'multiply' (no right operand)
     const s0 = initialState();

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { initialState, inputDigit, inputDecimal } from './engine';
+import { initialState, inputDigit, inputDecimal, resolveOperation } from './engine';
 import { Decimal } from './decimal-config';
 
 describe('initialState', () => {
@@ -111,5 +111,13 @@ describe('inputDecimal', () => {
     const state = inputDecimal(fresh);
     // Leading decimal must produce '0.' — never bare '.'
     expect(state.entryBuffer).toBe('0.');
+  });
+});
+
+describe('resolveOperation', () => {
+  it('addition is exact — 1.1 + 2.2 = 3.3 (no IEEE-754 artifact) (T-026)', () => {
+    const result = resolveOperation(new Decimal('1.1'), 'add', new Decimal('2.2'));
+    expect(result).toBeInstanceOf(Decimal);
+    expect((result as Decimal).toString()).toBe('3.3');
   });
 });

@@ -710,4 +710,19 @@ describe('overflow — Group 15 (E-006–E-008)', () => {
     expect(result.errorState).toBeNull();
     expect(result.entryBuffer).not.toBe('');
   });
+
+  it('overflow via chained operator auto-resolve sets error, new op not stored (E-008, D-011) (T-077)', () => {
+    // accumulator near maxE, entryBuffer '10' (right operand present so chain auto-resolves)
+    // Pressing 'add' triggers: 9e+9000000000000000 × 10 → overflow
+    // D-011: 'add' operator NOT registered when chain resolve errors
+    const state = {
+      ...initialState(),
+      accumulator: new Decimal('9e+9000000000000000'),
+      pendingOperator: 'multiply' as const,
+      entryBuffer: '10',
+    };
+    const result = inputOperator(state, 'add');
+    expect(result.errorState).toBe('overflow');
+    expect(result.pendingOperator).toBeNull();
+  });
 });

@@ -67,15 +67,15 @@ storm-depends-on:
 - [DONE] T-139 — `dispatch(fn)` replace-cell + render helper
 
 ## Group 5 — Operator/glyph/key map constant (INT-5)
-- [PENDING] T-140 — `src/ui/operator-map.ts` key→Operator frozen map
-- [PENDING] T-141 — Operator→true-Unicode glyph frozen map
+- [DONE] T-140 — `src/ui/operator-map.ts` key→Operator frozen map
+- [DONE] T-141 — Operator→true-Unicode glyph frozen map
 
 ## Group 6 — Render function (display + pending line + glyphs)
-- [PENDING] T-142 — `src/ui/render.ts` `render(state)` primary readout
-- [PENDING] T-143 — tag→sentence exhaustive switch over ErrorTag
-- [PENDING] T-144 — `pendingLine(state)` derivation
-- [PENDING] T-145 — error CSS class toggle (derived)
-- [PENDING] T-146 — call `render(state)` once at app start
+- [DONE] T-142 — `src/ui/render.ts` `render(state)` primary readout
+- [DONE] T-143 — tag→sentence exhaustive switch over ErrorTag
+- [DONE] T-144 — `pendingLine(state)` derivation
+- [DONE] T-145 — error CSS class toggle (derived)
+- [DONE] T-146 — call `render(state)` once at app start
 
 ## Group 7 — Click binding (click ≡ keyboard convergence)
 - [PENDING] T-147 — digit-button clicks → inputDigit

@@ -8,10 +8,13 @@ import './styles/layout.css'
 import './styles/keypad.css'
 
 // Group 4: M1 import + held EngineState cell + dispatch() wired.
-// Import side-effectfully so the module initialises (state seeded, render stub live).
-// dispatch() and getState() are consumed by Groups 6–8 via state.ts.
-import './state';
+// Group 6: render(state) from render.ts, wired into dispatch via state.ts.
+// dispatch() and getState() are consumed by Groups 7–8 via state.ts.
+import { getState, render } from './state';
 
-// Group 6: render(state) into the display — pending (T-142..T-146)
+// T-146 — call render(state) once at app start so the display reflects
+// the initial EngineState (entryBuffer="0") immediately on load (UR-005 fresh state).
+render(getState());
+
 // Group 7/8: click + keyboard binding — pending (T-147..T-160)
 export {}

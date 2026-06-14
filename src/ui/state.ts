@@ -2,9 +2,10 @@
 //
 // INT-1: M2 is the stateful host; M1 is the stateless reducer.
 // ONE EngineState cell, replaced atomically on every input event — never mutated in place.
-// render() is a placeholder stub (Group 6 fleshes it out, T-142..T-146).
+// render() is imported from render.ts (Group 6, T-142..T-146) and called by dispatch().
 
 import type { EngineState } from '../types';
+import { render } from './render';
 import {
   initialState,
   inputDigit,
@@ -46,12 +47,6 @@ export function dispatch(fn: (s: EngineState) => EngineState): void {
 }
 
 // ---------------------------------------------------------------------------
-// render() — placeholder stub for Group 6 (T-142..T-146).
-// Declared here so dispatch() has a valid target; Group 6 replaces this body.
-// Exported so Group 6 can re-assign it OR import and use it as the real implementation.
-// ---------------------------------------------------------------------------
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function render(_state: EngineState): void {
-  // Group 6 (T-142) writes the real implementation.
-  // Stub intentionally empty — Group 4 is wiring-only (YAGNI).
-}
+// render() is the real implementation from render.ts (Group 6, T-142).
+// Re-exported here so other modules can import render from state.ts if needed.
+export { render };

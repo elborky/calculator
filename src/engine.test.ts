@@ -129,6 +129,19 @@ describe('inputOperator', () => {
     expect(s2.entryBuffer).toBe('0');
   });
 
+  it('no-op in error state — state unchanged, pendingOperator stays null — E-019 (T-039)', () => {
+    // Construct state with errorState set
+    const errorState = { ...initialState(), errorState: 'divide-by-zero' as const };
+
+    const result = inputOperator(errorState, 'add');
+
+    // Must be completely unchanged (same reference or identical fields)
+    expect(result.errorState).toBe('divide-by-zero');
+    expect(result.pendingOperator).toBeNull();
+    // Confirm it returned the same object (no-op returns state unchanged)
+    expect(result).toBe(errorState);
+  });
+
   it('chaining div-by-zero sets error, new op NOT registered — D-011, E-002 (T-038)', () => {
     // Sequence: digit '5' → op 'divide' → decimal → digit '0' → op 'add'
     // The right operand is '0.' (numerically 0) — uses inputDecimal to bypass

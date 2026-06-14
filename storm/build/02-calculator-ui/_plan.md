@@ -25,7 +25,7 @@ storm-depends-on:
 - [DONE] T-105 — create `vite.config.ts` (minimal, default root, default dist)
 - [DONE] T-106 — create `index.html` with `#app` mount + module script
 - [DONE] T-107 — create placeholder `src/ui/main.ts` stub
-- [PENDING] T-108 — verify `npm run build` emits static `dist/`
+- [DONE] T-108 — verify `npm run build` emits static `dist/`
 
 ## Group 1 — HTML structure (port v3 markup, 15-key grid)
 - [PENDING] T-109 — calculator body glass-panel wrapper in `#app`

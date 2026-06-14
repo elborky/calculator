@@ -5,6 +5,8 @@
 # Node / test tooling
 node_modules/
 test-tooling/node_modules/
+# Vite static build output (artifact, not source)
+dist/
 # OS
 .DS_Store
 # Environment (sensitive)

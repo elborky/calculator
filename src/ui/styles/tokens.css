@@ -8,11 +8,18 @@
  * ============================================================ */
 :root {
   /* Accent system — vibrant indigo (equals) + hot coral-rose (operators) */
-  --accent:           #7c5cff;
-  --accent-glow:      rgba(124, 92, 255, 0.55);
-  --operator-accent:  #ff5e7a;
-  --operator-glow:    rgba(255, 94, 122, 0.50);
-  --error:            #ff8a8a;
+  --accent:                    #7c5cff;
+  --accent-glow:               rgba(124, 92, 255, 0.55);
+  --accent-dark:               #5a3ce0;   /* equals gradient dark stop (UR-029) */
+  --accent-hover-from:         #8b6cff;   /* equals :hover gradient light stop (UR-029) */
+  --accent-hover-to:           #6646e6;   /* equals :hover gradient dark stop (UR-029) */
+  --operator-accent:           #ff5e7a;
+  --operator-accent-dark:      #e0466a;   /* operator gradient dark stop (UR-029) */
+  --operator-accent-hover-from:#ff7088;   /* operator :hover gradient light stop (UR-029) */
+  --operator-accent-hover-to:  #e84d70;   /* operator :hover gradient dark stop (UR-029) */
+  --operator-glow:             rgba(255, 94, 122, 0.50);
+  --text-on-accent:            #fff;      /* text on operator/equals filled keys (UR-029) */
+  --error:                     #ff8a8a;
 
   /* D-006 — fitDisplay() font-size floor (px value read by JS in render.ts).
      At this floor and below, horizontal scroll activates (Group 10, T-164..T-165).

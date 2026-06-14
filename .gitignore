@@ -1,0 +1,10 @@
+# Claude Code — local overrides
+.claude/settings.local.json
+# Personal session memory
+.remember/
+# OS
+.DS_Store
+# Environment (sensitive)
+.env
+.env.local
+.env.*.local

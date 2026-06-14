@@ -356,4 +356,26 @@ describe('inputEquals', () => {
     expect(s5.justEvaluated).toBe(true);
     expect(s5.errorState).toBeNull();
   });
+
+  it('multiple repeated equals remain no-op — 3+4===→7 (D-017) (T-051)', () => {
+    // Sequence: digit '3' → op 'add' → digit '4' → equals (result 7) → equals × 3
+    const s0 = initialState();
+    const s1 = inputDigit(s0, '3');
+    const s2 = inputOperator(s1, 'add');
+    const s3 = inputDigit(s2, '4');
+    const s4 = inputEquals(s3); // first equals: result 7, justEvaluated=true
+
+    const s5 = inputEquals(s4); // 2nd equals — no-op
+    const s6 = inputEquals(s5); // 3rd equals — no-op
+    const s7 = inputEquals(s6); // 4th equals — no-op
+
+    // D-017: no-op is durable — every extra equals press returns state unchanged
+    expect(s7.entryBuffer).toBe('7');
+    expect(s7.justEvaluated).toBe(true);
+    expect(s7.errorState).toBeNull();
+    // Each repeated press must return same reference (guard fires each time)
+    expect(s5).toBe(s4);
+    expect(s6).toBe(s5);
+    expect(s7).toBe(s6);
+  });
 });

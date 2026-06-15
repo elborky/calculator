@@ -23,6 +23,15 @@ storm-canonical: false
 
 ---
 
+### #002 — Remove dead reduced-motion CSS selectors in tokens.css (L8 F-1)
+- **Status:** open
+- **Module:** 04-theming
+- **Phase surfaced:** REVIEW
+- **Description:** `src/ui/styles/tokens.css:179-184` contains a `@media (prefers-reduced-motion: reduce)` block targeting `[data-theme="light"] .aurora-layer`, `[data-theme="light"] body::before`, and `[data-theme="light"] .bg::before`. Of these, `.aurora-layer` and `.bg` match no element in the app (no such class exists in `index.html` or any module). The real reduced-motion aurora guard is `keypad.css:155-156` (`body::before/after { animation: none }`), which covers both themes globally — AC-F3-8 passes via that guard, NOT via the dead `tokens.css` block. The one selector that does match (`body::before`) is therefore redundant. The misleading comment ("Disable the Iridescent Dawn aurora pulse animation") falsely advertises this block as the canonical guard; a future maintainer editing the light aurora could trust this dead block and silently break reduced-motion. **Proposed fix:** delete the dead `tokens.css:179-184` block; add a one-line comment at `keypad.css:155` noting it is the canonical aurora reduced-motion guard for both themes. No behavior change — purely removes misleading dead code. (L8 F-1, surfaced by opus adversarial audit at commit `0a0558b`.)
+- **Resolution:** (open — non-blocking; P2 cosmetic/maintenance risk only)
+
+---
+
 ### #001 — Build drops unprefixed `backdrop-filter` → glass broken on Firefox
 - **Status:** open
 - **Module:** general (CSS build pipeline; affects layout.css / keypad.css / history.css glass panels)

@@ -1,0 +1,298 @@
+/* ============================================================ *
+ * M3 HISTORY TAPE — v1 CONSERVATIVE single-line CSS            *
+ * Tasks T-223..T-230 · Group F                                 *
+ *                                                              *
+ * RULES: ALL themed colours via var(--token) (UR-029).         *
+ * No hardcoded hex/rgba literals for themed values.            *
+ * Structural black/rgba shadows that never theme-swap stay     *
+ * as literals (same discipline as layout.css T-122).           *
+ * ============================================================ */
+
+/* ----------------------------------------------------------
+ * TAPE-LOCAL TOKEN EXTENSION (T-223)
+ * The near-opaque scrim under the tape glass — the a11y
+ * guarantor for --text-secondary over the aurora canvas,
+ * same approach as --display-scrim in tokens.css.
+ * Named here so M4 can swap it alongside the main token set.
+ * ---------------------------------------------------------- */
+:root {
+  --tape-scrim:   rgba(14, 10, 36, 0.74);  /* recessed dark film, AA guarantor */
+  --radius-tape:  24px;                     /* tape panel corner radius */
+}
+
+/* ============================================================
+ * T-223 — RECESSED GLASS PANEL
+ * The .history-tape <section> is a quiet sibling surface —
+ * LESS prominent than the .calc slab (16px blur vs 22px; no
+ * chromatic top-edge sheen; no under-glow bloom). It uses
+ * --glass-fill-display (the more-recessed fill) exactly like
+ * the display sub-panel, not --glass-fill (the slab fill).
+ * overflow: hidden clips the ::before scrim; scroll sits inside
+ * .history-tape__scroll which is overflow-y: auto.
+ * ============================================================ */
+.history-tape {
+  position: relative;
+  flex: 1;                          /* fill the .history-slot height */
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-tape);
+  background: var(--glass-fill-display);
+  backdrop-filter: blur(var(--blur-display)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--blur-display)) saturate(140%);
+  border: 1px solid var(--glass-border);
+  /* elevation: quiet float + inner sheen only (no accent glow — restrained) */
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  overflow: hidden;                 /* clip ::before scrim to rounded corners */
+}
+
+/* near-opaque recessed dark scrim — the contrast guarantor for
+   --text-secondary (the dimmed expression text) over the aurora.
+   Same approach as .display::before in layout.css. */
+.history-tape::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border-radius: 18px;
+  background: var(--tape-scrim);
+  box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.30);
+  z-index: 0;
+}
+
+/* backdrop-filter fallback — legibility never sacrificed */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .history-tape { background: rgba(18, 12, 44, 0.90); }
+}
+
+/* ============================================================
+ * HISTORY-SLOT FLEX WIRING
+ * The .history-slot rule in layout.css sets width:240px and
+ * align-self:stretch. We add display:flex here so .history-tape
+ * can use flex:1 to fill the slot height on desktop.
+ * ============================================================ */
+.history-slot {
+  display: flex;
+}
+
+/* ============================================================
+ * T-224 / §6 — "HISTORY" LABEL HEADER (quiet, barely-there)
+ * Visible region label so SR users and sighted users know
+ * what the panel is. Restrained: small, uppercase, low opacity.
+ * aria-hidden="true" on this element — the <section> carries
+ * aria-label="Calculation history" as the semantic label.
+ * ============================================================ */
+.history-tape__header {
+  position: relative;
+  z-index: 1;
+  padding: 16px 18px 8px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  opacity: 0.78;                    /* quieter than entries — secondary surface */
+}
+
+/* ============================================================
+ * SCROLL REGION
+ * overflow-y: auto absorbs unbounded tape growth (D-M3-DM-03).
+ * tabindex="0" is applied CONDITIONALLY by Group E when the
+ * list overflows (§6 keyboard-reachable, never a focus trap).
+ * The fade-mask at the bottom hints more content below (§3.3).
+ * ============================================================ */
+.history-tape__scroll {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  overflow-y: auto;
+  padding: 2px 16px 12px;
+  /* bottom fade-mask — subtle, restrained (one-sided only for v1) */
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 18px), transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 18px), transparent 100%);
+  /* thin styled scrollbar (chrome/safari) — low contrast, non-intrusive */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+}
+
+.history-tape__scroll::-webkit-scrollbar {
+  width: 5px;
+}
+.history-tape__scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 3px;
+}
+
+/* focus ring on the scroll region (keyboard users scrolling the tape) */
+.history-tape__scroll:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: -2px;
+  border-radius: 12px;
+}
+
+/* ============================================================
+ * THE SEMANTIC ENTRY LIST
+ * Newest entry at the visual top edge (Group E inserts
+ * at the start; flex-direction:column preserves DOM order).
+ * ============================================================ */
+.history-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================================
+ * T-224 / T-225 / T-226 / T-227 / T-228 — ENTRY ROW
+ * Single-line layout: `12 + 3 = 15` on one row.
+ * - right-aligned (calculator reads from the right, §2)
+ * - flex-wrap: wrap so a very long result moves to the next
+ *   visual line rather than overflowing (T-227, D-M3-EC-01)
+ * - cursor:default + pointer-events:none = read-only (T-228)
+ * - hairline bottom border in low-alpha white (T-226 divider)
+ * ============================================================ */
+.history-entry {
+  position: relative;
+  padding: 9px 2px;
+  display: flex;
+  justify-content: flex-end;       /* right-aligned (§2 calculator reads right) */
+  align-items: baseline;
+  flex-wrap: wrap;                 /* T-227: long result wraps, NEVER clips */
+  gap: 0 0.4ch;
+  text-align: right;
+  /* T-224: tape typography — Inter 0.875rem / 400 / tabular-nums / lh 1.5 */
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+  /* T-226: hairline divider between rows — quiet vertical rhythm (not colour-alone) */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  /* T-228: read-only — no pointer affordance, no interactivity */
+  cursor: default;
+  pointer-events: none;
+  user-select: text;               /* allow copy-by-selection even though not clickable */
+}
+
+/* remove divider from the last entry */
+.history-entry:last-child {
+  border-bottom: none;
+}
+
+/* ============================================================
+ * T-225 — EXPRESSION TEXT  (secondary colour, §2)
+ * overflow-wrap: anywhere allows a very long unbroken expression
+ * to break at any character rather than overflow (T-227, §4).
+ * ============================================================ */
+.history-expr {
+  color: var(--text-secondary);    /* HR-022 */
+  overflow-wrap: anywhere;         /* T-227: wrap not truncate */
+}
+
+/* ============================================================
+ * THE `=` GLYPH (quiet accent tint — not colour-alone, §6)
+ * Carried as real text so SR reads "12 plus 3 equals 15" as
+ * one coherent line. De-emphasized so the result stays dominant.
+ * ============================================================ */
+.history-eq {
+  color: var(--accent);
+  opacity: 0.8;
+  padding: 0 0.15ch;
+}
+
+/* ============================================================
+ * T-225 — RESULT TEXT  (primary colour, slightly heavier, §2)
+ * font-weight 500: a touch heavier than the expression to make
+ * the value the eye lands on — calm, no size bump (v1 restrained).
+ * overflow-wrap: anywhere for pathological long results (T-227).
+ * ============================================================ */
+.history-result {
+  color: var(--text-primary);      /* HR-023 */
+  font-weight: 500;
+  overflow-wrap: anywhere;         /* T-227: wrap not truncate (D-M3-EC-01) */
+}
+
+/* ============================================================
+ * T-229 — SLIDE-IN KEYFRAME: new entry added to the tape
+ * New top entry slides in from above (§3.4 / F-M3-7).
+ * 180ms ease-out — calm, restrained (v1 has no settle-glow).
+ * Class `.history-entry--new` applied by Group E render on insert.
+ * ============================================================ */
+@keyframes historySlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.history-entry--new {
+  animation: historySlideIn 180ms ease-out both;
+}
+
+/* ============================================================
+ * §3.1 — EMPTY STATE PLACEHOLDER
+ * Shown when the tape array is empty (on load + after AC).
+ * A quiet one-line message — not an icon, not a CTA.
+ * Group E toggles visibility via data-empty attribute on
+ * .history-tape or by toggling this element's display via JS.
+ * Default: hidden. When shown: flex-centered.
+ * ============================================================ */
+.history-empty {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: none;                   /* hidden by default (populated state) */
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px 20px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+/* when the tape is empty, show the placeholder and hide the scroll region */
+.history-tape[data-empty="true"] .history-tape__scroll {
+  display: none;
+}
+.history-tape[data-empty="true"] .history-empty {
+  display: flex;
+}
+
+/* ============================================================
+ * §7 — RESPONSIVE: phone (≲640px) — stacked, capped ~140px
+ * Mirrors M2's breakpoint (02-calculator-ui 640px boundary)
+ * so both surfaces reflow together. Tape is full-width, capped.
+ * The .history-slot height:0 in keypad.css @media (max-width:640px)
+ * is overridden here to auto so the tape is visible when stacked.
+ * ============================================================ */
+@media (max-width: 640px) {
+  .history-slot {
+    width: 100%;
+    height: auto;                  /* override keypad.css height:0 placeholder */
+    max-height: 150px;             /* cap at ~140px per spec §7 */
+    align-self: auto;
+  }
+
+  .history-tape {
+    max-height: 150px;             /* belt-and-suspenders cap */
+  }
+}
+
+/* ============================================================
+ * T-229 — REDUCED MOTION (HARD FLOOR, non-negotiable)
+ * prefers-reduced-motion: reduce → drop the slide-in instantly.
+ * No transform, no opacity ramp — instant static insert.
+ * Mirrors the pattern in keypad.css (T-172 block).
+ * ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .history-entry--new {
+    animation: none;
+  }
+}

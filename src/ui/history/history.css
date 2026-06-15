@@ -20,6 +20,13 @@
   --radius-tape:  24px;                     /* tape panel corner radius */
 }
 
+/* Light-theme flip — near-white tinted indigo (mirrors --display-scrim in tokens.css).
+ * Alpha 0.86 (vs display's 0.82) for extra opacity over the livelier aurora gradient;
+ * this is the AA guarantor for dark --text-primary/#1a1040 over the light aurora. */
+[data-theme="light"] {
+  --tape-scrim: rgba(240, 238, 255, 0.86);
+}
+
 /* ============================================================
  * T-223 — RECESSED GLASS PANEL
  * The .history-tape <section> is a quiet sibling surface —
@@ -63,6 +70,7 @@
 /* backdrop-filter fallback — legibility never sacrificed */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .history-tape { background: rgba(18, 12, 44, 0.90); }
+  [data-theme="light"] .history-tape { background: rgba(240, 238, 255, 0.92); }
 }
 
 /* ============================================================

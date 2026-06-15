@@ -7,6 +7,34 @@
 
 <!-- NEWEST ENTRY BELOW THIS LINE -->
 
+## [2026-06-15] — SPECIFY M3 (History Tape) COMPLETE / BUILD M3 started (gate-blocked) — anchor: 19d5a0b
+
+> `[unverified-fallback — written by main context]` — fresh handoff sub-agent dispatch SKIPPED: the
+> #FF-037 1M-context credits-gate is actively blocking forked dispatch this turn (3 BUILD Wave-1 forks
+> just rejected at 0 tokens with *"Usage credits required for 1M context"*); a handoff-writer fork would
+> hit the same gate, so per the mandatory fallback the orchestrator wrote this directly. FACTS
+> cross-checked against git (`f398258`→`19d5a0b`) + `_plan.md` (44 rows all `[PENDING]`, 0 `[DONE]`) +
+> CLAUDE.md. Verbal-only items folded from `session-delta.md`, tagged `[conversation-claim]`.
+
+- ✅ **Done this session — SPECIFY M3 COMPLETE + BUILD M3 planned (0 tasks built):**
+  - **SPECIFY M3 full set** (`f398258`→`321030b`): `_briefing` (10 facts, INT-M3 contract verified vs `src/`) + 8 concerns (`01-data-model` `HistoryEntry{expression,result,id}` unbounded in-mem array; `02-flows` 6 flows; `03-rules` HR-001..023; `04-ui` 4 states; `05-edge-cases` 28 HE; `06-tech-choices` subscriber-list seam zero-dep; `07-acceptance` US-M3-1..8) + `_decisions` (D-M3-DM-01..03, TC-01..02, EC-01).
+  - **3 mockups** (`84e512c` v2 Bold, `e0e467b` v1 Conservative, `b64d889` v3 Wildcard) — owner picked **v1 Conservative = single-line tape** (`2923728` `_picked.md`). 3 of the parallel SPECIFY mockup/acceptance dispatches died mid-flight on a transient socket error → re-dispatched clean.
+  - **Cross-file audit PASS** (`32e57f7`): seam verified buildable vs live `src/` (`dispatch()`, `EngineState`, predicate fields `pendingOperator`/`errorState`/`justEvaluated` all exist as specced); mechanical fixes `2203d81` (HE-018b→HE-029 monotonic) + `7dd16d8` (04-ui two-line→SUPERSEDED banner); 1-role×6-flow acceptance coverage complete; 44-task granularity clean.
+  - **Exit marker** `321030b` (SPECIFY M3 APPROVED). **State-sync** `3b686a1` (CLAUDE.md → BUILD M3 next). **BUILD plan** `19d5a0b` (44 tasks T-201..T-244, groups A–I, all `[PENDING]`).
+  - **All SPECIFY dispatches ran FORKED** (clean tier baseline restored — #FF-008 gate was OPEN during SPECIFY, unlike the inline REVIEW M2). The gate only re-closed at BUILD M3 start.
+
+- 🔒 **Decided:**
+  - **Build M3 BEFORE shipping M2** (owner: "lanjut M3", 2026-06-15) — resolves the prior session's open sequencing `[conversation-claim]`. SHIP M2 deferred; M2 REVIEW-PASS stays un-shipped. Durable in CLAUDE.md.
+  - **Visual baseline = v1 Conservative single-line** tape (`12 + 3 = 15`, recessed panel, hairline dividers). Durable in `04-ui/_picked.md`. Overrides 04-ui's two-line default for BUILD.
+  - **`[conversation-claim]` — BUILD M3 execution = per-file-unit batching** (44 micro-tasks → ~8 forked-sonnet commits; parallel-wave agents don't touch shared `_plan.md`/`CLAUDE.md`, orchestrator owns bookkeeping). Verbal-only — not yet in a durable doc (fold into `_plan.md`/`_decisions` if continued). See `session-delta.md` #1–2.
+
+- ⏳ **Pending — needs YOUR decision:**
+  - **`[conversation-claim]` — #FF-037 credits-gate BLOCKS BUILD M3 (must resolve FIRST):** 3 Wave-1 forks rejected (*"Usage credits required for 1M context"*). Owner picked **option A (`/model` → standard context)** but the `/model` switch was **kept at 1M** (standard not selected), then ended session — so the gate is STILL active. Resolve next session: **(A, rec)** `/model` → pick a **non-1M/standard** context (free, forks resume); **(B)** `/usage-credits` ON (costs credits); **(C)** "gas inline" (no cost; dumb-zone + tier-measurement caveat, stamp `Intended:` trailer).
+  - **`[conversation-claim]` — Re-run REVIEW M2 forked once credits/standard enabled?** (carried; optional clean tier baseline — REVIEW M2 ran inline `Model: opus`. Non-blocker, PASS stands.)
+  - **`[carry-forward]` — M4 theming (future):** reconcile tokens to v3 + light/dark toggle (reserved `.toggle-slot`). Not actionable until M4.
+
+- ➡️ **Next:** Resolve the credits-gate (option A recommended), then **re-dispatch BUILD M3 Wave 1** — A: tape data module (T-201..205, `src/ui/history/types.ts`+`tape.ts`), B: recording seam (T-206..208, `src/ui/state.ts` additive subscriber list), F: tape CSS (T-223..230, `history.css` v1 recessed glass). Then waves: E render-history (T-216..222, +T-231 scroll-focus), C `recordOnEquals` (T-209..212), D main.ts wiring (T-213..215), H tests (T-232..239), I verify/build/smoke (T-240..244) → BUILD M3 exit marker → REVIEW M3. (Wave-1 sub-agent prompts were fully drafted this session — reuse them.)
+
 ## [2026-06-15 07:42] — REVIEW M2 (Calculator UI) COMPLETE / next SHIP M2 — anchor: b9e8a79
 
 > `[unverified-fallback — written by main context]` — fresh handoff sub-agent dispatch failed

@@ -7,6 +7,28 @@
 
 <!-- NEWEST ENTRY BELOW THIS LINE -->
 
+## [2026-06-15] — BUILD / M4 theming — anchor: cd758cd
+
+- ✅ **Done this session:**
+  - **M4 theme-toggle BUILD complete** — 7 groups A–G all DONE in `storm/build/04-theming/_plan.md`. Light/Dark 2-state toggle in `.toggle-slot`: OS-default first-load (`prefers-color-scheme`) + single-key `localStorage` persist (`calc-theme`) + no-FOUC inline head script + 300ms cross-fade + reduced-motion guards (cross-fade + light aurora pulse). 0 new deps. Dark v3 "Wildcard" frozen as default, unchanged.
+  - **Light theme "Iridescent Dawn"** fully built: `[data-theme="light"]` override block in `tokens.css` + `history.css` light `--tape-scrim`. Theme module `src/ui/theme.ts` (resolveTheme/applyTheme/toggleTheme/attachOsChangeListener); wired in `main.ts`; toggle control styles in `toggle.css` (new). All forked-sonnet dispatches ran clean (1M context was OFF this session — no credits-gate).
+  - **Group-G real-browser WCAG AA verify PASS** (`fe3aa6a`) — 5 surface pairs all ≥5.13:1 worst-case (`group-g-aa-verification.md`). **2 AA fixes found during verify:** `3956f08` light `--tape-scrim` override (history tape was dark in light theme — M3 local token literal was outside Group A's swap surface); `d000e9e` light `--text-secondary` 0.60→0.66 (dimmed text was 4.24:1 < 4.5:1 threshold). Functional smoke (toggle flip/persist/aria/no-FOUC) PASS. 0 console errors.
+  - **96/96 tests green** (from module-complete marker `9e71412`). `tsc --noEmit` + `npm run build` exit 0.
+  - **#F-003 framework-feedback logged** (`ac84ccd`): #FF-037 credits-gate recurring pattern (fires every BUILD/SHIP session when orchestrator in 1M context; turning 1M off always fixes it). Proposed permanent pre-dispatch context check.
+  - **CLAUDE.md updated** to M4 BUILD complete, ready for REVIEW (`cd758cd`).
+  - **M4 is built LOCALLY on `main` only** — prod still runs v1.0.0 (SHA `e0ee19b`); no redeploy this session.
+
+- 🔒 **Decided:**
+  - **v3 "Iridescent Dawn"** picked as light theme; Light+Dark 2-state (System 3rd option DEFERRED); OS-default first-load + single-key localStorage persist. (Committed across M4 spec + build.)
+  - **1M context OFF** resolves #FF-037 credits-gate — standard context, all forked dispatches clean. Logged as `#F-003` (durable in `storm/meta/framework-feedback.md`).
+
+- ⏳ **Pending — needs YOUR decision:**
+  - **[conversation-claim] Deploy M4 to prod, or leave local-only?** M4 theme toggle is BUILT + AA-verified on `main` but NOT deployed — prod still runs v1.0.0 without the toggle. AI recommended REVIEW M4 first (`/storm-review`) before any redeploy. Owner ended the session without deciding: (a) REVIEW M4 → rebuild → redeploy so the toggle goes live, or (b) leave M4 parked locally. Carry forward until owner picks.
+  - **parking #001** — unprefixed `backdrop-filter` → Firefox glass gap (lightningcss/postcss prefix fix → redeploy). Non-blocking.
+  - **Enable HSTS** in `security-headers.conf` — HTTPS confirmed live, safe to activate → redeploy. Non-blocking.
+
+- ➡️ **Next:** Run `/storm-review` for M4 (8-layer audit of the theme module). After REVIEW PASS, owner decides whether to SHIP M4 (rebuild + redeploy to prod via Dokploy). Or `/storm-park` triage if scope stays unchanged.
+
 ## [2026-06-15 18:30] — SHIP COMPLETE — Calculator v1.0.0 LIVE in production — anchor: db76785
 
 - ✅ **Done this session:**

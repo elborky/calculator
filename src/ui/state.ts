@@ -33,17 +33,33 @@ export function getState(): EngineState {
 }
 
 // ---------------------------------------------------------------------------
-// T-139 — dispatch(fn): replace-cell update + render hook (INT-1)
+// T-206 — INT-M3-3 recording seam: post-dispatch subscriber list (zero new deps, observe-not-intercept)
+// Listeners receive (prev, next) after render(); M3 registers recordOnEquals via subscribe() at startup.
+// ---------------------------------------------------------------------------
+export type DispatchListener = (prev: EngineState, next: EngineState) => void;
+const listeners: DispatchListener[] = [];
+
+// T-207 — register an observer; called once at startup from history.ts (e.g. subscribe(recordOnEquals))
+export function subscribe(fn: DispatchListener): void {
+  listeners.push(fn);
+}
+
+// ---------------------------------------------------------------------------
+// T-139 / T-208 — dispatch(fn): replace-cell update + render hook (INT-1)
 //
-// Pattern:  state = fn(state)  →  render(state)
+// Pattern:  prev = state  →  state = fn(state)  →  render(state)  →  notify listeners
 //
 // fn is any M1 reducer already curried to its args, e.g.:
 //   dispatch(s => inputDigit(s, '7'))
 //   dispatch(inputEquals)
+//
+// T-208: capture prev BEFORE reassignment; render() unchanged + runs FIRST (C3); listeners AFTER.
 // ---------------------------------------------------------------------------
 export function dispatch(fn: (s: EngineState) => EngineState): void {
-  state = fn(state);
-  render(state);
+  const prev = state;            // capture before reassignment (T-208, INT-M3-3)
+  state = fn(state);             // existing line — unchanged
+  render(state);                 // existing line — unchanged, runs FIRST (C3)
+  for (const l of listeners) l(prev, state);  // additive: notify observers after render
 }
 
 // ---------------------------------------------------------------------------

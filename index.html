@@ -24,8 +24,19 @@
 
       <!-- flex row reserves M3 history slot beside the calculator -->
       <div class="app-layout">
-        <!-- reserved M3 history slot (laid out, empty in M2 — F3) -->
-        <div class="history-slot" aria-hidden="true"></div>
+        <!-- M3 history slot — static tape skeleton (T-216c).
+             render-history.ts queries these elements at module init; they must
+             exist in HTML. aria-hidden="true" on slot is removed by T-217 at runtime.
+             data-empty="true" initial state: no entries on load. -->
+        <div class="history-slot" aria-hidden="true">
+          <section class="history-tape" aria-label="Calculation history" data-empty="true">
+            <div class="history-tape__header" aria-hidden="true">History</div>
+            <div class="history-tape__scroll">
+              <ul class="history-list" role="list"></ul>
+            </div>
+            <div class="history-empty">No calculations yet</div>
+          </section>
+        </div>
 
         <!-- THE GLASS SLAB -->
         <main class="calc" aria-label="Calculator">

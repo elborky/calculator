@@ -7,6 +7,36 @@
 
 <!-- NEWEST ENTRY BELOW THIS LINE -->
 
+## [2026-06-15 07:15] — BUILD M2 (Calculator UI) COMPLETE / next REVIEW M2 — anchor: e1ba402
+
+> `[unverified-fallback — written by main context]` — fresh handoff sub-agent dispatch failed
+> (#FF-008, 1M-context usage-credits gate — intermittent this session: the Group 4–14 BUILD
+> sub-agents dispatched fine, the handoff writer hit the gate). Per mandatory fallback the
+> orchestrator wrote this entry directly. FACTS cross-checked against git log (73a10da..e1ba402)
+> + `_plan.md` markers (88 `[DONE]`, 0 real pending) + CLAUDE.md + module-status.md — NOT pure
+> conversation memory. Verbal-only items folded from `session-delta.md`, tagged `[conversation-claim]`.
+
+- ✅ **Done this session — BUILD M2 COMPLETE (Groups 4–14, T-137..T-187, all `[DONE]`):**
+  - **Group 4 (73a10da):** `src/ui/state.ts` — M1 engine wired; single held `EngineState` + `dispatch(fn)` replace-cell→render loop. Found+fixed briefing-vs-source discrepancy (`EngineState` lives in `types.ts` not `engine.ts`).
+  - **Groups 5–6 (2fc2e2f, e30639f):** `operator-map.ts` (key→Operator + Operator→true-Unicode glyph frozen maps) + `render.ts` (`render(state)` readout via M1 `getDisplayValue`, exhaustive `never`-guarded ErrorTag switch, `pendingLine()` derivation, derived error-class). Render loop CLOSED — page shows real M1 output.
+  - **Groups 7–8 (b43069c, 066ebaa) — INTERACTIVE milestone:** `bindings.ts` — delegated click listener + single document keydown; click≡keyboard convergence via shared `handleKeyIntent()`. Keyboard whitelist (digits, `.`, `+ - * /` with `/` preventDefault, Enter/`=`, Esc→AC, unknown early-return).
+  - **Groups 9–10 (4f1c4f0, 4a66415):** error-state render polish (token `--error`, pending hidden during error via `[hidden]` hook, CE/AC always escapable) + `fitDisplay()` shrink-toward-floor→RTL-scroll for long numbers, full exponent render.
+  - **Groups 11–12 (1596e2e, 7c74c0a):** motion (press-scale, hover-glow, **focus ring 3px/3px**, equals fade-rise w/ repeat-`=` guard) + `prefers-reduced-motion` disables all 6 motions; responsive (max-width 360px desktop, ≤640px phone ≥44px targets, landscape scroll) + reserved M3/M4 slots (pre-existed from G1).
+  - **Group 13 (273c012):** self-hosted Inter 300/400/500 woff2 (latin subset, Vite-fingerprinted in dist/), `@font-face` font-display:swap, preload 300 + crossorigin, NO CDN (D-004). Readout = real Inter-300.
+  - **Group 14 (b50f5ad) — verification gate:** tsc GREEN, build GREEN, **Playwright smoke PASS 4/4** (`12+3=`→15, `5÷0=`→"Cannot divide by zero", AC→0, keyboard `1 2 + 3 Enter`→15; screenshots in `_evidence/smoke-*.png`); a11y confirmed (role=status+aria-live, 3px focus ring, real `<button>`s+aria-labels). Found UR-029 blocker (6 hex in keypad.css).
+  - **UR-029 fix (be8c1a3):** extracted the 6 operator/equals hex into 7 tokens (exact copy, zero visual change); grep now 0 theme-hex outside tokens.css. G14 blocker closed.
+  - **State hygiene (e1ba402):** CLAUDE.md → BUILD M2 COMPLETE; module-status M2 → BUILD-COMPLETE.
+
+- 🔒 **Decided:**
+  - **Forked-sonnet dispatch RESTORED for the BUILD (Groups 4–14).** #FF-008 credits-gate stopped blocking the BUILD sub-agents this session; owner re-confirmed "coba lagi forked sonnet". ALL M2 task commits this session honestly tagged `Model: sonnet` → measurement tier-purity recovered (supersedes the prior session's inline-opus, which applied to Groups 0–3 only). Durable in commit bodies + CLAUDE.md.
+  - **T-181 resolved = display font is Inter-300 (per D-004 + design-system §4).** Space Grotesk was a mockup-v3-only artifact, never an open aesthetic choice; surfacing it as an owner decision would have contradicted the recorded D-004 (theater). AI-autonomous resolve, documented.
+
+- ⏳ **Pending — needs YOUR decision:**
+  - **`[conversation-claim]` — doc-cascade residual (parked as a session task-chip):** `08-design-system.md` §8 (~line 145) still says focus ring `2px / 2px offset`, but the SPECIFY audit raised it to **3px** and the build SHIPPED 3px. The audit fix never cascaded upstream to the design doc. A chip is queued to fix it (doc-only); if dismissed/lost, next session should cascade `2px → 3px` + grep stale `2px` across `storm/structure/` + `storm/specify/02-calculator-ui/`. Not a blocker — doc-truth hygiene.
+  - **`[carry-forward]` — M4 theming (future module):** will reconcile tokens to the v3 baseline + the light/dark theme toggle (the reserved top-right `.toggle-slot`). Not actionable until M4. Not a blocker for REVIEW M2.
+
+- ➡️ **Next:** Enter **REVIEW M2** (`/storm-review`) — Playwright e2e suite (beyond the BUILD smoke), full a11y audit, visual regression vs the v3 Wildcard baseline, L7 static guards (tsc/lint/test) + L8 fresh-context adversarial review. This is the gate that formally PASSes M2 before SHIP.
+
 ## [2026-06-15 02:30] — BUILD M2 (Calculator UI) in progress, Groups 0–3 done / next Group 4 — anchor: f3c5ab7
 
 > `[unverified — written by main context]` — fresh sub-agent dispatch failed (API error: 1M-context

@@ -1,0 +1,4 @@
+L2 Console capture (errors/warnings only) — M2 REVIEW, http://localhost:4173/
+[ERROR] Failed to load resource: 404 (Not Found) @ /favicon.ico
+  → P3 cosmetic: no favicon declared. Not on any critical path.
+No other console errors across full crawl (12+3=, keyboard path, 5÷0= error, 1÷3, decimal, repeated-equals, phone viewport).

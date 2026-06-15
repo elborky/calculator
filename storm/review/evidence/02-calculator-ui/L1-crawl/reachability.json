@@ -1,0 +1,2 @@
+{ "scanned_routes": ["/"], "reachable_from_ui": ["/"], "unreachable": [], "checked_at": "2026-06-15T07:30:00Z",
+  "note": "Single-page static calculator. No router/nav. Reachability is trivially complete." }

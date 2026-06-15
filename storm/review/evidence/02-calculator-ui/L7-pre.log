@@ -1,0 +1,28 @@
+STORM REVIEW M2 — Layer 7 static guards (orchestrator, deterministic floor)
+Run: 2026-06-15
+
+L7.1 tsc --noEmit            : PASS (exit 0, zero type errors at M1/M2 seam)
+L7.2 vitest run             : PASS (61/61 tests, 189ms)
+L7.3 vite build             : PASS (exit 0; dist/ = index.html + hashed css/js + 1 woff2)
+L7.4 token-purity (hex)     : PASS (0 theme-hex outside tokens.css — BUILD T-186)
+L7.4b token-purity (rgba)   : FINDINGS — colored rgba() theme values outside tokens.css:
+      layout.css:117 (aurora sheen gradient: rgba(124,92,255), rgba(255,94,122))
+      layout.css:258-259 (@supports fallback fills: rgba(26,18,56,.88), rgba(14,10,36,.92))
+      keypad.css:85,108 (operator/equals text-shadow colored: rgba(120,0,30), rgba(40,0,90))
+      NOTE: structural rgba (0,0,0 / 255,255,255 shadows+insets) = ALLOWED per UR-029/T-122.
+      Colored theme rgba above = candidate UR-029 nuance finding → grade in log (likely P2).
+
+L7.5 nav-coverage (#FF-022) : N/A — single-page static app, no router/nav (waived-by-architecture)
+L7.6 resource-existence (#FF-021): N/A — no DB/tables/migrations (4-fn calc, in-memory)
+
+FONT FINDING (cross-layer, P1):
+  - fonts.css imports 3 @font-face (300/400/500); built CSS DOES ship all 3 rules
+    (corrected: earlier "1 @font-face" was a grep-line artifact — minified CSS is one line).
+    BUT all 3 @font-face src url() resolve to ONE emitted asset: Inter-Light-<hash>.woff2.
+  - ROOT CAUSE: all 3 src woff2 files are byte-identical (48432 bytes, md5 65850a37...) —
+    Medium & Regular are copies of Light. Identical content → one content-hash → Vite emits
+    one file and rewrites all 3 url() to it. document.fonts reports 300/400/500 "loaded" but
+    all share the same (Light) outlines; weight 600 (keypad) faux-bolds from it.
+  - IMPACT: D-004 (self-host genuine 300/400/500) only cosmetically met. Keys (intended 500) and
+    pending-line (intended 400) render from Light outlines / browser synthesis. Display readout
+    (300, AA-critical) IS genuine → no a11y/contrast regression.

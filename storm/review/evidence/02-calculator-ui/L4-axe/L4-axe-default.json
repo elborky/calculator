@@ -1,0 +1,26 @@
+{
+  "state": "resting (fresh '0')",
+  "axe_version": "4.10.2",
+  "violation_count": 4,
+  "violations": [
+    { "id": "scrollable-region-focusable", "impact": "serious", "target": ".readout",
+      "summary": "Element should be focusable — .readout has overflow-x:scroll but no tabindex.",
+      "severity_grade": "P1" },
+    { "id": "landmark-one-main", "impact": "moderate", "target": "html",
+      "summary": "No main landmark — <main role=\"application\"> overrides its implicit landmark.",
+      "severity_grade": "P1", "root_cause_shared_with": "aria-allowed-role" },
+    { "id": "aria-allowed-role", "impact": "minor", "target": "main",
+      "summary": "role=application not appropriate on <main> (strips landmark).",
+      "severity_grade": "P1", "fix_shared_with": "landmark-one-main" },
+    { "id": "page-has-heading-one", "impact": "moderate", "target": "html",
+      "summary": "No level-one heading on the page.",
+      "severity_grade": "P1" }
+  ],
+  "manual_checks_PASS": [
+    "real <button>s (18, all aria-labelled)",
+    "focus ring 3px solid rgb(124,92,255) offset 3px (UR-020, exceeds 2px floor)",
+    "display role=status aria-live=polite (UR-023)",
+    "error conveyed by full sentence + color, not color-alone (UR-026)",
+    "operators distinguished by glyph+fill (UR-024)"
+  ]
+}

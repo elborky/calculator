@@ -1,0 +1,3 @@
+{ "state": "post-fix, resting AND scroll-mode", "axe_version": "4.10.2",
+  "violation_count": 0,
+  "note": "All 4 violations resolved: role=application removed (landmark restored + role ok), <h1 class=sr-only> added, .readout overflow:hidden at rest (no spurious vertical scroll region), tabindex=0+aria-label added conditionally in scroll mode (fitDisplay). Verified axe=0 in fresh state AND in 1/3 long-number scroll state." }

@@ -1,0 +1,6 @@
+L3 Network capture (4xx/5xx + font requests) — M2 REVIEW
+404: /favicon.ico (P3, cosmetic — see L2)
+FONT REQUESTS: only Inter-Light-<hash>.woff2 is fetched (one file).
+  → Corroborates the font finding: 3 @font-face rules (300/400/500) all resolve to ONE emitted
+    asset because the 3 source woff2 are byte-identical (md5 65850a37...). No @font-face src 404.
+No 5xx. CSS/JS assets 200. Critical paths clean.

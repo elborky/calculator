@@ -2,10 +2,10 @@
 
 ## Current State
 
-- **Phase:** BUILD M2 (Calculator UI) — **COMPLETE**. All 15 groups / 87 tasks DONE (T-101–T-187). Calculator is fully interactive + verified. Ready for REVIEW M2.
-- **Sub-context:** Vite static build GREEN. v3 aurora-glass UI live + interactive (click ≡ keyboard convergence via `handleKeyIntent`). M1 engine wired (state.ts → render.ts loop). Self-hosted Inter (300/400/500). Motion + reduced-motion + responsive + reserved M3/M4 slots. UR-029 token-purity clean (0 theme-hex outside tokens.css). Playwright smoke PASS: `12+3=`→15, `5÷0=`→"Cannot divide by zero", AC→0, keyboard path→15. Screenshots in `_evidence/smoke-*.png`. a11y: role=status, 3px focus ring, real `<button>`s.
-- **Last decision:** Forked-sonnet dispatch **RESTORED** for Groups 4–14 (#FF-008 credits-gate no longer blocking, 2026-06-15) — owner re-confirmed "coba lagi forked sonnet". All M2 task commits this session tagged `Model: sonnet` (tier-purity recovered; supersedes prior inline-opus session for Groups 0–3 only).
-- **Next step:** Enter REVIEW M2 (`/storm-review`) — Playwright e2e suite, full a11y audit, visual regression vs v3 baseline, L7 static guards + L8 adversarial review.
+- **Phase:** REVIEW M2 (Calculator UI) — **PASS**. 8-layer auto-verification complete (0 P0; all P1+P2 fixed & re-verified). Ready for SHIP M2 (or continue M3/M4 — owner sequencing).
+- **Sub-context:** REVIEW log `storm/review/02-review-calculator-ui.md`; evidence `storm/review/evidence/02-calculator-ui/`. L1 functional PASS (click≡keyboard, error sentence, shrink→scroll), L4 axe **4→0** (rest+scroll), L5 visual faithful to v3, L6 FCP 204ms, L7 tsc/61-tests/build GREEN + token-purity CLEAN, L8 code HIGH (no XSS, exhaustive switch, INT-1..6). Fixed in-REVIEW: main-landmark/role-application, sr-only `<h1>`, scroll-region focusable (conditional tabindex), UR-029 rgba→channel-tokens, font consolidation, favicon, dead re-export. **F1 "font weights collapsed" RETRACTED** — woff2 is a latin-subset variable font (fvar wght 100–900); D-004 self-host IS met (verify-before-flag #FF-001).
+- **Last decision:** REVIEW M2 ran **INLINE** (forked sonnet/opus dispatch blocked all session by #FF-008 credits-gate; owner chose "gas inline" after 2 retries). Tier-purity caveat: REVIEW commits tagged `Model: opus` (orchestrator tier), not the dispatched sonnet/opus — measurement degraded for these commits, documented in the review log + handoff. Re-run forked once credits enabled if a clean baseline is wanted.
+- **Next step:** SHIP M2 (`/storm-ship`) — first deployable surface (static NGINX/Dokploy), security audit + smoke-test scaffold. OR continue to M3 (history) / M4 (theming) first — **owner sequencing decision** to confirm at session start.
 
 ## STORM Config
 

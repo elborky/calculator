@@ -1,0 +1,4 @@
+{ "FCP_ms": 204, "domContentLoaded_ms": 102, "loadComplete_ms": 103, "transfer_KB": 2,
+  "LCP_est_ms": "~204 (single static surface, readout paints with FCP)",
+  "CLS_est": "~0 (static layout, font-display:swap on preloaded weight)",
+  "verdict": "PASS — well under LCP<2500 / CLS<0.1 thresholds. Tiny static page." }

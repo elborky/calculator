@@ -1,0 +1,1 @@
+{ "state": "error (Cannot divide by zero)", "note": "same 4 structural violations as resting state (landmark/h1/role/scrollable are state-independent). Error sentence wraps within scrim, conveyed by text+color. pending-line [hidden] during error (UE-013 ✓)." }

@@ -71,6 +71,18 @@ In one breath: the *product* is a trivial, no-account, no-data, no-compliance br
 
 ---
 
+## 4a. Documented exception — M4 re-entry (2026-06-15)
+
+**localStorage theme-preference persistence** is a permitted tiny-value exception to the no-persistence framing in §4 ("Data architect — not relevant. No persistence, no DB, no schema.").
+
+Scope of exception: **one key** (e.g. `"theme"`) storing a two-state string (`"light"` / `"dark"`). This is not a data model, not a schema, not user data, and carries zero compliance or security implications — it is a single UX-continuity preference identical in scope to a browser's own dark-mode memory.
+
+Lens framing otherwise **unchanged**: the domain remains "Solo zero-stakes consumer web utility — design-craft-forward, framework-test vehicle." The data-architect, security-expert, and compliance hats remain suppressed per the anti-inflation guard in §4. Theme toggle is in fact the purest expression of the "ga bosenin" design-craft axis — do NOT let this exception invite hat-creep.
+
+> Source: CAPTURE re-entry 2026-06-15, owner-confirmed. Logged in `storm/capture/01-braindump.md` (M4 re-entry slice) and `storm/capture/03-ideation-coverage.md` (M4 coverage delta).
+
+---
+
 ## 5. Re-validation triggers (L3-01)
 
 Re-check this Domain Lens at each of these points; narrate the re-check per CP-4:

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculator — Light Theme V3 Wildcard (Iridescent Holographic Dawn)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+   * V3 WILDCARD — Iridescent Holographic Dawn
+   * Light mirror of the vibrant aurora dark baseline.
+   * Creative twist: chromatic iridescent glass edge + warm
+   * dawn-aurora palette (peach / rose / lilac / periwinkle).
+   * Single-file mockup — light-mode active.
+   * ============================================================ */
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    /* Accent system */
+    --accent:                   #5b3de8;
+    --accent-dark:              #4a2ec8;
+    --accent-hover-from:        #6a4df5;
+    --accent-hover-to:          #5030d0;
+    --accent-glow:              rgba(91, 61, 232, 0.35);
+    --operator-accent:          #e8285a;
+    --operator-accent-dark:     #cc1f4a;
+    --operator-hover-from:      #f03868;
+    --operator-hover-to:        #d42050;
+    --operator-glow:            rgba(232, 40, 90, 0.30);
+    --text-on-accent:           #ffffff;
+    --error:                    #c0122a;
+
+    /* Text — dark indigo on light glass */
+    --text-on-scrim:            #1a1040;
+    --text-on-scrim-soft:       rgba(26, 16, 64, 0.55);
+    --text-primary:             #1a1040;
+    --text-secondary:           rgba(26, 16, 64, 0.55);
+
+    /* Glass — white translucent, higher alpha for light */
+    --glass-fill:               rgba(255, 255, 255, 0.52);
+    --glass-fill-hover:         rgba(255, 255, 255, 0.68);
+    --glass-fill-display:       rgba(255, 255, 255, 0.38);
+    --glass-border:             rgba(255, 255, 255, 0.82);
+    --glass-border-bright:      rgba(255, 255, 255, 0.96);
+
+    /* Display scrim — near-white tinted indigo */
+    --display-scrim:            rgba(240, 238, 255, 0.86);
+
+    /* Iridescent edge gradient (the V3 wildcard twist) */
+    --irid-from:                rgba(165, 180, 252, 0.72);  /* periwinkle */
+    --irid-mid:                 rgba(255, 160, 192, 0.65);  /* rose */
+    --irid-to:                  rgba(196, 181, 253, 0.70);  /* lilac */
+
+    /* Background aurora — warm dawn palette */
+    --bg-base:                  #ede8ff;
+
+    /* Motion */
+    --motion-press:             80ms ease-out;
+    --motion-hover:             150ms ease;
+    --motion-theme:             300ms ease;
+
+    /* Glass recipe structural */
+    --radius-body:              30px;
+    --radius-display:           22px;
+    --radius-btn:               18px;
+    --blur-body:                22px;
+    --blur-display:             16px;
+    --blur-key:                 10px;
+  }
+
+  /* ---- Page canvas ---- */
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+    position: relative;
+    overflow-x: hidden;
+    background-color: var(--bg-base);
+    background-image:
+      radial-gradient(42% 52% at 18% 22%, rgba(167, 139, 250, 0.82) 0%, transparent 62%),
+      radial-gradient(48% 58% at 82% 18%, rgba(251, 182, 206, 0.78) 0%, transparent 62%),
+      radial-gradient(52% 62% at 78% 82%, rgba(147, 197, 253, 0.72) 0%, transparent 64%),
+      radial-gradient(46% 52% at 22% 82%, rgba(216, 180, 254, 0.76) 0%, transparent 62%),
+      radial-gradient(60% 40% at 50% 50%, rgba(255, 212, 184, 0.55) 0%, transparent 70%),
+      linear-gradient(135deg, #ddd6fe 0%, #f3e8ff 45%, #fce7f3 75%, #ffe4e6 100%);
+  }
+
+  /* Subtle animated aurora blobs */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 30% 70%, rgba(255, 179, 217, 0.40) 0%, transparent 50%),
+      radial-gradient(circle at 70% 30%, rgba(165, 180, 252, 0.35) 0%, transparent 50%);
+    animation: auroraShift 12s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes auroraShift {
+    0%   { opacity: 0.6; transform: scale(1) rotate(0deg); }
+    100% { opacity: 1.0; transform: scale(1.08) rotate(3deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    body::before { animation: none; }
+    * { transition: none !important; }
+  }
+
+  /* ---- Layout shell ---- */
+  .app-layout {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    max-width: 720px;
+    width: 100%;
+  }
+
+  /* ---- History tape ---- */
+  .history-tape {
+    width: 200px;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.44);
+    backdrop-filter: blur(var(--blur-body)) saturate(140%);
+    -webkit-backdrop-filter: blur(var(--blur-body)) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.80);
+    border-radius: var(--radius-body);
+    padding: 16px 14px;
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.10),
+      0 0 0 1px rgba(165, 180, 252, 0.20),
+      inset 0 1px 0 rgba(255, 255, 255, 0.90);
+    position: relative;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+
+  /* Iridescent edge on history tape */
+  .history-tape::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg,
+      rgba(165, 180, 252, 0.18) 0%,
+      rgba(255, 160, 192, 0.12) 50%,
+      rgba(196, 181, 253, 0.16) 100%);
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .history-tape > * { position: relative; z-index: 1; }
+
+  .history-label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+  }
+
+  .history-entry {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(26, 16, 64, 0.08);
+  }
+  .history-entry:last-child { border-bottom: none; }
+
+  .history-expression {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    margin-bottom: 2px;
+  }
+  .history-result {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+
+  /* ---- Calculator body ---- */
+  .calc {
+    position: relative;
+    width: 100%;
+    max-width: 360px;
+    flex-shrink: 0;
+  }
+
+  /* The iridescent gradient ring — the V3 wildcard signature */
+  .calc::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: calc(var(--radius-body) + 2px);
+    background: linear-gradient(135deg,
+      rgba(165, 180, 252, 0.90) 0%,
+      rgba(255, 160, 192, 0.85) 35%,
+      rgba(251, 207, 232, 0.80) 55%,
+      rgba(196, 181, 253, 0.88) 75%,
+      rgba(147, 197, 253, 0.82) 100%);
+    z-index: 0;
+    filter: blur(1px);
+    opacity: 0.75;
+  }
+
+  /* Additional holographic shimmer layer */
+  .calc::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-body);
+    background: linear-gradient(135deg,
+      rgba(165, 180, 252, 0.15) 0%,
+      rgba(255, 160, 192, 0.10) 40%,
+      rgba(196, 181, 253, 0.13) 80%,
+      rgba(147, 197, 253, 0.10) 100%);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .calc-inner {
+    position: relative;
+    z-index: 1;
+    background: var(--glass-fill);
+    backdrop-filter: blur(var(--blur-body)) saturate(140%);
+    -webkit-backdrop-filter: blur(var(--blur-body)) saturate(140%);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-body);
+    padding: 20px;
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.12),
+      0 0 60px rgba(167, 139, 250, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.95),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.30);
+  }
+
+  /* ---- Toggle slot ---- */
+  .toggle-slot {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 10;
+  }
+
+  .theme-toggle {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    border-radius: 14px;
+    cursor: pointer;
+    font-size: 1.15rem;
+    color: var(--text-primary);
+    transition: background var(--motion-hover), transform var(--motion-press), box-shadow var(--motion-hover);
+    backdrop-filter: blur(8px) saturate(130%);
+    -webkit-backdrop-filter: blur(8px) saturate(130%);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255,255,255,0.95);
+  }
+  .theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 4px 12px rgba(91, 61, 232, 0.15), inset 0 1px 0 rgba(255,255,255,0.95);
+  }
+  .theme-toggle:active { transform: scale(0.92); }
+  .theme-toggle:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+  }
+  .toggle-icon { pointer-events: none; line-height: 1; }
+
+  /* ---- Display ---- */
+  .display {
+    margin-top: 8px;
+    margin-bottom: 14px;
+    background: var(--glass-fill-display);
+    backdrop-filter: blur(var(--blur-display)) saturate(130%);
+    -webkit-backdrop-filter: blur(var(--blur-display)) saturate(130%);
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    border-radius: var(--radius-display);
+    padding: 14px 18px 16px;
+    min-height: 96px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.80),
+      0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  /* Scrim under numbers for AA contrast */
+  .display::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--display-scrim);
+    border-radius: inherit;
+    z-index: 0;
+  }
+
+  .display > * { position: relative; z-index: 1; }
+
+  .display-expression {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--text-on-scrim-soft);
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 4px;
+    min-height: 1.1em;
+    text-align: right;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .display-readout {
+    font-size: clamp(2rem, 10vw, 3rem);
+    font-weight: 300;
+    color: var(--text-on-scrim);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+    text-align: right;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    letter-spacing: -0.02em;
+  }
+
+  /* ---- Keypad ---- */
+  .keypad {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+
+  /* ---- Buttons — base ---- */
+  button.key {
+    height: 68px;
+    border: 1px solid rgba(255, 255, 255, 0.70);
+    border-radius: var(--radius-btn);
+    cursor: pointer;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 1.3rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      background var(--motion-hover),
+      box-shadow var(--motion-hover),
+      transform var(--motion-press);
+    position: relative;
+    overflow: hidden;
+  }
+
+  button.key:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  button.key:active { transform: scale(0.96); }
+
+  /* Digit / utility keys */
+  button.key.digit {
+    background: var(--glass-fill);
+    backdrop-filter: blur(var(--blur-key)) saturate(130%);
+    -webkit-backdrop-filter: blur(var(--blur-key)) saturate(130%);
+    color: var(--text-primary);
+    box-shadow:
+      0 2px 8px rgba(0,0,0,0.07),
+      inset 0 1px 0 rgba(255,255,255,0.90);
+  }
+  button.key.digit:hover {
+    background: var(--glass-fill-hover);
+    box-shadow:
+      0 4px 12px rgba(91,61,232,0.12),
+      inset 0 1px 0 rgba(255,255,255,0.95);
+  }
+
+  /* Utility keys (AC, CE, %) — slightly tinted */
+  button.key.util {
+    background: rgba(196, 181, 253, 0.28);
+    backdrop-filter: blur(var(--blur-key)) saturate(130%);
+    -webkit-backdrop-filter: blur(var(--blur-key)) saturate(130%);
+    color: #3a2b8c;
+    border-color: rgba(196, 181, 253, 0.55);
+    font-size: 1rem;
+    font-weight: 500;
+    box-shadow:
+      0 2px 8px rgba(91,61,232,0.08),
+      inset 0 1px 0 rgba(255,255,255,0.85);
+  }
+  button.key.util:hover {
+    background: rgba(196, 181, 253, 0.42);
+    box-shadow:
+      0 4px 12px rgba(91,61,232,0.14),
+      inset 0 1px 0 rgba(255,255,255,0.90);
+  }
+
+  /* Operator keys */
+  button.key.operator {
+    background: linear-gradient(145deg, var(--operator-hover-from), var(--operator-accent-dark));
+    color: var(--text-on-accent);
+    border-color: rgba(255,255,255,0.35);
+    box-shadow:
+      0 4px 14px rgba(232, 40, 90, 0.28),
+      inset 0 1px 0 rgba(255,255,255,0.30),
+      inset 0 -1px 0 rgba(0,0,0,0.10);
+    text-shadow: 0 1px 3px rgba(120, 0, 30, 0.35);
+  }
+  button.key.operator:hover {
+    background: linear-gradient(145deg, #f5457a, #d42050);
+    box-shadow:
+      0 6px 20px rgba(232, 40, 90, 0.38),
+      inset 0 1px 0 rgba(255,255,255,0.35);
+  }
+
+  /* Equals key */
+  button.key.equals {
+    background: linear-gradient(145deg, var(--accent-hover-from), var(--accent-dark));
+    color: var(--text-on-accent);
+    border-color: rgba(255,255,255,0.28);
+    box-shadow:
+      0 4px 16px rgba(91, 61, 232, 0.35),
+      inset 0 1px 0 rgba(255,255,255,0.28),
+      inset 0 -1px 0 rgba(0,0,0,0.12);
+    text-shadow: 0 1px 3px rgba(40, 0, 90, 0.30);
+  }
+  button.key.equals:hover {
+    background: linear-gradient(145deg, #7a5aff, #5030d0);
+    box-shadow:
+      0 6px 22px rgba(91, 61, 232, 0.45),
+      inset 0 1px 0 rgba(255,255,255,0.32);
+  }
+
+  /* Zero key — spans 2 columns */
+  button.key.zero { grid-column: span 2; justify-content: flex-start; padding-left: 26px; }
+
+  /* ============================================================
+   * Iridescent inner shimmer on accent keys — subtle holo edge
+   * ============================================================ */
+  button.key.operator::before,
+  button.key.equals::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 40%;
+    background: linear-gradient(180deg,
+      rgba(255,255,255,0.22) 0%,
+      rgba(255,255,255,0.04) 100%);
+    border-radius: var(--radius-btn) var(--radius-btn) 0 0;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-layout">
+
+  <!-- History tape -->
+  <aside class="history-tape" aria-label="Calculation history">
+    <p class="history-label">History</p>
+
+    <div class="history-entry">
+      <p class="history-expression">8 × 9</p>
+      <p class="history-result">72</p>
+    </div>
+
+    <div class="history-entry">
+      <p class="history-expression">100 ÷ 4</p>
+      <p class="history-result">25</p>
+    </div>
+
+    <div class="history-entry">
+      <p class="history-expression">1,200 + 34.56</p>
+      <p class="history-result">1,234.56</p>
+    </div>
+  </aside>
+
+  <!-- Calculator -->
+  <main class="calc" aria-label="Calculator">
+
+    <!-- Iridescent ring rendered via calc::before / calc::after pseudo-elements -->
+
+    <div class="calc-inner">
+
+      <!-- Theme toggle -->
+      <div class="toggle-slot">
+        <button
+          class="theme-toggle"
+          id="theme-toggle"
+          aria-label="Switch to dark theme"
+          aria-pressed="true"
+        >
+          <span class="toggle-icon" aria-hidden="true">☀</span>
+        </button>
+      </div>
+
+      <!-- Display -->
+      <div class="display" role="region" aria-label="Calculator display" aria-live="polite">
+        <p class="display-expression">1,200 + 34.56</p>
+        <p class="display-readout">1,234.56</p>
+      </div>
+
+      <!-- Keypad -->
+      <div class="keypad" role="group" aria-label="Calculator keys">
+        <!-- Row 1: utility + divide -->
+        <button class="key util" type="button" aria-label="All clear">AC</button>
+        <button class="key util" type="button" aria-label="Clear entry">CE</button>
+        <button class="key util" type="button" aria-label="Percent">%</button>
+        <button class="key operator" type="button" aria-label="Divide">÷</button>
+
+        <!-- Row 2 -->
+        <button class="key digit" type="button" aria-label="7">7</button>
+        <button class="key digit" type="button" aria-label="8">8</button>
+        <button class="key digit" type="button" aria-label="9">9</button>
+        <button class="key operator" type="button" aria-label="Multiply">×</button>
+
+        <!-- Row 3 -->
+        <button class="key digit" type="button" aria-label="4">4</button>
+        <button class="key digit" type="button" aria-label="5">5</button>
+        <button class="key digit" type="button" aria-label="6">6</button>
+        <button class="key operator" type="button" aria-label="Subtract">−</button>
+
+        <!-- Row 4 -->
+        <button class="key digit" type="button" aria-label="1">1</button>
+        <button class="key digit" type="button" aria-label="2">2</button>
+        <button class="key digit" type="button" aria-label="3">3</button>
+        <button class="key operator" type="button" aria-label="Add">+</button>
+
+        <!-- Row 5 -->
+        <button class="key digit zero" type="button" aria-label="0">0</button>
+        <button class="key digit" type="button" aria-label="Decimal point">.</button>
+        <button class="key equals" type="button" aria-label="Equals">=</button>
+      </div>
+
+    </div><!-- /.calc-inner -->
+  </main>
+
+</div><!-- /.app-layout -->
+
+</body>
+</html>

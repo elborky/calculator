@@ -23,3 +23,14 @@ render(getState());
 import { setupClickBinding, setupKeyboardBinding } from './bindings';
 setupClickBinding();
 setupKeyboardBinding();
+
+// Group D: M3 History Tape wiring (T-213)
+// Register the post-dispatch listener so completed calculations are recorded.
+// subscribe() is the seam added in Group B (T-207); recordOnEquals is Group C (T-209..T-212).
+// renderHistory() is called once here so the empty-state placeholder renders immediately on load
+// (before any calculation) — parallel to the render(getState()) call above for M2.
+import { subscribe } from './state';
+import { recordOnEquals } from './history/history';
+import { renderHistory } from './history/render-history';
+subscribe(recordOnEquals);
+renderHistory();

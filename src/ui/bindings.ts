@@ -29,6 +29,11 @@ import {
   inputAllClear,
 } from './state';
 import { KEY_TO_OPERATOR } from './operator-map';
+// Group D: T-214/T-215 — AC clears the history tape (HR-016).
+// Both the AC button click AND Esc keyboard press funnel through handleKeyIntent('all-clear')
+// below, so one wiring here covers both (T-215 shared-handler case — see context.md).
+import { clearTape } from './history/tape';
+import { renderHistory } from './history/render-history';
 
 // ---------------------------------------------------------------------------
 // Shared intent dispatcher — the convergence point (INT-4)
@@ -69,7 +74,9 @@ function handleKeyIntent(intent: string): void {
       dispatch(s => inputClearEntry(s));
       break;
     case 'all-clear':
-      dispatch(s => inputAllClear(s));
+      dispatch(s => inputAllClear(s));  // M2 engine reset — dispatch-FIRST (HR-016)
+      clearTape();                       // T-214/T-215: empty the tape array (HR-016)
+      renderHistory();                   // re-render tape → empty-state panel
       break;
     // Unknown intents are no-ops (T-160 principle applied to click side too)
   }

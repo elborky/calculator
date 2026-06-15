@@ -7,6 +7,29 @@
 
 <!-- NEWEST ENTRY BELOW THIS LINE -->
 
+## [2026-06-15 15:49] — BUILD M3 (History Tape) COMPLETE / ready for REVIEW M3 — anchor: 6bfebb3
+
+- ✅ **Done this session — BUILD M3 all 44 tasks (groups A–I), forked-sonnet tier-clean:**
+  - **Group A** (`19857eb`): `src/ui/history/types.ts` (`HistoryEntry{expression,result,id}`) + `src/ui/history/tape.ts` (in-memory array, `appendEntry`/`clearTape`/`getTape`).
+  - **Group B** (`4c91434` + `3391e86`): recording seam — subscriber list + `subscribe(fn)` + `dispatch()` patch (loop after render, zero render-path change).
+  - **Group C** (`9af14cf`): `history.ts` `recordOnEquals(prev,next)` — INT-M3-1 predicate (`pendingOperator≠null AND errorState===null AND justEvaluated===true`), INT-M3-2 expression derivation, `appendEntry` call.
+  - **Group D** (`7b8457f`): `main.ts` `subscribe(recordOnEquals)` at mount + startup `renderHistory()`; AC/Esc → `clearTape()`+`renderHistory()` (dispatch-first).
+  - **Groups E+G** (`2a6bab0`): `render-history.ts` — `<ul role="list">` newest-at-top, single-line v1 spans (`.history-expr`/`.history-eq`/`.history-result`), aria-hidden toggle, empty-state placeholder, conditional `tabindex=0` on scroll region when overflowing.
+  - **Group F** (`dd24a6c`): `history.css` — recessed glass panel (backdrop-blur 16px), Inter 0.875rem tabular-nums, right-align, hairline dividers, slide-in @keyframes 180ms + reduced-motion cancel.
+  - **Group H+I** (`35e8530`): 14 M3 jsdom tests (predicate + render), 75 total passed (61 engine + 14 M3), zero regressions; `tsc --noEmit` exit 0; `npm run build` exit 0. **LIVE browser smoke (real Chrome @ localhost:4173):** 6 flows — record 12+3=15 ✓ / newest-on-top ✓ / repeated-= dedup ✓ / 5÷0 error+no-record ✓ / AC clears tape ✓.
+  - **⚠️ Startup-crash bug caught by live smoke (35e8530):** missing static `.history-slot` skeleton in `index.html` caused `renderHistory()` to crash on startup — green tsc/build/61-engine-tests had masked it. Fixed in-BUILD (added `<aside class="history-slot" aria-hidden="true">` + inner skeleton). Key lesson: live browser smoke is not optional even when tests pass.
+  - **Module-complete marker** (`6bfebb3`): module-status M3 → BUILD-COMPLETE; CLAUDE.md updated → ready for REVIEW M3.
+
+- 🔒 **Decided:**
+  - **[conversation-claim] #FF-037 credits-gate RESOLVED this session (option A):** owner switched off 1M-context (selected standard context) → forked sonnet sub-agents ran cleanly for all 12 BUILD M3 dispatches, tier-pure. Gate is no longer blocking forked dispatch. Confirmed runtime: orchestrator may stay 1M; forks need standard context.
+  - **[conversation-claim] Parallel-wave batching CONFIRMED + proven:** BUILD M3 ran as group-batched forked-sonnet agents (one commit per group, ~10 commits for 44 tasks); each agent owned only its own `src/` files; orchestrator owned `_plan.md`+`CLAUDE.md` bookkeeping (no parallel write-races); deterministic sieve-2 verify after each wave. Worked cleanly. Now the proven M3 BUILD execution pattern (supersedes the prior verbal claim from last session).
+
+- ⏳ **Pending — needs YOUR decision:**
+  - **[conversation-claim] Owner sequencing: REVIEW M3 vs SHIP M2 — still unresolved.** BUILD M3 is complete. Recommended next: **REVIEW M3** (`/storm-review` — 8-layer auto-verify, Playwright/axe full HE/HR/US coverage). Alternative: **SHIP M2 first** (REVIEW M2 PASS is un-shipped since M2). Owner has not picked.
+  - **[conversation-claim] Re-run REVIEW M2 forked for clean tier-measurement baseline** (carried, non-blocker — REVIEW M2 ran inline `Model: opus`; verdict PASS stands; gate now resolved so forked re-run is doable). Optional cleanup only.
+
+- ➡️ **Next:** **REVIEW M3** (`/storm-review` — recommended) OR **SHIP M2** (owner sequencing to confirm at session start). REVIEW M3 will run full Playwright/axe coverage for all HE/HR/US acceptance criteria.
+
 ## [2026-06-15] — SPECIFY M3 (History Tape) COMPLETE / BUILD M3 started (gate-blocked) — anchor: 19d5a0b
 
 > `[unverified-fallback — written by main context]` — fresh handoff sub-agent dispatch SKIPPED: the

@@ -67,6 +67,10 @@ storm-canonical: false
 - T-428 blocked write → swallow, session-only toggle still flips attribute
 - T-429 terminal fallback: no stored + no matchMedia → dark
 
-### Group G — AA contrast verification  `[PENDING]`
+### Group G — AA contrast verification  `[DONE]` (see group-g-aa-verification.md; fixes 3956f08, d000e9e)
 - T-430 orchestrator: build + load light theme in real browser, screenshot worst gradient patch,
   verify 5 surface pairs clear WCAG AA; raise --glass-fill alpha before darkening text if any fail
+  → PASS. 2 AA fixes applied: light --tape-scrim override (3956f08, history tape was dark in
+  light theme); light --text-secondary 0.60→0.66 (d000e9e, dimmed text was 4.24:1 < 4.5).
+  All 5 pairs now ≥5.13:1 worst-case. Toggle flip/persist/aria smoke PASS, 0 console errors,
+  dark v3 frozen unchanged.

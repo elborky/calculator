@@ -1,0 +1,15 @@
+# Keep the Docker build context small + reproducible.
+node_modules
+dist
+.git
+.gitignore
+*.log
+npm-debug.log*
+.DS_Store
+storm
+.claude
+*.md
+STORM-*.md
+.vscode
+.idea
+coverage

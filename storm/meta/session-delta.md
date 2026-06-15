@@ -3,28 +3,28 @@
 > Written by orchestrator at session EXIT. Overwritten each exit. Sub-agent reads this to fold in
 > [conversation-claim] items. Bounded (CP-14) — a delta, not a journal.
 
-## Session: 2026-06-15 (REVIEW M3 → SHIP v1.0.0 — shipped to production)
+## Session: 2026-06-15 (BUILD M4 theme toggle — built + verified, NOT deployed)
 
-### Verbal decisions / resolutions this session (ALL already landed in git/CLAUDE.md — listed for confirmation, not re-derivation)
+### Open-questions this session (→ ⏳ Pending, needs owner)
 
-1. **Prior open questions RESOLVED:** REVIEW M3 chosen over SHIP-M2-first (both ended up shipped
-   together as one bundle); the carried "re-run REVIEW M2 forked for clean baseline" is now MOOT —
-   REVIEW M3 ran fully forked tier-clean, establishing the clean baseline.
+1. **Deploy M4 to prod, or leave it local-only?** M4 theme toggle is BUILT + AA-verified on
+   `main` but NOT deployed — prod (`calc.elborky.my.id`) still runs v1.0.0 without the toggle.
+   Owner ended the session ("udahan") without deciding whether to (a) REVIEW M4 → redeploy so the
+   toggle goes live, or (b) leave M4 parked locally. AI recommended REVIEW M4 first before any
+   redeploy. Carry forward until owner picks.
 
-2. **#FF-037 credits-gate re-fired at REVIEW M3 start** (forked dispatch rejected at 0 tokens);
-   owner switched session OFF 1M context again → all REVIEW + SHIP forked dispatches then ran clean.
-   Same resolution as BUILD M3. (Recorded in review log + module-status — durable.)
+### Verbal items already landed in git/CLAUDE.md (listed for confirmation, not re-derivation)
 
-3. **Deploy decisions (all committed):** install official `@dokploy/mcp` (config `.mcp.json`,
-   credentials in gitignored `.claude/settings.local.json`); source = NEW public GitHub repo
-   `elborky/calculator`; drive deploy via direct REST API (not MCP-tool path — MCP not connected
-   this session, owner chose direct API); custom domain `calc.elborky.my.id` + Let's Encrypt.
+- **v3 "Iridescent Dawn"** picked as the light theme; Light+Dark 2-state (System 3rd option
+  DEFERRED); OS-default first-load + single-key localStorage persist. (Committed across M4 spec
+  + build.)
+- **#F-003 logged** (framework-feedback `ac84ccd`): #FF-037 credits-gate fires every BUILD/SHIP
+  session when orchestrator is in 1M context; turning 1M off always fixes it. Proposed permanent
+  pre-dispatch context check. (Durable in `storm/meta/framework-feedback.md`.)
+- **2 AA fixes** found in Group-G real-browser verify: light `--tape-scrim` override (3956f08),
+  light `--text-secondary` 0.60→0.66 (d000e9e). (Durable in git + group-g-aa-verification.md.)
 
-4. **Glass confirmed by owner** in their real Chrome on prod (real-browser is the backdrop-filter
-   oracle — headless Playwright false-negatived it 3×). In module-status + parking #001 + memory.
-
-### Open follow-ups (durable in CLAUDE.md + parking #001 — NOT verbal-only, listed for next-session visibility)
+### Open follow-ups (durable in CLAUDE.md + parking #001 — listed for next-session visibility)
 
 - parking #001: build drops unprefixed `backdrop-filter` → Firefox glass gap (lightningcss/postcss fix → redeploy).
 - Enable HSTS in `security-headers.conf` now HTTPS is confirmed live → redeploy.
-- Optional M4 (theme toggle) if owner extends scope.

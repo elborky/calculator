@@ -60,3 +60,28 @@ A web-based calculator app intended as a **low-risk vehicle to field-test the ST
 - **What / Why:** high — owner was clear on purpose and design constraint.
 - **Who:** medium — implicit single-user, no roles needed, but unconfirmed.
 - **Feature scope:** low — deliberately open; STRUCTURE must resolve the operation set and design direction before SPECIFY.
+
+---
+
+## M4 — Theme Toggle (re-entry slice, 2026-06-15)
+
+**Provenance:** Theme was part of the original stated scope ("4-func + history + theme + kbd"). It was deferred post-STRUCTURE (M4 slot reserved). This re-entry executes the deferred item — NOT new scope.
+
+### Scope (in-scope now)
+
+| Item | Detail | Source |
+|---|---|---|
+| Light / Dark toggle | 2-state only | Owner-confirmed, 2026-06-15 |
+| OS default on first load | `prefers-color-scheme` media query | Owner-confirmed |
+| localStorage persistence | Single key (e.g. `"theme"`); survives reload | Owner-confirmed |
+| Placement | `.toggle-slot` reserved in M2 markup | Structural anchor already in prod |
+
+### Explicit DEFERRED (not built in M4)
+
+| Item | Reason |
+|---|---|
+| 3rd "System" state (re-follow OS after manual override) | Owner explicitly deferred; re-entry welcome later |
+
+### Domain Lens impact
+
+Lens unchanged: "Solo zero-stakes consumer web utility — design-craft-forward, framework-test vehicle." `localStorage` for one tiny preference key is a documented exception to the no-persistence framing; it does NOT shift the domain's stakes, hat profile, or compliance posture. Data-architect and security hats remain suppressed per original anti-inflation guard (§4).

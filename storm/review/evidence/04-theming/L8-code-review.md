@@ -151,6 +151,11 @@ and dispatches a synthetic `{matches}` event — assert: (1) no stored value →
 called + storage NOT written; (2) stored value present → handler is a no-op (sticky); (3)
 matchMedia absent → `attachOsChangeListener` returns without throwing.
 
+**REVIEW resolution:** Fixed. T-430 describe block added in `src/ui/theme.test.ts` — 7 new
+tests covering AC-F4-1 (OS-follow + no-storage-write invariant), AC-F4-2 (stored-wins sticky
+for both light and dark stored values), matchMedia absent (two guards), and addEventListener
+'change' registration assertion. All 7 pass. Commit: see storm:REVIEW:theming::fix commit.
+
 ### F-3 — OS-change listener never removed; lifecycle ownership undocumented — **P3**
 **File:** `src/ui/theme.ts:204-213`
 **Description:** `mq.addEventListener('change', …)` is added with no corresponding
@@ -169,6 +174,11 @@ unsubscribe function for symmetry. (a) is sufficient and right-sized for this pr
 (flips to light). Tests only cover starting from a known `'light'` (and dark via `applyTheme`)
 state; the documented "absent → dark" fallback branch (comment `:166`) is unasserted.
 **Proposed fix:** Add one test: `delete dataset.theme; expect(toggleTheme()).toBe('light')`.
+
+**REVIEW resolution:** Fixed. T-430b describe block added in `src/ui/theme.test.ts` — 3 new
+tests: absent `dataset.theme` → resolves dark → flips to light; unrecognised value `'system'`
+→ same default-dark branch → flips to light; explicit `'light'` → flips to dark (regression
+guard). All 3 pass. Commit: see storm:REVIEW:theming::fix commit.
 
 ### F-5 — `aria-pressed` on a whole-page theme toggle is a debated ARIA pattern — **P3**
 **File:** `index.html:73`, `src/ui/main.ts:147,151`

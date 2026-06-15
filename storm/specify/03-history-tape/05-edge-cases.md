@@ -102,7 +102,7 @@ exclusions below are automatic, **not** special-cased (INT-M3-1, `06-tech-choice
 | # | Scenario | Expected handling | Ties to |
 |---|---|---|---|
 | HE-017 | **Operator glyph is true Unicode.** A recorded subtract/multiply/divide expression. | Expression uses the inherited `OPERATOR_TO_GLYPH` (F-M3-9): `−` U+2212 / `×` U+00D7 / `÷` U+00F7 / `+` U+002B — never ASCII `- x /`. Subtract is the real minus, not a hyphen. | F-M3-9, INT-M3-2, `01-data-model §3` |
-| HE-018b | **Decimal result renders faithfully.** A recorded result like `3.5` or `0.5`. | The decimal point + digits render exactly as `getDisplayValue(nextState)` produced; M3 does not reformat (F-M3-4). `tabular-nums` keeps digit columns aligned across rows. | F-M3-4, F-M3-6 (`tabular-nums`), INT-M3-2 |
+| HE-029 | **Decimal result renders faithfully.** A recorded result like `3.5` or `0.5`. | The decimal point + digits render exactly as `getDisplayValue(nextState)` produced; M3 does not reformat (F-M3-4). `tabular-nums` keeps digit columns aligned across rows. | F-M3-4, F-M3-6 (`tabular-nums`), INT-M3-2 |
 
 ---
 
@@ -147,7 +147,9 @@ exclusions below are automatic, **not** special-cased (INT-M3-1, `06-tech-choice
 
 ## Coverage note (anti-padding, CP-13 YAGNI)
 
-28 HE rows across 9 categories — each a genuine tape-specific RECORD / RENDER / CLEAR / LAYOUT / A11Y
+28 HE rows across 9 categories (HE-001..HE-028 plus HE-029, the decimal-faithfulness row — renumbered
+from the former HE-018b to keep IDs monotonic and unique; the §6 HE-018 "AC clears the tape" row is the
+sole owner of number 18) — each a genuine tape-specific RECORD / RENDER / CLEAR / LAYOUT / A11Y
 scenario. None re-tests M1 math (E-001..E-060, frozen) or M2 keypad/readout (UE-001..UE-055,
 REVIEW-PASS); upstream cases appear only as *triggers* the tape reacts to. The count reflects honest
 breadth of a small read-only in-memory tape's edges — one panel, one array, one predicate — not

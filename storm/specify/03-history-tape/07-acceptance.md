@@ -54,7 +54,7 @@ it can be observed.
 ---
 
 ## US-M3-1 — A completed calculation appears on the tape
-*[covers: flow #1 record-on-equals · HR-001, HR-002, HR-007, HR-008, HR-009, HR-010 · HE-011, HE-017, HE-018b]*
+*[covers: flow #1 record-on-equals · HR-001, HR-002, HR-007, HR-008, HR-009, HR-010 · HE-011, HE-017, HE-029]*
 
 **As an end-user, I want each calculation I finish to appear as a new entry at the visible edge of the
 tape, so that I can glance back at what I just computed without redoing it.**
@@ -75,7 +75,7 @@ AC (observable):
   real minus, not hyphen `-`); `6 × 2 =` contains `×` (U+00D7); `8 ÷ 2 =` contains `÷` (U+00F7) (HR-008,
   HE-017).
 - **T6** a decimal result renders faithfully: `7 ÷ 2 =` records result `3.5` exactly as the readout
-  shows — no reformat (HE-018b).
+  shows — no reformat (HE-029).
 
 ---
 

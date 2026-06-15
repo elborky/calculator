@@ -78,3 +78,15 @@ storm-depends-on:
   render fn already does. Inherited tooling (Vite 8.0.16, TS 6.0.3, plain-CSS tokens, self-hosted Inter) is
   carried from M2's CP-6-verified `06-tech-choices.md` unchanged — no new version, no fresh verification owed.
 - **Authority:** CP-7 technical (AI-autonomous). **Source concern:** `06-tech-choices.md §5-6`.
+
+## D-M3-EC-01 — Long entry: wrap → per-line horizontal scroll, fixed font (resolves OQ-M3-5)
+
+- **Decision:** a long expression/result in the narrow tape panel (~240px desktop / ~140px phone) **wraps
+  by default**; an unbreakable single token (e.g. a long exponent string `1.23e+30`) gets **per-line,
+  right-anchored horizontal scroll**; the tape **never truncates/ellipsizes** (no data loss) and the **tape
+  font stays fixed** (no per-line auto-shrink).
+- **Rationale:** honours the same no-data-loss *intent* as M2's readout (`02-calculator-ui` D-006) but via a
+  **list-appropriate** mechanism. M2's measure-and-shrink works for a single readout line; a list of many
+  small lines cannot shrink per-line without jitter and breaking cross-row `tabular-nums` alignment — so
+  wrap+scroll replaces shrink here. Deliberate divergence from D-006, same principle.
+- **Authority:** CP-7 technical (AI-autonomous). **Source concern:** `05-edge-cases.md` (HE-001..004).

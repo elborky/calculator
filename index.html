@@ -16,6 +16,25 @@
     />
     <!-- inline empty favicon — avoids a 404 on /favicon.ico (REVIEW L2) -->
     <link rel="icon" href="data:," />
+    <!-- M4 no-FOUC: resolve + apply theme BEFORE paint. Plain inline script (NOT type=module)
+         so it runs synchronously, blocking paint, ahead of the deferred module bundle.
+         Resolution precedence: valid localStorage "calc-theme" → OS prefers-color-scheme → dark.
+         try/catch guards against blocked/throwing storage (Safari private mode, quota, etc.). -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem('calc-theme');
+          if (t !== 'light' && t !== 'dark') {
+            t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light';
+          }
+          document.documentElement.dataset.theme = t;
+        } catch (e) {
+          document.documentElement.dataset.theme = 'dark'; /* default v3 baseline */
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="app">
@@ -44,8 +63,32 @@
                role="application" removed: it stripped the <main> landmark and is wrong
                for a button-grid calculator (real <button>s + aria-live display). -->
           <h1 class="sr-only">Calculator</h1>
-          <!-- reserved M4 theme-toggle corner (empty in M2 — F4) -->
-          <div class="toggle-slot" aria-hidden="true"></div>
+          <!-- M4 theme-toggle corner — filled by T-417 -->
+          <div class="toggle-slot">
+            <button
+              id="theme-toggle"
+              class="theme-toggle"
+              type="button"
+              aria-label="Switch to light theme"
+              aria-pressed="false"
+            >
+              <!-- Moon icon: dark theme active (aria-hidden — decorative, label carries meaning) -->
+              <svg
+                aria-hidden="true"
+                focusable="false"
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M17.293 13.293A8 8 0 0 1 6.707 2.707a8.001 8.001 0 1 0 10.586 10.586z"
+                  fill="currentColor"
+                />
+              </svg>
+            </button>
+          </div>
 
           <!-- DISPLAY — live region; dark scrim guarantees AA contrast (UR-023) -->
           <div class="display" role="status" aria-live="polite" aria-label="Calculator display">

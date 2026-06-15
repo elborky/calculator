@@ -98,13 +98,16 @@ Foundation-first build order (`00-domain-lens` / CP-10 dark-stretch): **M1 → M
 **Purpose:** the look-and-feel layer that carries the one first-class product axis — "ga bosenin" (`00-domain-lens.md:57`; `01-vision.md:38`). Owns the light/dark toggle and the application of the design-system tokens across M2 and M3.
 
 **Key responsibilities:**
-- Light/dark theme toggle — a chosen feature, user-flippable (`01-vision.md:40`; `02-user-roles.md:42`).
+- Light/dark theme toggle (2-state) — a chosen feature, user-flippable (`01-vision.md:40`; `02-user-roles.md:42`); the toggle lives in the `.toggle-slot` reserved in M2's markup.
+- First-load default follows the OS via CSS `prefers-color-scheme`; once the user flips the toggle, their choice overrides the OS default and is remembered.
+- Persist the chosen theme preference in `localStorage` under a single small key (e.g. `"theme"`) — the **one documented persistence exception** in this product (see "Explicitly NOT in M4" below; cf. `00-domain-lens.md` §4a).
 - Apply the design-system tokens (color, typography, spacing, motion) defined in `08-design-system.md` so the calculator reads as deliberate, not template-default (`01-vision.md:38`).
 - Cross-cutting: M4 styles the surfaces M2 and M3 render; it is the visual skin over both.
 
 **Explicitly NOT in M4:**
 - It does **not** author the design system — the aesthetic direction (a business/taste decision) is captured in `08-design-system.md` per CP-7; M4 *applies* those tokens.
-- No theme persistence across sessions — toggle state is in-memory, consistent with the no-persistence stance (`02-user-roles.md:57`). (Default theme on each load; user re-toggles if desired.)
+- **The theme *preference* persists; nothing else does.** The single `localStorage` theme key is the sole carve-out from the product-wide no-persistence stance — the **M3 history tape stays ephemeral / in-memory and dies with the tab** (`03-modules.md:89`). No history persistence, no DB, no server-side, no cross-**device** sync (localStorage is same-device only).
+- No explicit 3rd "System" toggle option for now — light/dark only; an explicit "System" choice is **deferred** to a later CAPTURE re-entry (the first-load default already follows the OS).
 - No per-user theming, no theme accounts, no custom-theme builder — single anonymous user, no settings backend (`02-user-roles.md:56`).
 - No business logic or input handling — purely presentational.
 

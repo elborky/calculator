@@ -80,14 +80,26 @@ exact inlining mechanism; acceptance verifies no flash.
 ## EC-M4-05 — Reduced motion (`prefers-reduced-motion: reduce`)
 
 **Risk:** the 300ms theme cross-fade (`08-design-system.md §7`) is unwanted motion for users
-who opt out.
+who opt out. Additionally, the v3 "Iridescent Dawn" light theme ships a continuous pulsing
+aurora background animation (`animation: auroraShift 12s ... infinite alternate`) that is also
+unwanted motion under reduced-motion.
 
-**Handling:** under `prefers-reduced-motion: reduce`, the theme switch is **instant** — the
-300ms `transition` on `background`/`color`/`border` is dropped (e.g. `transition: none`), the
-token set swaps with no cross-fade. The toggle's *outcome* is identical; only the animated
-beat is removed. This honours the §7 motion spec and §8 reduced-motion line (accessibility,
-not optional) — design-system is the canonical owner; this file only names it as an edge to
-verify.
+**Handling — two animation vectors, both must be suppressed:**
+
+1. **Theme cross-fade:** under `prefers-reduced-motion: reduce`, the theme switch is
+   **instant** — the 300ms `transition` on `background`/`color`/`border` is dropped (e.g.
+   `transition: none`), the token set swaps with no cross-fade. The toggle's *outcome* is
+   identical; only the animated beat is removed.
+
+2. **Light-theme v3 aurora pulse:** under `prefers-reduced-motion: reduce`, the aurora pulse
+   animation is **disabled** — the aurora renders as a **static gradient**. The aurora visual
+   is still present; only the animation is removed (e.g. `animation: none` on the aurora
+   element inside `@media (prefers-reduced-motion: reduce)`). The light theme remains fully
+   functional; the user just sees a still aurora background instead of a pulsing one.
+
+Both suppressions are mandatory (accessibility, not optional). Canonical rule owner for both:
+`03-rules R-M4-08`; design-system `§7` owns the cross-fade timing; this file names both
+as edges to verify.
 
 ## EC-M4-06 — Rapid toggle spam
 
@@ -141,7 +153,7 @@ the same AA bar as dark.
 | EC-M4-01/02 | `03-rules` (valid-value + precedence) |
 | EC-M4-03 | `03-rules` (terminal default-dark fallback), `_briefing.md` CF-1 |
 | EC-M4-04 | `03-rules` (no-FOUC), `_briefing.md` seam |
-| EC-M4-05 | `08-design-system.md §7` (motion / reduced-motion) |
+| EC-M4-05 | `03-rules R-M4-08` (cross-fade + aurora pulse / reduced-motion), `08-design-system.md §7` (cross-fade timing) |
 | EC-M4-06 | seam (`_briefing.md`) — AI-autonomous, CP-7 |
 | EC-M4-07 | `02-flows F4` / `03-rules` (OS-follow vs explicit-choice) |
 | EC-M4-08 | `08-design-system.md §8` (contrast discipline) |

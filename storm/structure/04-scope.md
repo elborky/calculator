@@ -35,7 +35,8 @@ The committed build, mapped to the four modules from `03-modules.md`. Each line 
 | Responsive layout (phone + desktop) | **M2** | `03-ideation-coverage.md:52` |
 | History tape — session-only, in-memory record of completed calculations | **M3** History tape | pre-approved scope; `03-modules.md:84` |
 | Non-boring, intentional visual design via design-system tokens | **M4** Theming | pre-approved scope (the one first-class axis); `01-vision.md:38` |
-| Light / dark theme toggle (user-flippable, session-only) | **M4** | pre-approved scope; `01-vision.md:40`; `03-modules.md:101` |
+| Light / dark theme toggle (2-state, user-flippable; first-load default follows OS `prefers-color-scheme`) | **M4** | pre-approved scope; `01-vision.md:40`; `03-modules.md:101` |
+| Theme preference persisted in a single `localStorage` key (the one documented persistence exception) | **M4** | M4 re-entry slice; `03-modules.md` M4; `00-domain-lens.md` §4a |
 
 **Coverage check against pre-approved IN list** — all eight items accounted for: 4-function arithmetic ✓, clear/AC ✓, decimal ✓, equals ✓, history tape (session-only) ✓, theme toggle ✓, keyboard input ✓, non-boring polished visual design ✓.
 
@@ -50,7 +51,8 @@ Explicitly **not** in this build. Each carries a one-line reason — the anti-cr
 | Memory keys (M+, M−, MR, MC) | Pre-approved OUT; adds state + four buttons that don't serve "simple + non-boring" (`01-vision.md:50`). |
 | Scientific / extended functions (trig, powers, roots, parentheses) | Pre-approved OUT; turns a basic calculator into a different product (`01-vision.md:51`). |
 | Percent (%) and ± sign-toggle | Pre-approved OUT; convenience keys outside the basic-4 brief (`01-vision.md:52`). |
-| Cross-device / cross-session persistence | Pre-approved OUT; history + theme are in-memory and die with the tab — no localStorage, no carry-over (`00-domain-lens.md:67`; `03-modules.md:89`). |
+| **History** persistence (cross-session / reload survival) | OUT; the **history tape stays in-memory and dies with the tab** — no localStorage, no carry-over for history (`00-domain-lens.md:67`; `03-modules.md:89`). |
+| Cross-**device** persistence / sync (any data) | OUT; localStorage is same-device only, and there is no backend to sync through (`01-vision.md:53`). The one persisted item — the theme preference (In-scope, M4) — does **not** cross devices. |
 | Accounts / auth / login | Pre-approved OUT; single anonymous user, nothing to gate or own (`00-domain-lens.md:31,66`). |
 | Backend / server / API | Pre-approved OUT; client-side-only utility, no server tier (`01-vision.md:53`). |
 | Multi-user / sharing / collaboration | Pre-approved OUT; single general web user, no second actor exists (`00-domain-lens.md:31`). |
@@ -66,7 +68,8 @@ Noted so they are not *lost*, but **NOT committed** — recorded here only to ke
 
 - **Memory keys** (M+, M−, MR, MC) — the most natural "next button set" if the calculator ever grows.
 - **Scientific / extended mode** — a separate, toggle-able panel rather than bloating the basic keypad.
-- **Persistence** — localStorage for history and/or last-used theme, surviving a reload.
+- **History persistence** — localStorage for the history tape, surviving a reload. *(Still a candidate — last-used **theme** persistence has graduated to In-scope (M4); history persistence has **not**.)*
+- **Explicit "System" theme option** — a 3rd toggle state beside light/dark that defers to the OS at runtime. **Deferred** from the M4 slice (the first-load default already follows the OS); would re-enter via a fresh CAPTURE slice.
 - **Percent / ± convenience keys** — small additions that some users expect on a basic calculator.
 - **Copy result / copy history line** — clipboard convenience if real usage shows demand.
 

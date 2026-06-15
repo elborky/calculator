@@ -26,7 +26,7 @@ storm-canonical: false
 
 ## Tasks
 
-### Group A — tokens.css: light palette + glass-edge + cross-fade  `[PENDING]`
+### Group A — tokens.css: light palette + glass-edge + cross-fade  `[DONE]` (0fb2cc8)
 - T-401 header/structure annotate dark-default + reserve light section
 - T-402 `[data-theme=light]` bg tokens (warm dawn aurora)
 - T-403 light accent tokens (indigo, AA-darkened)
@@ -39,11 +39,11 @@ storm-canonical: false
 - T-421 `:root` 300ms token cross-fade transition
 - T-422 `prefers-reduced-motion` → transition none + disable light aurora pulse
 
-### Group B — index.html: no-FOUC script + toggle markup  `[PENDING]`
+### Group B — index.html: no-FOUC script + toggle markup  `[DONE]` (50710d7)
 - T-410 synchronous non-module inline head script (resolve stored→OS→dark, set data-theme pre-paint)
 - T-417 fill `.toggle-slot` with `<button#theme-toggle>` + moon icon, remove slot aria-hidden
 
-### Group C — theme.ts: resolution + persistence module  `[PENDING]`
+### Group C — theme.ts: resolution + persistence module  `[DONE]` (a5a4079)
 - T-411 `readStoredTheme()` (try/catch, exact-match validate)
 - T-412 `writeStoredTheme()` (try/catch, silent fallback)
 - T-413 `resolveTheme()` (stored → matchMedia → dark)
@@ -51,7 +51,7 @@ storm-canonical: false
 - T-415 `toggleTheme()` (flip + apply + persist)
 - T-416 `attachOsChangeListener()` (modern addEventListener, stored-wins guard)
 
-### Group D — toggle.css: toggle control styles  `[PENDING]`
+### Group D — toggle.css: toggle control styles  `[DONE]` (cb71b75)
 - T-418 `.theme-toggle` base (32px btn, 44px tap target, 20px icon)
 - T-419 `:active` press feedback (scale 0.92, --motion-press)
 - T-420 focus ring (3px solid var(--accent), 3px offset)

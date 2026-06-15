@@ -1,28 +1,24 @@
-# Session Delta — verbal-only outbox
+# Session Delta — verbal-only outbox (#F-012)
 
-> Written by orchestrator at session EXIT per #F-012.
-> Overwritten each exit. Sub-agent reads this to fold in [conversation-claim] items.
-> Empty this session = all owner decisions landed in committed structure files.
+> Written by orchestrator at session EXIT. Overwritten each exit. Sub-agent reads this to fold in
+> [conversation-claim] items. Bounded (CP-14) — a delta, not a journal.
 
-## This session (2026-06-15, BUILD M2 Groups 4–14 → COMPLETE)
+## This session (2026-06-15, REVIEW M2 → PASS)
 
-Most decisions this session landed in git commits + CLAUDE.md (NOT verbal-only):
-forked-sonnet RESTORED for Groups 4–14 (owner re-confirmed "coba lagi forked sonnet";
-#FF-008 credits-gate no longer blocking; all M2 commits this session tagged `Model: sonnet`
-→ tier-purity recovered); T-181 resolved = Inter-300 per D-004 (Space Grotesk was mockup-only
-artifact, not an open aesthetic choice); UR-029 hex→token fix committed (be8c1a3). These are
-durable in git, so not re-listed as verbal-only.
+Most of this session's substance landed in git + CLAUDE.md + the review log (NOT verbal-only):
+REVIEW M2 ran inline (#FF-008 blocked forked dispatch; owner "gas inline"); 8-layer PASS; a11y +
+UR-029 + P3 fixes (6a4d10b); F1 font finding retracted; exit marker (b9e8a79). These are durable.
 
 ## Decisions (→ 🔒 Decided)
 
-- none verbal-only. (See above — all landed in git/CLAUDE.md.)
+- none verbal-only. (The "gas inline" REVIEW decision + tier caveat are durable in git/CLAUDE.md/log.)
 
 ## Open questions (→ ⏳ Pending)
 
-- **[doc-cascade residual, parked as a session task-chip — not in storm/meta yet]**
-  `08-design-system.md` §8 (~line 145) still states focus ring `2px / 2px offset`, but the
-  SPECIFY cross-file audit raised it to **3px / 3px** and the M2 build SHIPPED 3px (keypad.css).
-  The audit fix never cascaded upstream to the design-system doc. A task-chip is queued to fix it
-  (doc-only). If that chip is dismissed/lost, next session should still cascade `2px → 3px` in
-  `08-design-system.md` and grep for other stale `2px` refs across `storm/structure/` +
-  `storm/specify/02-calculator-ui/`. Not a blocker — purely doc-truth hygiene.
+- **Next-step SEQUENCING (UNRESOLVED — owner ended session before choosing):** after M2 REVIEW-PASS,
+  SHIP M2 now (`/storm-ship`, first deployable static NGINX/Dokploy surface) **vs** build M3 (history)
+  / M4 (theming) first, then ship together. Surfaced this session; owner said "udahan" without
+  picking. (Also in CLAUDE.md next-step.)
+- **Re-run REVIEW M2 forked once credits enabled?** REVIEW ran INLINE → commits read `Model: opus`
+  not dispatched sonnet/opus (measurement degraded). Optional re-run of the 8-layer forked for a
+  clean tier baseline. Owner's call — not a blocker (verdict PASS stands).

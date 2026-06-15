@@ -7,6 +7,30 @@
 
 <!-- NEWEST ENTRY BELOW THIS LINE -->
 
+## [2026-06-15 07:42] — REVIEW M2 (Calculator UI) COMPLETE / next SHIP M2 — anchor: b9e8a79
+
+> `[unverified-fallback — written by main context]` — fresh handoff sub-agent dispatch failed
+> again (#FF-008, 1M-context credits-gate — blocked ALL session, rejects at 0 tokens). Per the
+> mandatory fallback the orchestrator wrote this directly. FACTS cross-checked against git
+> (a3f8f15 → 6a4d10b → b9e8a79) + CLAUDE.md + `storm/review/02-review-calculator-ui.md`. Verbal-only
+> items folded from `session-delta.md`, tagged `[conversation-claim]`.
+
+- ✅ **Done this session — REVIEW M2 8-layer PASS (0 P0):**
+  - Ran the full 8-layer auto-verification **INLINE** (forked sonnet/opus dispatch #FF-008-blocked; owner chose "gas inline"). L1 functional PASS (12+3=15 click & keyboard convergence, 5÷0=error sentence, digit no-op + Esc escape, 1÷3 shrink→scroll full precision, repeated-`=` stable), L2 console, L3 network, **L4 axe 4→0**, L5 visual faithful-to-v3, L6 FCP 204ms, L7 tsc/61-tests/build GREEN + token-purity CLEAN, L8 code HIGH (no XSS, exhaustive ErrorTag switch, INT-1..6 honoured). Evidence in `storm/review/evidence/02-calculator-ui/`.
+  - **Fixes (6a4d10b):** 3× a11y — drop `<main role="application">` (restores landmark), add `<h1 class="sr-only">`, `.readout overflow:hidden` at rest + conditional `tabindex=0`/aria-label only while scrolling (axe scrollable-region-focusable). UR-029 — coloured `rgba()` → RGB-channel tokens (`--accent-rgb` etc.; structural black/white left literal per T-122; zero visual change). P3 — favicon inline (kills 404), removed dead `getDisplayValue` re-export, consolidated 3 byte-identical woff2 → one `Inter-latin-var.woff2` + single variable `@font-face font-weight:100 900`.
+  - **Exit marker (b9e8a79):** verdict PASS; module-status M2 → REVIEW-PASS; CLAUDE.md → REVIEW M2 PASS.
+
+- 🔒 **Decided:**
+  - **REVIEW M2 ran INLINE (not forked).** #FF-008 blocked forked dispatch all session; owner explicitly chose "gas inline" after 2 retries. Tier caveat: REVIEW commits read `Model: opus` (orchestrator tier), NOT the dispatched sonnet/opus → measurement degraded for these commits (documented in review log + this handoff). Durable in git + CLAUDE.md.
+  - **F1 "font weights collapsed" RETRACTED as a non-bug.** Verify-before-flag (#FF-001): the woff2 is a latin-subset **variable font** (fvar wght 100–900); the @font-face pulls genuine 300/400/500 from the axis (measured: widths 300<400<500). D-004 self-host IS met. "Fixing" it with static weights would have downgraded a working setup.
+
+- ⏳ **Pending — needs YOUR decision:**
+  - **`[conversation-claim]` — Next-step SEQUENCING (UNRESOLVED — belum dikonfirmasi, dari obrolan sesi ini):** after M2 REVIEW-PASS, **SHIP M2 now** (`/storm-ship`, first deployable static NGINX/Dokploy surface) **vs** build **M3 (history) / M4 (theming) first** then ship together. Owner said "udahan" before picking.
+  - **`[conversation-claim]` — Re-run REVIEW M2 forked once credits enabled? (belum dikonfirmasi):** optional re-run of the 8-layer forked for a clean tier-measurement baseline (this session's was inline `Model: opus`). Not a blocker — verdict PASS stands.
+  - **`[carry-forward]` — M4 theming (future module):** reconcile tokens to the v3 baseline + the light/dark toggle (reserved `.toggle-slot`). Not actionable until M4.
+
+- ➡️ **Next:** Resolve the sequencing choice, then either **SHIP M2** (`/storm-ship` — security audit, QA, staged deploy, smoke-test scaffold) or **`/storm-specify` M3/M4**. If a clean measurement baseline matters, enable 1M-context credits and re-run REVIEW forked first.
+
 ## [2026-06-15 07:15] — BUILD M2 (Calculator UI) COMPLETE / next REVIEW M2 — anchor: e1ba402
 
 > `[unverified-fallback — written by main context]` — fresh handoff sub-agent dispatch failed

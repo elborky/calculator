@@ -56,11 +56,11 @@ storm-canonical: false
 - T-419 `:active` press feedback (scale 0.92, --motion-press)
 - T-420 focus ring (3px solid var(--accent), 3px offset)
 
-### Group E — main.ts: wiring  `[PENDING]`
+### Group E — main.ts: wiring  `[DONE]` (e5ac9e6)
 - T-423 init: resolveTheme → applyTheme → attachOsChangeListener
 - T-424 wire #theme-toggle click → toggleTheme + update aria-label/aria-pressed/icon
 
-### Group F — theme.test.ts: unit tests  `[PENDING]`
+### Group F — theme.test.ts: unit tests  `[DONE]` (73b87d5)
 - T-425 precedence: valid stored wins over OS
 - T-426 corrupt/absent stored → OS fallback
 - T-427 blocked/throwing localStorage read → OS fallback no-throw

@@ -59,7 +59,16 @@ export function dispatch(fn: (s: EngineState) => EngineState): void {
   const prev = state;            // capture before reassignment (T-208, INT-M3-3)
   state = fn(state);             // existing line — unchanged
   render(state);                 // existing line — unchanged, runs FIRST (C3)
-  for (const l of listeners) l(prev, state);  // additive: notify observers after render
+  for (const l of listeners) {                 // additive: notify observers after render
+    try {
+      l(prev, state);
+    } catch (err) {
+      // Seam contract: "observe, never break M2" (06-tech-choices.md).
+      // A throw in any listener must not propagate out of dispatch() and break the calculator.
+      // Log so the error remains visible during dev; M2 render path is unaffected.
+      console.error('[dispatch] listener threw; M2 dispatch unaffected:', err);
+    }
+  }
 }
 
 // ---------------------------------------------------------------------------

@@ -125,26 +125,23 @@ omission, not concealment.
 
 | ID | Sev | File:line | Description | Proposed fix (not a diff) |
 |---|---|---|---|---|
-| **F-1** | **P2** | `src/ui/state.ts:62` | Listener loop `for (const l of listeners) l(prev, state)` has no try/catch. A throw in any listener propagates out of `dispatch()` and breaks the calculator — violating the C3 "observe, never break M2" contract that the seam's whole safety rests on. Safe today (sole listener is total), but the seam is unguarded for its stated invariant. | Wrap each listener call so an observer exception is caught + logged (`console.error`) and cannot break the host dispatch — fail-isolated, observable, M2 unaffected. |
-| **F-2** | **P2** | `src/history-tape.test.ts:212-250` | The `justEvaluated===false` predicate branch (intermediate-operator press in a chain) is asserted only in comments, never executed: T-236 builds `afterChainOp` but never calls `recordOnEquals(prevBeforeChain, afterChainOp)`. A regression that recorded on operator-press would stay green. | Add one assertion: call `recordOnEquals(prevBeforeChain, afterChainOp)` and `expect(getTape().length).toBe(0)` — covers the third-clause negative side directly. |
-| **F-3** | **P3** | `src/history-tape.test.ts:317-359` | AC-via-dispatch non-record is only simulated structurally (`clearTape()+renderHistory()`), never proven at the listener seam: no test drives `recordOnEquals(prev, inputAllClear(prev))` to confirm the predicate rejects the `initialState()` (`justEvaluated:false`) AC result. | Add an assertion driving `recordOnEquals(prevPopulated, inputAllClear(prevPopulated))` then `expect(getTape().length)` unchanged — proves AC produces no phantom record. |
-| **F-4** | **P3** | `src/ui/main.ts:32-36` & `:16` | Two separate `import { … } from './state'` statements (`getState, render` at line 16; `subscribe` at line 32) — minor import fragmentation; cosmetic, intentional for narration grouping. | Optional: consolidate the two `./state` imports into one statement. No behavioral impact. |
+| **F-1** | **P2** | `src/ui/state.ts:62` | Listener loop `for (const l of listeners) l(prev, state)` has no try/catch. A throw in any listener propagates out of `dispatch()` and breaks the calculator — violating the C3 "observe, never break M2" contract that the seam's whole safety rests on. Safe today (sole listener is total), but the seam is unguarded for its stated invariant. | ✅ **RESOLVED** — wrapped per-listener call in try/catch; `console.error` in catch (visible, non-silent); M2 render path and ordering unchanged. |
+| **F-2** | **P2** | `src/history-tape.test.ts:212-250` | The `justEvaluated===false` predicate branch (intermediate-operator press in a chain) is asserted only in comments, never executed: T-236 builds `afterChainOp` but never calls `recordOnEquals(prevBeforeChain, afterChainOp)`. A regression that recorded on operator-press would stay green. | ✅ **RESOLVED** — added assertion in T-236: `expect(afterChainOp.justEvaluated).toBe(false)` + `recordOnEquals(prevBeforeChain, afterChainOp)` + `expect(getTape().length).toBe(0)`. Coverage gap closed. |
+| **F-3** | **P3** | `src/history-tape.test.ts:317-359` | AC-via-dispatch non-record is only simulated structurally (`clearTape()+renderHistory()`), never proven at the listener seam: no test drives `recordOnEquals(prev, inputAllClear(prev))` to confirm the predicate rejects the `initialState()` (`justEvaluated:false`) AC result. | ⚠️ **DEFERRED** — the INT-M3-1 predicate blocks AC results by construction (`justEvaluated:false`), guarded by T-235 (bare `=` with `justEvaluated:false` already asserted). Not added this commit to keep the fix atomic to P1/P2 scope. P3 deferred to post-SHIP or M4 harness. |
+| **F-4** | **P3** | `src/ui/main.ts:32-36` & `:16` | Two separate `import { … } from './state'` statements (`getState, render` at line 16; `subscribe` at line 32) — minor import fragmentation; cosmetic, intentional for narration grouping. | ✅ **RESOLVED** — consolidated into single `import { getState, render, subscribe } from './state'`. |
 | **F-5** | **P3** | `src/ui/history/history.css:279,284` | `max-height:150px` set on both `.history-slot` and `.history-tape` at the phone breakpoint — comment labels it "belt-and-suspenders". Mild duplication (rule-of-three not breached). Defensible as a flex-cap guard, not dead. | Optional: keep on the scroll-owning element only if redundant proves true under L5 visual check; otherwise leave — harmless. |
 
 ---
 
 ## Verdict summary
 
-| Severity | Count |
-|---|---|
-| **P0** | 0 |
-| **P1** | 0 |
-| **P2** | 2 (F-1 unguarded dispatch-seam listener loop; F-2 untested `justEvaluated===false` branch) |
-| **P3** | 3 (F-3 untested AC-via-dispatch non-record; F-4 import fragmentation; F-5 CSS max-height dup) |
+| Severity | Count | Status |
+|---|---|---|
+| **P0** | 0 | — |
+| **P1** | 0 | — |
+| **P2** | 2 (F-1, F-2) | ✅ Both RESOLVED in refix commit |
+| **P3** | 3 (F-3, F-4, F-5) | F-4 RESOLVED; F-3 deferred; F-5 left as-is (defensible) |
 
-**No P0/P1.** The module is injection-safe by construction, spec-exact on the load-bearing INT-M3-1
-predicate, zero-new-dep, and right-sized (no over-engineering). The two P2s are robustness/coverage
-hardening, not behavioral defects on any spec'd path: F-1 is a latent contract-safety gap on M2's hot
-path (the seam relies on listeners never throwing, but doesn't enforce it); F-2 is a real 8b
-coverage-map gap (a predicate branch whose failing side a regression could flip undetected). Neither
-blocks — both are recommended before SHIP. P3s are cosmetic/optional.
+**Post-refix verdict: PASS.** All P1 (from L1) and P2 (from L8) findings resolved. F-3 (P3) deferred by scope — the predicate guards it by construction and T-235 covers the same clause. F-5 (P3) CSS belt-and-suspenders duplication intentionally left as-is.
+
+**Refix commit:** storm:REVIEW:history-tape::fix - scroll-bound P1 + seam-guard + test-gap + dup-import

@@ -70,9 +70,19 @@
  * The .history-slot rule in layout.css sets width:240px and
  * align-self:stretch. We add display:flex here so .history-tape
  * can use flex:1 to fill the slot height on desktop.
+ *
+ * Desktop height cap (HE-016 / US-M3-4 fix): the slot is
+ * align-self:stretch in a row whose height is set by the .calc
+ * slab. Without a cap, .history-tape grows unbounded as entries
+ * accumulate, pushing .app-layout and then body to scroll instead
+ * of the panel's own scroll region. max-height here ensures the
+ * panel is viewport-bounded so overflow-y:auto on the scroll
+ * child fires internally — the page stays still, the panel scrolls.
+ * 100px accounts for body padding (2×32px) + .app-layout gap.
  * ============================================================ */
 .history-slot {
   display: flex;
+  max-height: calc(100vh - 100px);  /* desktop height cap — panel scrolls, page does not */
 }
 
 /* ============================================================

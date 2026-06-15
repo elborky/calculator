@@ -230,6 +230,12 @@ describe('Group H tests — T-232..T-237', () => {
     // But afterChainOp.justEvaluated is false (pressing + doesn't set justEvaluated)
     // So the chain intermediate is NOT recorded by recordOnEquals when the second + is pressed.
     // The recording happens on the FINAL =.
+    //
+    // Assert the third-clause (justEvaluated===false) directly — guards against a regression
+    // that records on operator-press mid-chain (L8 code audit F-2, P2 coverage gap).
+    expect(afterChainOp.justEvaluated).toBe(false);
+    recordOnEquals(prevBeforeChain, afterChainOp);
+    expect((await import('./ui/history/tape')).getTape().length).toBe(0); // must NOT record on operator-press
 
     // Continue: type 4, press =
     let state2 = afterChainOp;

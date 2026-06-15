@@ -129,7 +129,7 @@
   --text-on-scrim:        #1a1040;                 /* dark indigo on near-white scrim */
   --text-on-scrim-soft:   rgba(26, 16, 64, 0.65);
   --text-primary:         #1a1040;                 /* digit labels on light glass */
-  --text-secondary:       rgba(26, 16, 64, 0.60);
+  --text-secondary:       rgba(26, 16, 64, 0.66); /* AA-tuned: ≥5.1:1 worst-case over light tape/aurora (4.5:1 threshold) */
 
   /* ---- Glass (T-406) — white translucent, higher alpha than dark ---- */
   --glass-fill:          rgba(255, 255, 255, 0.52);

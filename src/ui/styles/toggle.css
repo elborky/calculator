@@ -1,0 +1,68 @@
+/* ============================================================ *
+ * M4 THEMING — THEME TOGGLE CONTROL STYLES                      *
+ * T-418: base (.theme-toggle) — 32px visual, ≥44px tap target   *
+ * T-419: :active press feedback — scale(0.92) via --motion-press *
+ * T-420: focus ring — 3px solid var(--accent), 3px offset        *
+ * ============================================================ */
+
+/* -------- T-418: base — glass-consistent toggle button -------- */
+.theme-toggle {
+  /* Positioning / reset */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  background: transparent;
+
+  /* Tap target ≥44px via padding around the 32px visual button.
+     The visual size is 32×32px; padding adds (44-32)/2 = 6px each side. */
+  width: 32px;
+  height: 32px;
+  padding: 6px;
+  /* Overflow visible so the padding area registers pointer events
+     without clipping — box-sizing content-box means tap area = 44×44px. */
+  box-sizing: content-box;
+
+  /* Glass-consistent styling — inherits calculator surface language */
+  border-radius: 50%;
+  color: var(--text-primary);
+
+  /* Smooth transition for hover + motion feedback */
+  transition:
+    transform var(--motion-press),
+    background var(--motion-hover-bg),
+    color var(--motion-hover-bg);
+
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Icon sizing: SVG inside is authored at 20×20 (aria-hidden on SVG) */
+.theme-toggle svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  display: block;
+}
+
+/* -------- T-419: :active press feedback -------- */
+.theme-toggle:active {
+  transform: scale(0.92);
+  transition: transform var(--motion-press);
+}
+
+/* -------- T-420: focus ring — 3px solid accent, 3px offset -------- */
+.theme-toggle:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* -------- Reduced-motion: zero all transitions/transforms -------- */
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle {
+    transition: none;
+  }
+  .theme-toggle:active {
+    transform: none;
+  }
+}

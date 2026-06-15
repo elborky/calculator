@@ -9,6 +9,7 @@ import './styles/tokens.css'
 import './styles/layout.css'
 import './styles/keypad.css'
 import './history/history.css'     // M3 History Tape — T-230
+import './styles/toggle.css'       // M4 Theme Toggle — T-418..420
 
 // Group 4: M1 import + held EngineState cell + dispatch() wired.
 // Group 6: render(state) from render.ts, wired into dispatch via state.ts.

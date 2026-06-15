@@ -65,7 +65,7 @@ Reverse-topological walk of the dependency DAG (`05-dependency-map.md:62`): buil
 
 **Why last:** M4 is **presentational coupling, not causal logic** (`05-dependency-map.md:27`). M2 and M3 are fully functional in default/unstyled markup before M4 touches them — nothing *blocks* on theming. It goes last because it has the **most surfaces to skin once they exist**: doing it after M2 *and* M3 means M4 makes the whole functional surface "non-boring" in one pass, rather than re-skinning as new surfaces arrive. **This is why M3 is sequenced before M4** — the full surface exists before the visual skin lands (`05-dependency-map.md:66`).
 
-**What lands:** light/dark toggle, application of the `08-design-system.md` tokens (color, type, spacing, motion) across M2 and M3 (`03-modules.md:100-103`). Its true upstream input is the design-token document (a taste decision, CP-7) — not a sibling module.
+**What lands:** light/dark toggle, application of the `08-design-system.md` tokens (color, type, spacing, motion) across M2 and M3 (`03-modules.md:100-103`). The toggle also persists the chosen theme in a single `localStorage` key, with the first-load default following the OS via `prefers-color-scheme` (the one documented persistence exception; M3's history tape stays ephemeral). Its true upstream input is the design-token document (a taste decision, CP-7) — not a sibling module.
 
 **Visible?** **Yes** — this is where the one first-class product axis ("ga bosenin") finally pays off (`00-domain-lens.md:57`; `01-vision.md:38`).
 

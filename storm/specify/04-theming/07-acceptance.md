@@ -16,7 +16,7 @@ storm-depends-on:
 > code. Cite-don't-restate: mechanism lives in the owning concerns; AC here states
 > *what a tester sees*, not *how the code achieves it*.
 
-**Total AC count: 28**
+**Total AC count: 29**
 
 ---
 
@@ -109,16 +109,25 @@ Set OS `prefers-reduced-motion: reduce`. Toggle the theme. Observe: the theme
 switch is instant — no visible intermediate animation frames; the new theme
 appears in a single frame.
 
-**AC-F3-8 — Icon reflects the active theme.**
+**AC-F3-8 — Light-theme aurora pulse is static under reduced-motion.**
+Set OS `prefers-reduced-motion: reduce`. Switch to (or load in) the light theme.
+Observe: the aurora background is **static** — no pulsing, shifting, or looping
+animation is visible. The aurora gradient itself is still rendered (the visual is
+present); only the `auroraShift` animation is not running. Verifiable via DevTools
+Animations panel (no active animation on the aurora element) or by capturing two
+screenshots 6+ seconds apart and confirming they are pixel-identical in the aurora
+region. (→ `03-rules R-M4-08`, `05-edge-cases EC-M4-05`)
+
+**AC-F3-9 — Icon reflects the active theme.**
 In dark theme: the toggle shows the moon icon. After toggle to light: the
 toggle shows the sun icon. After toggle back to dark: moon again.
 
-**AC-F3-9 — `aria-label` names the action (not the current state), updates on toggle.**
+**AC-F3-10 — `aria-label` names the action (not the current state), updates on toggle.**
 In dark theme: inspect `aria-label` on the toggle button. Value is
 `"Switch to light theme"`. Toggle to light. Inspect again. Value is
 `"Switch to dark theme"`.
 
-**AC-F3-10 — `aria-pressed` reflects current active state, updates on toggle.**
+**AC-F3-11 — `aria-pressed` reflects current active state, updates on toggle.**
 In dark theme: `aria-pressed === "false"`. Toggle to light. `aria-pressed ===
 "true"`. Toggle back to dark. `aria-pressed === "false"`.
 

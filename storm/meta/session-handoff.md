@@ -7,6 +7,34 @@
 
 <!-- NEWEST ENTRY BELOW THIS LINE -->
 
+## [2026-06-15 18:30] — SHIP COMPLETE — Calculator v1.0.0 LIVE in production — anchor: db76785
+
+- ✅ **Done this session:**
+  - **REVIEW M3** (`80a2d77`+`f09df91`+`a303f3b`+`e886832`+`f209f43`): 8-layer PASS (0 P0 / 0 P1 remaining). Fixed in-REVIEW: P1 desktop tape scroll-bound + 2 elevated P2 (seam-guard + test-gap) + P3 dup-import (`a303f3b`). L1 crawl: P0:0 P1:1 P2:1 P3:1 (`e886832`). L8 fresh-context opus audit: P0:0 P1:0 P2:2 P3:3 (`f209f43`). All 75 tests green. Exit commit `80a2d77` (REVIEW M3 PASS).
+  - **SHIP — all artifacts forked opus (tier-clean):**
+    - `da22543` — security audit CLEAR (0 vulns, XSS-safe by construction, static-only surface).
+    - `2bbce83` — QA report CLEAR (0 P0 / 0 P1; 75/75 tests, tsc+build green; 13/13 acceptance areas PASS).
+    - `f4dd6b8` — smoke-test plan (7 critical flows).
+    - `71f3298` — ops runbook (`storm/ship/05-runbook.md`).
+    - `515761f` — Dockerfile + nginx security headers + Dokploy setup (`storm/ship/04-deployment-config/`).
+    - `e0ee19b` — `@dokploy/mcp` server config (`.mcp.json`, env-var expansion, no secrets committed).
+    - `db76785` — production deploy: public GitHub repo `elborky/calculator` pushed; deployed to Dokploy via direct REST API; custom domain `calc.elborky.my.id` + Let's Encrypt cert; HTTP/2 live. Prod functional smoke 8/8 PASS (arithmetic click≡keyboard, history record/dedup/error-no-record/AC-clear, 0 console errors). Glass confirmed in owner's real Chrome.
+  - **module-status.md** updated: M1+M2+M3 all → **PROD** (prod SHA `e0ee19b`, 2026-06-15).
+  - **CLAUDE.md** updated: Phase → SHIPPED v1.0.0 LIVE.
+
+- 🔒 **Decided:**
+  - **[conversation-claim] REVIEW M3 + SHIP ran as one bundle this session** — the prior open "REVIEW M3 vs SHIP M2 first" sequencing resolved organically: REVIEW M3 completed clean, then SHIP followed immediately (M2's un-shipped REVIEW PASS bundled into the same deploy). Both shipped together as v1.0.0.
+  - **[conversation-claim] #FF-037 credits-gate re-fired at REVIEW M3 start** (forked dispatch rejected at 0 tokens); owner switched session OFF 1M context → all REVIEW + SHIP forked dispatches ran clean. Same resolution as BUILD M3 — standard context, not 1M.
+  - **[conversation-claim] Deploy path = direct REST API** (not MCP-tool path — `@dokploy/mcp` installed via `.mcp.json` but MCP not connected this session; owner chose direct API). Public source repo: `elborky/calculator`.
+  - **[conversation-claim] Glass confirmed by owner** in real Chrome on prod (headless Playwright false-negatived backdrop-filter 3×; real browser is the oracle). Durable in module-status.
+
+- ⏳ **Pending — needs YOUR decision (all non-blocking, owner-paced):**
+  - **[conversation-claim] parking #001** — build drops unprefixed `backdrop-filter` → Firefox glass gap. Fix: add PostCSS/lightningcss prefix → rebuild → redeploy. Non-blocking (functional unaffected; Chrome confirmed fine).
+  - **[conversation-claim] Enable HSTS** in `storm/ship/04-deployment-config/security-headers.conf` — HTTPS now confirmed live, safe to activate. Requires redeploy.
+  - **Optional M4** — theme toggle (light/dark) if owner extends scope. `.toggle-slot` reserved. Not scoped yet.
+
+- ➡️ **Next:** Product is LIVE at `https://calc.elborky.my.id`. STORM v1 field-test ran the full CAPTURE→STRUCTURE→SPECIFY→BUILD→REVIEW→SHIP loop end-to-end — COMPLETE. Owner-paced follow-ups: `/storm-park` triage to action #001 Firefox-glass or HSTS, or start M4 via `/storm-capture` if scope extends.
+
 ## [2026-06-15 15:49] — BUILD M3 (History Tape) COMPLETE / ready for REVIEW M3 — anchor: 6bfebb3
 
 - ✅ **Done this session — BUILD M3 all 44 tasks (groups A–I), forked-sonnet tier-clean:**

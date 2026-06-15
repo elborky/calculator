@@ -120,9 +120,21 @@ When the OS `prefers-color-scheme` changes **while the app is open**:
 The interactive walkthrough of this behaviour lives in `02-flows` (flow **F4**); this rule owns
 the binding precedence it must follow.
 
-### R-M4-08 — Reduced-motion (cross-fade dropped to instant)
+### R-M4-08 — Reduced-motion (ALL theme-introduced motion suppressed)
 
-The theme switch is a **300ms token cross-fade** (`08-design-system.md §7`). Under
-`prefers-reduced-motion: reduce`, this cross-fade is **dropped to instant** — the theme swaps
-with no transition animation. All other theme behaviour (precedence, persistence, no-FOUC,
-contrast) is unchanged under reduced-motion; only the transition timing is suppressed.
+Under `prefers-reduced-motion: reduce`, **all motion introduced by the theme layer is
+suppressed**. This covers two distinct animation vectors:
+
+1. **Theme cross-fade (300ms) — dropped to instant.** The theme switch is a **300ms token
+   cross-fade** (`08-design-system.md §7`). Under reduced-motion, this cross-fade is **dropped
+   to instant** — the theme swaps with no transition animation.
+
+2. **Light-theme v3 aurora pulse — disabled (static aurora).** The v3 "Iridescent Dawn" light
+   theme ships a continuous pulsing aurora background animation
+   (`animation: auroraShift 12s ... infinite alternate`). Under reduced-motion, this pulse
+   animation MUST be disabled — the aurora renders as a **static gradient** (no movement). The
+   aurora is still visible; only the animation is removed. Mechanism: `animation: none` applied
+   to the aurora element(s) inside a `@media (prefers-reduced-motion: reduce)` block.
+
+All other theme behaviour (precedence, persistence, no-FOUC, contrast) is unchanged under
+reduced-motion; only the motion is suppressed.

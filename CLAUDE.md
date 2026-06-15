@@ -2,10 +2,10 @@
 
 ## Current State
 
-- **Phase:** SPECIFY M3 (History Tape) — **COMPLETE / APPROVED** (exit marker `321030b`). Ready for **BUILD M3** (44 tasks T-201..T-244). M2 REVIEW-PASS still un-shipped (SHIP M2 deferred by owner sequencing — "lanjut M3" 2026-06-15).
+- **Phase:** BUILD M3 (History Tape) — **IN PROGRESS, Wave 1 DONE (16/44 tasks).** Groups A (data module `19857eb`), B (recording seam `4c91434`+`3391e86`), F (tape CSS `dd24a6c`) landed — all forked sonnet, tier-clean; tsc+build+61 tests green. M2 REVIEW-PASS still un-shipped (SHIP M2 deferred by owner — "lanjut M3" 2026-06-15).
 - **Sub-context:** M3 spec set `storm/specify/03-history-tape/` — 8 concerns + `_decisions.md` (D-M3-DM-01..03, TC-01..02, EC-01) + `_audit.md` PASS (`32e57f7`). Load-bearing design = **INT-M3 recording seam**: a subscriber list on M2's `dispatch()` (`src/ui/state.ts`) observing `(prev,next)` EngineState; INT-M3-1 predicate `prevState.pendingOperator !== null AND nextState.errorState === null AND nextState.justEvaluated === true` IS the equals-filter (dedupes repeated-=/error/bare-=). `HistoryEntry {expression,result,id}`, unbounded in-memory array, zero new deps, M1 frozen+untouched. Visual baseline = **v1 Conservative single-line** (`04-ui/_picked.md`); v2 Bold/v3 Wildcard retained as record. Audit verified seam buildable vs live `src/`, renumbered HE-018b→HE-029, superseded 04-ui two-line orphan.
 - **Last decision:** Owner picked **v1 single-line** tape ("gw pilih v1", 2026-06-15). All 6 M3 SPECIFY sub-agent dispatches ran **forked** this session (#FF-008 credits-gate OPEN — clean tier baseline restored vs the inline REVIEW M2 commits). 3 of the parallel mockup/acceptance dispatches died on a transient socket error mid-flight; re-dispatched cleanly.
-- **Next step:** **BUILD M3** (`/storm-build` — 44 tasks T-201..T-244: data-model module → recording seam in state.ts → single-line tape render into `.history-slot` → AC-clears wiring → predicate+render tests). OR SHIP M2 first — **owner sequencing** to confirm at session start.
+- **Next step:** **BUILD M3 Wave 2** — Group C `recordOnEquals` listener (T-209..212, `src/ui/history/history.ts`, INT-M3-1 predicate), then Group E render (T-216..222 + T-231 scroll-focus, into `.history-slot` using Group F class contract in `_plan.md`), Group D main.ts wiring (T-213..215, `subscribe(recordOnEquals)` + AC/Esc `clearTape()`). Then Group H tests (T-232..239), Group I verify/smoke (T-240..244) → BUILD M3 exit marker → REVIEW M3.
 
 ## STORM Config
 

@@ -5,6 +5,12 @@
  * (UR-029) — M4 (F4) re-skins by swapping this layer.          *
  * v3 intentionally departs from design-system §3 (owner pick); *
  * M4 SPECIFY reconciles §3 tables to this baseline.            *
+ *                                                               *
+ * DARK v3 Wildcard is the DEFAULT theme — :root below is the   *
+ * dark aurora-glass baseline, frozen/unchanged by M4.          *
+ * LIGHT "Iridescent Dawn" override lives in [data-theme="light"]*
+ * below — it overrides only the themed colour tokens.          *
+ * Structural literals (radius, blur, shadow) are not themed.   *
  * ============================================================ */
 :root {
   /* Accent system — vibrant indigo (equals) + hot coral-rose (operators) */
@@ -77,4 +83,103 @@
   --blur-body:      22px;
   --blur-display:   16px;
   --blur-key:       10px;
+
+  /* ---- Theme cross-fade (T-421) — 300ms on toggle activation ---- */
+  transition:
+    background     300ms ease,
+    color          300ms ease,
+    border-color   300ms ease;
+}
+
+/* ============================================================ *
+ * LIGHT THEME — "Iridescent Dawn" (M4 override, T-402..T-409) *
+ * Warm dawn aurora: violet/rose/peach/periwinkle/lilac blobs   *
+ * over lavender base; white translucent glass; dark-indigo     *
+ * text (#1a1040-family) for WCAG AA; indigo/coral accents pop. *
+ * Dark v3 :root above is the default — unchanged.              *
+ * ============================================================ */
+[data-theme="light"] {
+  /* ---- Accent system (T-403) — indigo family, AA-darkened for light bg ---- */
+  --accent:                    #5b3de8;   /* indigo, darkened vs dark #7c5cff for AA */
+  --accent-glow:               rgba(91, 61, 232, 0.40);
+  --accent-dark:               #4a2ec8;
+  --accent-hover-from:         #6a4df5;
+  --accent-hover-to:           #5030d0;
+
+  /* ---- Operator accent (T-404) — coral-rose family, AA-darkened ---- */
+  --operator-accent:           #e8285a;   /* coral-rose, darkened vs dark #ff5e7a for AA */
+  --operator-accent-dark:      #cc1f4a;
+  --operator-accent-hover-from:#f03868;
+  --operator-accent-hover-to:  #d42050;
+  --operator-glow:             rgba(232, 40, 90, 0.35);
+  --text-on-accent:            #ffffff;   /* white on filled keys — unchanged */
+
+  /* ---- Error (T-408) — AA-darkened red for light glass ---- */
+  --error:                     #c0122a;
+
+  /* ---- RGB triplets (T-407) — updated to match light accent values ---- */
+  --accent-rgb:           91, 61, 232;
+  --operator-accent-rgb:  232, 40, 90;
+  --scrim-rgb:            240, 238, 255;  /* near-white tinted indigo (light scrim hue) */
+  --calc-fallback-rgb:    230, 228, 255;
+  --op-shadow-rgb:        180, 0, 60;
+  --eq-shadow-rgb:        50, 20, 160;
+
+  /* ---- Text (T-405) — dark-indigo on light glass for AA ---- */
+  --text-on-scrim:        #1a1040;                 /* dark indigo on near-white scrim */
+  --text-on-scrim-soft:   rgba(26, 16, 64, 0.65);
+  --text-primary:         #1a1040;                 /* digit labels on light glass */
+  --text-secondary:       rgba(26, 16, 64, 0.60);
+
+  /* ---- Glass (T-406) — white translucent, higher alpha than dark ---- */
+  --glass-fill:          rgba(255, 255, 255, 0.52);
+  --glass-fill-hover:    rgba(255, 255, 255, 0.65);
+  --glass-fill-display:  rgba(255, 255, 255, 0.38);
+  --glass-border:        rgba(255, 255, 255, 0.80);
+  --glass-border-bright: rgba(255, 255, 255, 0.95);
+
+  /* ---- Display scrim (T-407) — near-white tinted indigo (flips the dark scrim) ---- */
+  --display-scrim:       rgba(240, 238, 255, 0.82);
+
+  /* ---- Background aurora (T-402) — warm dawn radial blobs over lavender base ---- */
+  --bg-base: #e8e4ff;
+  --bg-aurora:
+    radial-gradient(40% 50% at 20% 25%, #a78bfa 0%, transparent 60%),
+    radial-gradient(45% 55% at 80% 20%, #f472b6 0%, transparent 60%),
+    radial-gradient(50% 60% at 75% 80%, #60a5fa 0%, transparent 62%),
+    radial-gradient(45% 50% at 25% 80%, #a855f7 0%, transparent 60%),
+    linear-gradient(135deg, #ddd6fe 0%, #f3e8ff 50%, #fce7f3 100%);
+  --bg-blob: radial-gradient(circle, rgba(232, 40, 90, 0.35) 0%, rgba(91, 61, 232, 0.28) 45%, transparent 70%);
+}
+
+/* ---- Iridescent Dawn chromatic ring (T-409) — light-only, additive ::before ---- *
+ * 2px periwinkle→rose→lilac→periwinkle gradient border ring + 1px blur shimmer.    *
+ * Applies only to [data-theme="light"] .calc elements — does NOT alter dark ::before. */
+[data-theme="light"] .calc::before {
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  outline: 2px solid transparent;
+  box-shadow:
+    0 0 0 2px rgba(165, 180, 252, 0.72),  /* periwinkle */
+    0 0 0 3px rgba(255, 160, 192, 0.65),  /* rose */
+    0 0 0 4px rgba(196, 181, 253, 0.70);  /* lilac */
+  filter: blur(0.5px);
+}
+
+/* ============================================================ *
+ * REDUCED MOTION (T-422) — suppress both animation vectors:    *
+ *   1. 300ms theme cross-fade → instant                        *
+ *   2. Light aurora pulse animation → static                   *
+ * ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    transition: none;
+  }
+
+  /* Disable the Iridescent Dawn aurora pulse animation */
+  [data-theme="light"] .aurora-layer,
+  [data-theme="light"] body::before,
+  [data-theme="light"] .bg::before {
+    animation: none;
+  }
 }

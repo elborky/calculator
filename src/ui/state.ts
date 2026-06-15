@@ -14,12 +14,12 @@ import {
   inputEquals,
   inputClearEntry,
   inputAllClear,
-  getDisplayValue,
 } from '../engine';
 
-// Re-export the types and functions Group 5+ needs so they import from one place.
+// Re-export the types and reducers Group 5+ (bindings.ts) needs so they import from one place.
+// (getDisplayValue is NOT re-exported — render.ts imports it directly from '../engine'.)
 export type { EngineState };
-export { inputDigit, inputDecimal, inputOperator, inputEquals, inputClearEntry, inputAllClear, getDisplayValue };
+export { inputDigit, inputDecimal, inputOperator, inputEquals, inputClearEntry, inputAllClear };
 
 // ---------------------------------------------------------------------------
 // T-138 — single held module-level state cell (D-M2-DM-01)

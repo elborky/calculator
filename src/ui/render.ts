@@ -111,6 +111,16 @@ function pendingLine(state: EngineState): string {
 // Called from render() on every state change, after textContent is set.
 // Never called during error render (isError guard at top).
 // ---------------------------------------------------------------------------
+/**
+ * REVIEW L4 — remove the scroll-region a11y affordances added when the readout
+ * is NOT in horizontal-scroll mode. Keeps a non-overflowing readout out of the
+ * tab order (no dead tab stop on "0") while a scrolling one stays keyboard-reachable.
+ */
+function clearScrollA11y(el: HTMLElement): void {
+  el.removeAttribute('tabindex');
+  el.removeAttribute('aria-label');
+}
+
 function fitDisplay(isError: boolean): void {
   const el = readoutEl!;
 
@@ -118,6 +128,7 @@ function fitDisplay(isError: boolean): void {
     // Error sentences wrap via word-break (CSS). Reset fit state and exit.
     el.style.fontSize    = '';
     el.removeAttribute('data-overflow');
+    clearScrollA11y(el); // REVIEW L4: not scrollable → not a focusable scroll region
     // Unwrap inner span if present from a previous scroll state
     const inner = el.querySelector('.readout-inner');
     if (inner) {
@@ -137,6 +148,7 @@ function fitDisplay(isError: boolean): void {
   // --- reset previous fit overrides so we measure from the natural clamp() size ---
   el.style.fontSize = '';
   el.removeAttribute('data-overflow');
+  clearScrollA11y(el); // cleared here; re-applied below only if scroll mode activates
   // Unwrap inner span if present (from prior scroll state)
   const prevInner = el.querySelector('.readout-inner');
   if (prevInner) {
@@ -158,6 +170,11 @@ function fitDisplay(isError: boolean): void {
   // --- Step 2: still overflowing at floor → activate horizontal scroll ---
   if (el.scrollWidth > el.clientWidth) {
     el.setAttribute('data-overflow', 'scroll');
+    // REVIEW L4 (axe scrollable-region-focusable, serious): a horizontally
+    // scrollable region MUST be keyboard-reachable. Make it focusable + labelled
+    // ONLY while it actually scrolls (a non-overflowing "0" stays out of tab order).
+    el.setAttribute('tabindex', '0');
+    el.setAttribute('aria-label', 'Result, scroll to see full number');
     // Wrap the raw text in a ltr span inside the rtl scroll container.
     // This preserves digit/exponent order while right-anchoring the scroll.
     // T-166: exponent strings (e.g. "1.23e+45") are inside the ltr span

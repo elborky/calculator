@@ -8,6 +8,19 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
 
+/* screen-reader-only utility (REVIEW L4 a11y) — visually hidden, still announced.
+   Used by the page-level <h1>Calculator</h1> so the page has a level-one heading
+   and a main landmark without altering the visual design. */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   min-height: 100vh;
@@ -102,7 +115,7 @@ body::after {
   /* layered elevation: outer float + coloured under-glow + inner sheen */
   box-shadow:
     0 30px 70px rgba(0, 0, 0, 0.45),
-    0 0 60px rgba(124, 92, 255, 0.22),       /* indigo under-glow bloom */
+    0 0 60px rgba(var(--accent-rgb), 0.22),  /* indigo under-glow bloom */
     inset 0 1px 0 rgba(255, 255, 255, 0.40), /* top sheen */
     inset 0 0 60px rgba(255, 255, 255, 0.04);/* inner frost */
   transform: perspective(1400px) rotateX(2.2deg);  /* sculptural tilt (dropped on reduced-motion) */
@@ -114,7 +127,7 @@ body::after {
   top: 0; left: 12%; right: 12%;
   height: 2px;
   border-radius: 2px;
-  background: linear-gradient(90deg, transparent, rgba(124, 92, 255, 0.7), rgba(255, 255, 255, 0.85), rgba(255, 94, 122, 0.7), transparent);
+  background: linear-gradient(90deg, transparent, rgba(var(--accent-rgb), 0.7), rgba(255, 255, 255, 0.85), rgba(var(--operator-accent-rgb), 0.7), transparent);
   opacity: 0.8;
 }
 
@@ -185,8 +198,11 @@ body::after {
   width: 100%;
   word-break: break-word;       /* error sentence wraps, never overflows */
   text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
-  /* D-006 horizontal scroll: off by default, activated by fitDisplay() via data-attr */
-  overflow-x: hidden;
+  /* D-006 horizontal scroll: off by default, activated by fitDisplay() via data-attr.
+     REVIEW L4: use `overflow: hidden` (both axes) — `overflow-x: hidden` alone forces
+     the y-axis to compute to `auto`, which made the line-box (~5px taller than client)
+     a vertically-scrollable region and tripped axe scrollable-region-focusable at rest. */
+  overflow: hidden;
   white-space: nowrap;          /* keep numeric content on one line for scroll to work */
 }
 
@@ -255,6 +271,6 @@ body::after {
 
 /* -------- backdrop-filter fallback — legibility never sacrificed (T-126) -------- */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .calc    { background: rgba(26, 18, 56, 0.88); }
-  .display { background: rgba(14, 10, 36, 0.92); }
+  .calc    { background: rgba(var(--calc-fallback-rgb), 0.88); }
+  .display { background: rgba(var(--scrim-rgb), 0.92); }
 }

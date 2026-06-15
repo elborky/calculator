@@ -82,7 +82,7 @@
   box-shadow:
     0 6px 20px var(--operator-glow),
     inset 0 1px 0 rgba(255, 255, 255, 0.45);
-  text-shadow: 0 1px 6px rgba(120, 0, 30, 0.4);
+  text-shadow: 0 1px 6px rgba(var(--op-shadow-rgb), 0.4);
 }
 .key--op:hover {
   background: linear-gradient(145deg, var(--operator-accent-hover-from), var(--operator-accent-hover-to));
@@ -105,7 +105,7 @@
     0 8px 26px var(--accent-glow),
     0 0 26px var(--accent-glow),
     inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  text-shadow: 0 1px 8px rgba(40, 0, 90, 0.5);
+  text-shadow: 0 1px 8px rgba(var(--eq-shadow-rgb), 0.5);
 }
 .key--equals:hover {
   background: linear-gradient(155deg, var(--accent-hover-from), var(--accent-hover-to));

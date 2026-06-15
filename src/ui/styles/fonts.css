@@ -1,48 +1,32 @@
 /* ============================================================ *
- * INTER SELF-HOSTED (D-004) — weights 300 / 400 / 500         *
- * Latin subset only (digits + UI labels — calculator scope).   *
- * Source: fonts.gstatic.com/s/inter/v20 latin binary.          *
- * OFL-licensed — freely self-hostable.                         *
- * font-display: swap — body text is immediately visible.       *
- * Preload of weight-300 (display readout) is in index.html.   *
+ * INTER SELF-HOSTED (D-004) — latin-subset VARIABLE woff2      *
+ * One file (Inter-latin-var.woff2): a variable font with a     *
+ * wght axis 100–900 (verified: fvar wght min=100 def=400       *
+ * max=900). A single @font-face with a font-weight RANGE lets  *
+ * the browser select genuine instances for every weight the    *
+ * UI uses — 300 (display readout), 400 (pending line),         *
+ * 500 (keys / error), 600 (key emphasis) — all from this one   *
+ * file. No CDN; OFL-licensed, freely self-hostable.            *
  *                                                              *
- * T-181 / D-004 reconcile: Space Grotesk was a mockup-only    *
- * artifact in 04-ui/mockup-v3.html. It was NEVER wired into   *
- * any stylesheet. All CSS already references 'Inter'. This     *
- * file completes the self-host requirement — no CDN needed.    *
+ * REVIEW correction: earlier the tree shipped three identical  *
+ * copies named Light/Regular/Medium (md5-identical) — all the  *
+ * SAME variable file. Consolidated to one correctly-named      *
+ * variable file; the per-weight @font-face split is unneeded   *
+ * because the variable axis covers them. (Vite already deduped *
+ * the copies to one emitted asset; this fixes the source.)     *
+ *                                                              *
+ * font-display: swap — text is immediately visible.            *
+ * Preload of this file is in index.html.                       *
+ * Space Grotesk (mockup-v3 only) was never wired in — the app  *
+ * uses Inter throughout per D-004.                             *
  * ============================================================ */
 
-/* Inter 300 — Light (display readout: .readout font-weight: 300) */
 @font-face {
   font-family: 'Inter';
   font-style: normal;
-  font-weight: 300;
+  font-weight: 100 900;        /* variable wght axis — covers 300/400/500/600 */
   font-display: swap;
-  src: url('../fonts/Inter-Light.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
-                 U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
-                 U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-/* Inter 400 — Regular (pending-line: font-weight: 400) */
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('../fonts/Inter-Regular.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
-                 U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
-                 U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
-/* Inter 500 — Medium (keys: font-weight: 500; error readout: font-weight: 500) */
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url('../fonts/Inter-Medium.woff2') format('woff2');
+  src: url('../fonts/Inter-latin-var.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
                  U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
                  U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;

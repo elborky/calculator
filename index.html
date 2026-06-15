@@ -4,15 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Calculator</title>
-    <!-- T-180 / D-004: preload Inter-300 (display readout weight) — self-hosted, no CDN.
-         crossorigin is required for font preloads even when same-origin. -->
+    <!-- D-004: preload the self-hosted Inter latin variable woff2 (one file, wght 100–900;
+         @font-face maps CSS weights 300/400/500 onto its axis). No CDN. crossorigin is
+         required for font preloads even when same-origin. -->
     <link
       rel="preload"
-      href="/src/ui/fonts/Inter-Light.woff2"
+      href="/src/ui/fonts/Inter-latin-var.woff2"
       as="font"
       type="font/woff2"
       crossorigin
     />
+    <!-- inline empty favicon — avoids a 404 on /favicon.ico (REVIEW L2) -->
+    <link rel="icon" href="data:," />
   </head>
   <body>
     <div id="app">
@@ -25,7 +28,11 @@
         <div class="history-slot" aria-hidden="true"></div>
 
         <!-- THE GLASS SLAB -->
-        <main class="calc" role="application" aria-label="Calculator">
+        <main class="calc" aria-label="Calculator">
+          <!-- REVIEW L4 a11y: page-level heading (visually hidden, screen-reader only).
+               role="application" removed: it stripped the <main> landmark and is wrong
+               for a button-grid calculator (real <button>s + aria-live display). -->
+          <h1 class="sr-only">Calculator</h1>
           <!-- reserved M4 theme-toggle corner (empty in M2 — F4) -->
           <div class="toggle-slot" aria-hidden="true"></div>
 

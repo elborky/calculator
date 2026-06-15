@@ -21,6 +21,17 @@
   --text-on-accent:            #fff;      /* text on operator/equals filled keys (UR-029) */
   --error:                     #ff8a8a;
 
+  /* RGB channel triplets (UR-029) — let decorative glows/sheens/shadows reference the
+     theme hue with a per-effect alpha via rgba(var(--x-rgb), α), instead of hardcoding
+     coloured rgba() literals in layout.css/keypad.css. M4 re-skins by swapping these.
+     (Structural black/white shadows stay literal per T-122 — they don't theme-swap.) */
+  --accent-rgb:           124, 92, 255;   /* indigo accent (matches --accent #7c5cff) */
+  --operator-accent-rgb:  255, 94, 122;   /* coral operator (matches --operator-accent) */
+  --scrim-rgb:            14, 10, 36;      /* display scrim hue (matches --display-scrim) */
+  --calc-fallback-rgb:    26, 18, 56;     /* calc glass @supports fallback fill hue */
+  --op-shadow-rgb:        120, 0, 30;     /* operator-key text-shadow tint */
+  --eq-shadow-rgb:        40, 0, 90;      /* equals-key text-shadow tint */
+
   /* D-006 — fitDisplay() font-size floor (px value read by JS in render.ts).
      At this floor and below, horizontal scroll activates (Group 10, T-164..T-165).
      Error sentences never shrink-scroll — they wrap instead (T-161). */
